@@ -2,12 +2,12 @@
 
 **Patterns & Trends in Environmental Data / Computational Movement Analysis Geo 880**
 
-| Semester:      | FS23                                    |
-|:---------------|:----------------------------------------|
-| **Data:**      | What type of data are you focussing on? |
-| **Title:**     | The title of your project               |
-| **Student 1:** | Aurelia Möri                            |
-| **Student 2:** | Lisa Wahlen                             |
+| Semester:      | FS23                                   |
+|:---------------|:---------------------------------------|
+| **Data:**      | What type of data are you focusing on? |
+| **Title:**     | The title of your project              |
+| **Student 1:** | Aurelia Möri                           |
+| **Student 2:** | Lisa Wahlen                            |
 
 ## Abstract
 
@@ -46,6 +46,12 @@ We will use the data from the data - pool of all students of this class. The dat
 ## R concepts
 
 <!-- Which R concepts, functions, packages will you mainly use. What additional spatial analysis methods will you be using? -->
+
+preprocessing tools (readr, dplyr)
+
+geoprocessing tools (sf, terra)
+
+data visualisation (ggplot, tmap)
 
 ## Risk analysis
 
