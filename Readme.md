@@ -47,6 +47,8 @@ We will use the data from the data - pool of all students of this class. The dat
 
 <!-- Which R concepts, functions, packages will you mainly use. What additional spatial analysis methods will you be using? -->
 
+We will further use R packages such as dplyr for data wrangling and tidyverse.
+
 ## Risk analysis
 
 <!-- What could be the biggest challenges/problems you might face? What is your plan B? -->
