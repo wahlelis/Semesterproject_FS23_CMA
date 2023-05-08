@@ -49,6 +49,8 @@ We will use the data from the data - pool of all students of this class. The dat
 
 We will further use R packages such as dplyr for data wrangling and tidyverse.
 
+hallo aurelia 
+
 ## Risk analysis
 
 <!-- What could be the biggest challenges/problems you might face? What is your plan B? -->
