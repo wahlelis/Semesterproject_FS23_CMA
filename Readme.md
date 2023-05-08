@@ -51,6 +51,8 @@ We will further use R packages such as dplyr for data wrangling and tidyverse.
 
 hallo aurelia 
 
+wie geits? 
+
 ## Risk analysis
 
 <!-- What could be the biggest challenges/problems you might face? What is your plan B? -->
