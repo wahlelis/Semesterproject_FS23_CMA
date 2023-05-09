@@ -13,6 +13,8 @@
 
 <!-- (50-60 words) -->
 
+Mountainbiking is a sport which becomes more and more popular in Switzerland. It is therefore interesting, to assess the behavior and pattern of mountainbikers. In order to assess the patterns, it is important to know how to filter mountainbiking data out of a general dataset of movement data.
+
 ## Research Questions
 
 <!-- (50-60 words) -->
