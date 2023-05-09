@@ -17,15 +17,9 @@
 
 <!-- (50-60 words) -->
 
--   How can we detect bikers?
+-    How can we detect moutainbikers, meaning all bikers riding downhill using gravity offroad?
 
--   How do sinuosity and turning angle influence the speed of bikers?
-
--   Can we detect the influence of turning angles on the speed of bikers?
-
--   How do sinuosity influence the choice of bikepath of bikers?
-
--   Can we detect differences in bikepath choices?
+-    How do sinuosity and turning angle influence the speed of bikers?
 
 ## Results / products
 
@@ -48,10 +42,6 @@ We will use the data from the data - pool of all students of this class. The dat
 <!-- Which R concepts, functions, packages will you mainly use. What additional spatial analysis methods will you be using? -->
 
 We will further use R packages such as dplyr for data wrangling and tidyverse.
-
-hallo aurelia 
-
-wie geits? 
 
 ## Risk analysis
 
