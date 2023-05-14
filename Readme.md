@@ -15,7 +15,7 @@
 
 Mountainbiking is a sport which becomes more and more popular in Switzerland. It is therefore interesting, to assess the behavior and pattern of mountainbikers. This information can not only serve community planning, but also be out of interest for the support of legalization of trails in Switzerland.
 
-Deriving information about where and when people ride mountainbikes can be extracted out of mountainbiking directed apps such as trailforks or strava. But filterin general movement data for mountainbiking patterns could provide more information also about illegal trail uses.
+Deriving information about where and when people ride mountainbikes can be extracted out of mountainbiking directed apps such as trailforks or strava. But filtering general movement data for mountainbiking patterns could also provide information about illegal trail uses.
 
 ## Research Questions
 
@@ -37,17 +37,19 @@ Following this thought, we developped the research questions following below:
 
 <!-- What do you expect, anticipate? -->
 
-We expect to find multiple sets of mountain biking patterns which could also be used for further evaluation. Furthermore, we expect that the turning angle generally decreases the speed of the bikers. The amount of curves (sinuosity) in a mountain bike descent decreases the average speed of the trajectory. We expect that the same happens to cycling movement data in urban areas, probably even more so due to red lights and crossroads.  
+We expect to find multiple sets of mountain biking patterns which could also be used for further evaluation. Furthermore, we expect that the turning angle generally decreases the speed of the bikers. The amount of curves (sinuosity) in a mountain bike descent decreases the average speed of the trajectory. We expect that the same happens to cycling movement data in urban areas, probably even more so due to red lights and crossroads.
 
 ## Data
 
 <!-- What data will you use? Will you require additional context data? Where do you get this data from? Do you already have all the data? -->
 
-We will use the data from the data - pool of all students of this class. The data has been collected by gps as well as by using the posmo app. For this type of evaluation, the date and time of the collection of the data is irrelevant. The sampling rate on the other hand, is needed to assess the speed.
+To characterise the moving pattern of mountainbiking we will use Lisa\'s recorded data with the posmo app. To compare it with other moving patterns we might use data from the data pool of our class.  
 
-To detect which are the mountainbike trajectories, we might need a map of some mountainbike trails or a basemap to localize likely mountainbike paths? E.g. movement data within a city might not be part of a mountainbike trail, we assume that mountainbike trails are localised in steep and rural environments.
+For the evaluation of the turning angles, sinuosity and speed, the exact date is irrelevant. The sampling rate on the other hand, is needed. We will conduct the analysis based on our own moving data mentioned above. 
 
-## Analytical concepts
+To prove our findings of the mountainbike trajectories, we might need a map of some mountainbike trails or a basemap to localize likely mountainbike paths? E.g. movement data within a city might not be part of a mountainbike trail, we assume that mountainbike trails are localised in steep and rural environments. This could be an alternative to the detection based on moving patterns. 
+
+## Analytical concepts 
 
 <!-- Which analytical concepts will you use? What conceptual movement spaces and respective modelling approaches of trajectories will you be using? What additional spatial analysis methods will you be using? -->
 
@@ -57,9 +59,15 @@ To detect which are the mountainbike trajectories, we might need a map of some m
 
 **Sinuosity** and/or **turning angle** and how they influence the mountainbikers on different trajectories. (Laube & Purves, 2011) 
 
-Movement patterns for mountainbike detection? 
+Movement patterns for mountainbike detection? Mountainbiking trips might show the following characteristics: 
 
- 
+-   Repetition (revisiting the same route) 
+
+-   Slow uphill, fast downhill. Speed difference 
+
+-   Rural/natural environment, hills. Topographical context
+
+other criteria to be assessed. 
 
 Laube, P. & Purves, R. S. (2011). How fast is a cow? Cross-Scale Analysis of Movement Data. Transactions in GIS, 15(3): 401--418 
 
@@ -76,8 +84,6 @@ We will use R packages from the tidyverse for data wrangling and tidying. Explor
 <!-- What could be the biggest challenges/problems you might face? What is your plan B? -->
 
 The research questions are ambitious, as we need to first filter bikers from other means of movement and then find different relevant definitions. As mountainbiking is a relatively "small" movement compared to other movement patterns, it is important to ensure that it doesn't get classified as static and that we don't lose important information. Therefore the first part of this project might be the most crucial, when we define the different parameters. It is for example up do discussion, how we define the relevant turning angles and what sinuosity is relevant.
-
-The research questions are ambitious, as we need to first filter cyclists from other means of movement and then find different relevant definitions. It is for example up do discussion, how we define the relevant turning angles and what sinuosity is relevant. 
 
 If we find ourselves overwhelmed with the task, we will shorten our project and try to focus on the detection of bicycle use. 
 
