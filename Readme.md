@@ -37,8 +37,7 @@ Following this thought, we developped the research questions following below:
 
 <!-- What do you expect, anticipate? -->
 
-We expect to find multiple sets of mountain biking patterns which could also be used for further evaluation.
-Furthermore, we expect that the turning angle generally decreases the speed of the bikers. The amount of curves (sinuosity) in a mountain bike descent decreases the average speed of the trajectory. We expect that the same happens to cycling movement data in urban areas, probably even more so due to red lights and crossroads.  
+We expect to find multiple sets of mountain biking patterns which could also be used for further evaluation. Furthermore, we expect that the turning angle generally decreases the speed of the bikers. The amount of curves (sinuosity) in a mountain bike descent decreases the average speed of the trajectory. We expect that the same happens to cycling movement data in urban areas, probably even more so due to red lights and crossroads.  
 
 ## Data
 
@@ -70,8 +69,7 @@ Laube, P. & Purves, R. S. (2011). How fast is a cow? Cross-Scale Analysis of Mov
 
 We will further use R packages such as dplyr for data wrangling and tidyverse.
 
-We will use R packages from the tidyverse for data wrangling and tidying. Exploratory data analysis and visualisations can be executed with ggplot2. For spatial data we expect to use the packages sf, tmap,
-For spatial data we expect to use the packages sf, and for visualisations tmap or leaflet might come into play. It is not yet clear if we will make use of SimilarityMeasures. 
+We will use R packages from the tidyverse for data wrangling and tidying. Exploratory data analysis and visualisations can be executed with ggplot2. For spatial data we expect to use the packages sf, tmap, For spatial data we expect to use the packages sf, and for visualisations tmap or leaflet might come into play. It is not yet clear if we will make use of SimilarityMeasures. 
 
 ## Risk analysis
 
