@@ -43,7 +43,7 @@ We expect to find multiple sets of mountain biking patterns which could also be 
 
 <!-- What data will you use? Will you require additional context data? Where do you get this data from? Do you already have all the data? -->
 
-To characterise the moving pattern of mountainbiking we will use Lisa\'s recorded data with the posmo app. To compare it with other moving patterns we might use data from the data pool of our class.  
+To characterise the moving pattern of mountainbiking we will use Lisa's recorded data with the posmo app. To compare it with other moving patterns we might use data from the data pool of our class.  
 
 To detect which are the mountainbike trajectories, we might need a map of some mountainbike trails or a basemap to localize likely mountainbike paths? E.g. movement data within a city might not be part of a mountainbike trail, we assume that mountainbike trails are localised in steep and rural environments.
 
