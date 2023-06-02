@@ -75,7 +75,7 @@ Laube, P. & Purves, R. S. (2011). How fast is a cow? Cross-Scale Analysis of Mov
 
 <!-- Which R concepts, functions, packages will you mainly use. What additional spatial analysis methods will you be using? -->
 
-We will further use R packages such as dplyr for data wrangling and tidyverse.
+preprocessing tools (readr, dplyr)
 
 We will use R packages from the tidyverse for data wrangling and tidying. Exploratory data analysis and visualisations can be executed with ggplot2. For spatial data we expect to use the packages sf, tmap, For spatial data we expect to use the packages sf, and for visualisations tmap or leaflet might come into play. It is not yet clear if we will make use of SimilarityMeasures. 
 
