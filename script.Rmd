@@ -25,7 +25,20 @@ mycolors4 <- brewer.pal(4, "BrBG")
 ## Read Data
 
 ```{r}
-traj1 <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
+posmo <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
 ```
 
 Evtl. könnte man die Daten auf die AV-Daten legen. So kann man dann alle Trajectories löschen, welche sich auf einer Strasse befinden.
+
+```{r}
+posmo <- st_as_sf(posmo, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+head(posmo)
+
+posmo_coordinates <- st_coordinates(posmo)
+
+posmo <- cbind(posmo, posmo_coordinates)
+
+posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
+```
