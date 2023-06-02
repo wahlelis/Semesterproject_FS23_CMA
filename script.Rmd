@@ -1,0 +1,31 @@
+---
+title: "Rproject_semesterproj"
+author: "Lisa Wahlen"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Load Libraries
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readr) # to import tabular data (e.g. csv)
+library(dplyr) # to manipulate (tabular) data
+library(ggplot2) # to visualize data
+library(sf) # to handle spatial vector data
+library(terra) # To handle raster data
+library(lubridate) # To handle dates and times
+library(SimilarityMeasures)
+library(RColorBrewer)
+
+mycolors4 <- brewer.pal(4, "BrBG")
+```
+
+## Read Data
+
+```{r}
+traj1 <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
+```
+
+Evtl. könnte man die Daten auf die AV-Daten legen. So kann man dann alle Trajectories löschen, welche sich auf einer Strasse befinden.

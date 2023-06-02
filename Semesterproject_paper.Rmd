@@ -1,0 +1,28 @@
+---
+title: "Semesterproject_paper"
+author: "Lisa Wahlen"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Abstract
+
+
+## Introduction
+
+
+## Research Question
+
+
+## Materials and Methods
+
+
+## Results
+
+
+## Discussion
+
+
+## References
+
+
