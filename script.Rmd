@@ -63,11 +63,33 @@ tm_shape(posmo_transport)+
   tm_dots("transport_mode")
 
 ```
-most of the trajectory is labelled with the transport mode "car". The loop located in the south of the trajectory shows the part where Lisa went downhill-biking. Most of that section is labelled as "car", wherease some points are labelled as "walk". We now want to try to find out some criteria in order to be able to isolate that downhill biking part and label it as "downhill biking"
+most of the trajectory is labelled with the transport mode "car". The loop located in the south of the trajectory shows the part where Lisa went downhill-biking in Diemtigtal, Allmiried. Most of that section is labelled as "car", wherease some points are labelled as "walk". We now want to try to find out some criteria in order to be able to isolate that downhill biking part and label it as "downhill biking"
 
 ## pattern
 
-```{r}
+how to isolate downhill biking pattern?
 
+things to try
+- setting speed threshold
+- compare to street map
+- compare to elevation model (topography)
+- segmentation into segments expressing different sinuosity (Laube, computational movement analysis, 2014)
+```{r}
+# calculate distance between points d_plusx for distance
+
+posmo_transport |> 
+  mutate(
+    d_plus1 = sqrt((lead(X)-X)^2 + (lead(Y)-Y)^2),
+    d_plus2 = sqrt((lead(X,2)-X)^2 + (lead(Y,2)-Y)^2), # new offset of 2 in function lead()
+    d_minus1 = sqrt((lag(X)-X)^2 + (lag(Y)-Y)^2),
+    d_minus2 = sqrt((lag(X,2)-X)^2 + (lag(Y,2)-Y)^2),
+    t_plus1 = difftime(lead(datetime), datetime),
+    t_plus2 = difftime(lead(datetime, 2), datetime),
+    t_minus1 = difftime(lag(datetime), datetime),
+    t_minus2 = difftime(lag(datetime, 2), datetime),
+    s_plus1 = t_plus1/d_plus1 # s for speed
+  )
+
+# calculate time between points
 ```
 
