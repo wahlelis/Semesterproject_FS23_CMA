@@ -18,6 +18,7 @@ library(terra) # To handle raster data
 library(lubridate) # To handle dates and times
 library(SimilarityMeasures)
 library(RColorBrewer)
+library(tmap)
 
 mycolors4 <- brewer.pal(4, "BrBG")
 ```
@@ -40,5 +41,33 @@ posmo_coordinates <- st_coordinates(posmo)
 
 posmo <- cbind(posmo, posmo_coordinates)
 
+posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
 posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
 ```
+
+## first plots, visualization
+```{r}
+# overview datapoints
+ggplot(posmo, aes(x=X, y=Y))+
+  geom_point()+
+  coord_fixed()
+
+# overview transport mode
+ggplot(posmo_transport, aes(x=X, y=Y, color=transport_mode))+
+  geom_point()+
+  coord_fixed()
+
+# overview with map background
+tmap_mode("view")
+tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
+
+```
+most of the trajectory is labelled with the transport mode "car". The loop located in the south of the trajectory shows the part where Lisa went downhill-biking. Most of that section is labelled as "car", wherease some points are labelled as "walk". We now want to try to find out some criteria in order to be able to isolate that downhill biking part and label it as "downhill biking"
+
+## pattern
+
+```{r}
+
+```
+
