@@ -10,6 +10,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+
 library(readr) # to import tabular data (e.g. csv)
 library(dplyr) # to manipulate (tabular) data
 library(ggplot2) # to visualize data
@@ -74,10 +75,15 @@ things to try
 - compare to street map
 - compare to elevation model (topography)
 - segmentation into segments expressing different sinuosity (Laube, computational movement analysis, 2014)
+
+speed threshold
 ```{r}
 # calculate distance between points d_plusx for distance
+# calculate time between points
+# calculate speed
+# calculate average speed
 
-posmo_transport |> 
+posmo_transport <- posmo_transport |> 
   mutate(
     d_plus1 = sqrt((lead(X)-X)^2 + (lead(Y)-Y)^2),
     d_plus2 = sqrt((lead(X,2)-X)^2 + (lead(Y,2)-Y)^2), # new offset of 2 in function lead()
@@ -87,9 +93,31 @@ posmo_transport |>
     t_plus2 = difftime(lead(datetime, 2), datetime),
     t_minus1 = difftime(lag(datetime), datetime),
     t_minus2 = difftime(lag(datetime, 2), datetime),
-    s_plus1 = t_plus1/d_plus1 # s for speed
+    s_plus1 = as.numeric(t_plus1)/d_plus1, # s for speed [m/s]
+    s_plus2 = as.numeric(t_plus2)/d_plus2,
+    s_minus1 = -as.numeric(t_minus1)/d_minus1,
+    s_minus2 = -as.numeric(t_minus2)/d_minus2
   )
 
-# calculate time between points
+# calculate mean speed within window of two neighboring points. not exactly a temporal window because the sampling time varies slightly
+
+posmo_transport <- posmo_transport |>
+  rowwise() |>  # so the mean per row is computed
+  mutate(
+    speedmean = mean(c(s_plus1, s_plus2, s_minus1, s_minus2))
+  ) |> 
+  ungroup() # otherwise each row would represent a group, we don't want that
+
+
+# explore what we just did
+ggplot(posmo_transport, aes(speedmean))+
+  geom_histogram(binwidth = 2)+
+  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE))
+
+range(posmo_transport$speedmean, na.rm=TRUE)
+
+posmo_transport$speedmean # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
+pt <- posmo_transport$speedmean == Inf
+length(pt[pt == TRUE]) # counts also NA values
 ```
 

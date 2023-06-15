@@ -7,18 +7,11 @@ output: html_document
 Length of report (approx. 15000 char (incl. spaces, incl. References list, excl. Code listing), 20000 char max)
 ```{r}
 
-# install.packages("devtools")
+# had to install Rtools43 before i could run the code below : https://cran.rstudio.com/bin/windows/Rtools/rtools43/rtools.html
 
 devtools::install_github("benmarwick/wordcountaddin",  type = "source", dependencies = TRUE)
 
-# Error in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]) : 
-#   Namensraum ‘rlang’ 1.0.6 ist bereits geladen, aber >= 1.1.0 wird gefordert
-# In addition: Warning message:
-# In unloadNamespace(package) :
-#   Namensraum ‘rlang’ ist importiert von ‘tibble’, ‘tidyselect’, ‘vctrs’, ‘pillar’, ‘ggplot2’, ‘scales’, ‘lifecycle’, ‘dplyr’ und kann deshalb nicht entladen werden
-
-install.packages("rlang")
-
+wordcountaddin:::text_stats() # to check character count
 ```
 
 
@@ -44,5 +37,7 @@ things to try
 ## Discussion
 
 ## References
+
+APA 7th edition instructions: https://libguides.jcu.edu.au/apa/books#s-lg-box-21191622
 
 Laube, P. (2014). *Computational Movement Analysis*. Springer Cham. <https://doi.org/10.1007/978-3-319-10268-9>
