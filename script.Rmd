@@ -93,10 +93,10 @@ posmo_transport <- posmo_transport |>
     t_plus2 = difftime(lead(datetime, 2), datetime),
     t_minus1 = difftime(lag(datetime), datetime),
     t_minus2 = difftime(lag(datetime, 2), datetime),
-    s_plus1 = as.numeric(t_plus1)/d_plus1, # s for speed [m/s]
-    s_plus2 = as.numeric(t_plus2)/d_plus2,
-    s_minus1 = -as.numeric(t_minus1)/d_minus1,
-    s_minus2 = -as.numeric(t_minus2)/d_minus2
+    s_plus1 = d_plus1/as.numeric(t_plus1), # s for speed [m/s]
+    s_plus2 = d_plus2/as.numeric(t_plus2),
+    s_minus1 = d_minus1/-as.numeric(t_minus1),
+    s_minus2 = d_minus2/-as.numeric(t_minus2)
   )
 
 # calculate mean speed within window of two neighboring points. not exactly a temporal window because the sampling time varies slightly
@@ -104,20 +104,53 @@ posmo_transport <- posmo_transport |>
 posmo_transport <- posmo_transport |>
   rowwise() |>  # so the mean per row is computed
   mutate(
-    speedmean = mean(c(s_plus1, s_plus2, s_minus1, s_minus2))
+    speedmean = mean(c(s_plus1, s_plus2, s_minus1, s_minus2, na.rm=TRUE))
   ) |> 
   ungroup() # otherwise each row would represent a group, we don't want that
+
+# somehow returns incorrect mean values
 
 
 # explore what we just did
 ggplot(posmo_transport, aes(speedmean))+
-  geom_histogram(binwidth = 2)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE))
+  geom_histogram(binwidth = 1)+
+  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE)) #no vline because of nan values
 
 range(posmo_transport$speedmean, na.rm=TRUE)
 
-posmo_transport$speedmean # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
-pt <- posmo_transport$speedmean == Inf
-length(pt[pt == TRUE]) # counts also NA values
+posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
+pt <- is.finite(posmo_transport$speedmean) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
+length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 82 of those
 ```
+
+
+Aurelia 19.06.2023
+
+```{r}
+# plot points with inf and non numeric value. let's see which points are affected.
+
+inf_filter <- posmo_transport |> 
+  filter(!is.finite(speedmean))
+
+tmap_mode("view")
+tm_shape(posmo_transport)+
+  tm_dots()+
+  tm_shape(inf_filter)+
+  tm_dots("transport_mode")
+
+# of 2,237 rows only 82 rows are affected (3.67 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
+
+posmo_transport <- posmo_transport |> 
+  filter(is.finite(speedmean)) 
+
+ggplot(posmo_transport, aes(speedmean))+
+  geom_histogram(binwidth = 1)+
+  geom_vline(xintercept = mean(posmo_transport$speedmean))
+
+tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
+
+```
+
+
 
