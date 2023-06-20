@@ -129,6 +129,7 @@ range(posmo_transport$speedmean, na.rm=TRUE)
 posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
 pt <- is.finite(posmo_transport$speedmean) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
 length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
+
 ```
 
 
@@ -148,8 +149,13 @@ tm_shape(posmo_transport)+
 
 # of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
 
-posmo_transport <- posmo_transport |> 
-  filter(is.finite(speedmean)) 
+# new dataset to work with segments
+posmo_segments <- posmo_transport |> 
+    mutate(static = !is.finite(posmo_transport$speedmean))
+
+# "clean" dataset for visualisation of moving point parameter profile
+posmo_transport <- posmo_transport |>
+  filter(is.finite(speedmean))
 
 ggplot(posmo_transport, aes(speedmean))+
   geom_histogram(binwidth = 1)+
@@ -161,10 +167,66 @@ tm_shape(posmo_transport)+
 ```
 
 Aurelia 20.06.2023
-moving parameter profile (Dodge et al., 2009)
+moving parameter (MP) profile for speed (Dodge et al., 2009)
 ```{r}
 head(posmo_transport)
-ggplot(posmo_transport, aes(x = datetime, y = speedmean))+
-  geom_line()
 
+ggplot(posmo_transport, aes(x = datetime, y = speedmean))+
+  geom_line()+
+  geom_hline(yintercept = mean(posmo_transport$speedmean))
+
+```
+
+Segments visualisation
+```{r}
+
+ggplot(posmo_segments, aes(X, Y))+
+  geom_path()+
+  geom_point(aes(color = static))+
+  coord_fixed()
+
+
+```
+assign unique IDs to the segments
+
+```{r}
+# function for assigning unique ID to the subtrajectories
+
+rle_id <- function(vec) {
+    x <- rle(vec)$lengths
+    as.factor(rep(seq_along(x), times = x))
+}
+
+posmo_segments <- posmo_segments |> 
+  mutate(ID=rle_id(static))
+
+
+```
+
+Visualize the moving segments by colourizing them by segment_ID.
+```{r}
+
+posmo_segments <- posmo_segments |> 
+  filter(!static) # select rows where the static value is not TRUE to select the moving segments
+
+ggplot(posmo_segments, aes(X, Y))+
+  geom_point()+
+  geom_path(aes(color=ID))+
+  coord_fixed()
+
+tm_shape(posmo_segments)+
+  tm_dots("ID")+
+  tmap_options(max.categories = 37)
+
+# MP profile
+ggplot(posmo_segments, aes(x = datetime, y = speedmean))+
+  geom_line(aes(color = ID))+
+  geom_hline(yintercept = mean(posmo_transport$speedmean))
+```
+
+from the speed profile plot i suppose that the biking pattern starts around 9 o'clock and ends around half past one. 
+to set a reasonable speed range or threshold, i want to figure out the average speed of a bike descent. i try to isolate the bike segments.    
+```{r}
+
+```
 
