@@ -77,11 +77,19 @@ things to try
 - segmentation into segments expressing different sinuosity (Laube, computational movement analysis, 2014)
 
 speed threshold
+compute movement parameter speed for every fix and a profile of the movement parameter. (Dodge et al., 2009)
 ```{r}
+head(posmo_transport) # there is an outlier. one point was recorded the night before the tour started.
+
+# remove outlier
+
+posmo_transport <- posmo_transport |> 
+  slice(-1)
+
 # calculate distance between points d_plusx for distance
 # calculate time between points
 # calculate speed
-# calculate average speed
+# calculate average speed between four fixes
 
 posmo_transport <- posmo_transport |> 
   mutate(
@@ -104,7 +112,7 @@ posmo_transport <- posmo_transport |>
 posmo_transport <- posmo_transport |>
   rowwise() |>  # so the mean per row is computed
   mutate(
-    speedmean = mean(c(s_plus1, s_plus2, s_minus1, s_minus2, na.rm=TRUE))
+    speedmean = mean(c(s_plus1, s_plus2, s_minus1, s_minus2), na.rm=TRUE)
   ) |> 
   ungroup() # otherwise each row would represent a group, we don't want that
 
@@ -120,7 +128,7 @@ range(posmo_transport$speedmean, na.rm=TRUE)
 
 posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
 pt <- is.finite(posmo_transport$speedmean) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
-length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 82 of those
+length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
 ```
 
 
@@ -138,7 +146,7 @@ tm_shape(posmo_transport)+
   tm_shape(inf_filter)+
   tm_dots("transport_mode")
 
-# of 2,237 rows only 82 rows are affected (3.67 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
+# of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
 
 posmo_transport <- posmo_transport |> 
   filter(is.finite(speedmean)) 
@@ -152,5 +160,11 @@ tm_shape(posmo_transport)+
 
 ```
 
+Aurelia 20.06.2023
+moving parameter profile (Dodge et al., 2009)
+```{r}
+head(posmo_transport)
+ggplot(posmo_transport, aes(x = datetime, y = speedmean))+
+  geom_line()
 
 

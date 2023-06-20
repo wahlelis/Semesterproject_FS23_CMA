@@ -4,7 +4,9 @@ author: "Lisa Wahlen"
 date: "`r Sys.Date()`"
 output: html_document
 ---
+
 Length of report (approx. 15000 char (incl. spaces, incl. References list, excl. Code listing), 20000 char max)
+
 ```{r}
 
 # had to install Rtools43 before i could run the code below : https://cran.rstudio.com/bin/windows/Rtools/rtools43/rtools.html
@@ -14,23 +16,17 @@ devtools::install_github("benmarwick/wordcountaddin",  type = "source", dependen
 wordcountaddin:::text_stats() # to check character count
 ```
 
-
 ## Abstract
 
 ## Introduction
 
 ## Research Question
 
-
 ## Materials and Methods
 
 how to isolate downhill biking pattern?
 
-things to try
-- setting speed threshold
-- compare to street map
-- compare to elevation model (topography)
-- segmentation into segments expressing different sinuosity (Laube, 2014)
+things to try - setting speed threshold - compare to street map - compare to elevation model (topography) - segmentation into segments expressing different sinuosity (Laube, 2014)
 
 ## Results
 
@@ -38,6 +34,12 @@ things to try
 
 ## References
 
-APA 7th edition instructions: https://libguides.jcu.edu.au/apa/books#s-lg-box-21191622
+APA 7th edition instructions: <https://libguides.jcu.edu.au/apa/books#s-lg-box-21191622>
 
 Laube, P. (2014). *Computational Movement Analysis*. Springer Cham. <https://doi.org/10.1007/978-3-319-10268-9>
+
+Dodge, S., Laube, P., & Weibel, R. (2012). Movement similarity assessment using symbolic representation of trajectories. *International Journal of Geographical Information Science, 26*(9), 1563-1588. https://doi.org/10.1080/13658816.2011.630003
+
+Dodge, S., Weibel, R., & Forootan, E. (2009). Revealing the physics of movement: Com-
+paring the similarity of movement characteristics of different types of moving objects.
+*Computers, Environment and Urban Systems, 33*(6), 419–434. https://doi.org/10.1016/j.compenvurbsys.2009.07.008
