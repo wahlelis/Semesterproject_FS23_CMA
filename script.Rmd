@@ -348,8 +348,10 @@ posmo_annotated <- na.omit(posmo_annotated)
 posmo_annotated <- posmo_annotated[order(posmo_annotated$datetime, decreasing = FALSE),]
 
 ggplot()+
-  geom_point(data= posmo_annotated, aes(datetime, hoehe$altivrt, color = BBARTT_BEZ))+
-  geom_path(data= posmo_annotated, aes(datetime, hoehe$altivrt))
+  geom_point(data= posmo_annotated,
+             aes(datetime, hoehe$altivrt, color = BBARTT_BEZ))+
+  geom_path(data= posmo_annotated,
+            aes(datetime, hoehe$altivrt))
 ```
 
 in this last visualization we can see very clearly, that the combination
@@ -362,15 +364,25 @@ That the height difference is clearly visible, we will compute the
 height difference every half minute, which equals 6 points.
 
 ```{r}
-posmo_height <- posmo_dtm |> 
+posmo_annotated <- posmo_annotated |> 
   mutate(
-    h_minus1 = (lag(X)-X)^2 + (lag(Y)-Y)^2),
-    h_minus2 = (lag(X,2)-X)^2 + (lag(Y,2)-Y)^2),
-    h_minus3 = (lag(X,2)-X)^2 + (lag(Y,2)-Y)^2),
-    h_plus1 = difftime(lead(datetime, 2), datetime),
-    h_plus2 = difftime(lag(datetime), datetime),
-    h_plus3 = difftime(lag(datetime, 2), datetime),
+    h_minus1 = (lag(hoehe$altivrt)-hoehe$altivrt),
+    h_minus2 = (lag(hoehe$altivrt, 2)-hoehe$altivrt),
+    h_minus3 = (lag(hoehe$altivrt, 3)-hoehe$altivrt),
+    h_plus1 = (lead(hoehe$altivrt) -hoehe$altivrt),
+    h_plus2 = (lead(hoehe$altivrt, 2)- hoehe$altivrt),
+    h_plus3 = (lag(hoehe$altivrt, 3)- hoehe$altivrt),
   )
+
+posmo_annotated <- na.omit(posmo_annotated)
+
+posmo_annotated <- format(posmo_annotated, scientific=FALSE)
+
+posmo_annotated <- posmo_annotated |>
+  rowwise() |> 
+  mutate(elevmean = sum(c(h_minus1, h_minus2, h_minus3,
+                      h_plus1, h_plus2, h_plus3), na.rm=TRUE)) |> 
+  ungroup()
 ```
 
 ## Combination of criteria
