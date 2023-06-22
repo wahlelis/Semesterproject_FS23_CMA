@@ -308,14 +308,14 @@ bodenbedeckung and posmo, deleting all polygons that do not intersect
 with the nodes of the posmo data.
 
 ```{r}
-tmap_mode("view")
-tm_shape(boden_subset)+
-  tm_polygons("BBARTT_BEZ")+
-  tm_shape(posmo_subset)+
-  tm_dots()+
-  tm_shape(sdf)+
-  tm_raster()+
-  tmap_options(check.and.fix = TRUE)
+# tmap_mode("view")
+# tm_shape(boden_subset)+
+#   tm_polygons("BBARTT_BEZ")+
+#   tm_shape(posmo_subset)+
+#   tm_dots()+
+#   tm_shape(sdf)+
+#   tm_raster()+
+#   tmap_options(check.and.fix = TRUE)
 
 plot(sdf)
 plot(posmo_subset, add=TRUE)
@@ -376,13 +376,22 @@ posmo_annotated <- posmo_annotated |>
 
 posmo_annotated <- na.omit(posmo_annotated)
 
-posmo_annotated <- format(posmo_annotated, scientific=FALSE)
-
 posmo_annotated <- posmo_annotated |>
-  rowwise() |> 
-  mutate(elevmean = sum(c(h_minus1, h_minus2, h_minus3,
-                      h_plus1, h_plus2, h_plus3), na.rm=TRUE)) |> 
+  rowwise() |>
+  mutate(elevmean = mean(c(h_minus1, h_minus2, h_minus3,
+                      h_plus1, h_plus2, h_plus3), na.rm=TRUE), 
+         elevsum = sum(c(h_minus1, h_minus2, h_minus3,
+                      h_plus1, h_plus2, h_plus3), na.rm=TRUE)) |>
   ungroup()
 ```
 
 ## Combination of criteria
+
+If the sum of the 30 seconds movement block is negative and the
+groundtype is either Acker, Wiese, Weide or else geschlossener Wald oder
+übrige humusierte, it must be checked with the speed to determine if
+these criteria match mountainbiking.
+
+```{r}
+
+```
