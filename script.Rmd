@@ -283,12 +283,22 @@ plot(sdf)
 ```{r}
 bodenbedeckung <- read_sf("data/MOPUBE/data/MOPUBE_BBF_ausschnitt.shp")
 
+# remove all columns that are not required
 bodenbedeckung <- bodenbedeckung[,-4:-13]
 
+#Clip the Posmo Data to the extent of the groundtype layer
+boden_subset <- bodenbedeckung[posmo,]
+posmo_subset <- posmo[bodenbedeckung, ]
+
+# st_is_valid(posmo_cropped, reason=TRUE)
+# st_make_valid(posmo_cropped)
 
 # alle Werte im Layer Bodenbedekcung anzeigen, damit dann die passenden für das Mountainbiken definiert werden können.
-unique(bodenbedeckung$BBARTT_BEZ)
+unique(boden_subset$BBARTT_BEZ)
 
+# check the data
+plot(boden_subset[,'BBARTT_BEZ'])
+plot(posmo_subset[,'datetime'])
 ```
 
 We could now see, that there are 23 different groundtypes to describe
@@ -298,15 +308,18 @@ bodenbedeckung and posmo, deleting all polygons that do not intersect
 with the nodes of the posmo data.
 
 ```{r}
-boden_cropped <- bodenbedeckung[posmo,]
-plot(posmo_cropped)
-
 tmap_mode("view")
-tm_shape(boden_cropped)+
+tm_shape(boden_subset)+
   tm_polygons("BBARTT_BEZ")+
-  tm_shape(posmo)+
+  tm_shape(posmo_subset)+
   tm_dots()+
+  tm_shape(sdf)+
+  tm_raster()+
   tmap_options(check.and.fix = TRUE)
+
+plot(sdf)
+plot(posmo_subset, add=TRUE)
+plot(boden_subset, add=TRUE)
 ```
 
 This worked well. Looking at the map, we can now see, that the posmo
@@ -319,7 +332,7 @@ to also add height information to the data in order to achieve filtering
 of mountainbiking.
 
 ```{r}
-posmo_boden <- st_intersection(posmo, boden_cropped)
+posmo_annotated <- st_intersection(posmo_subset, boden_subset)
 ```
 
 ### Criteria III: Elevation model
@@ -327,14 +340,37 @@ posmo_boden <- st_intersection(posmo, boden_cropped)
 now i will do the same with the terrainmodel
 
 ```{r}
-posmo_dtm <- posmo_boden |> 
-  mutate(hoehe = extract(sdf, posmo_boden, fun=mean))
+posmo_annotated <- posmo_annotated |> 
+  mutate(hoehe = extract(sdf, posmo_annotated))
+
+posmo_annotated <- na.omit(posmo_annotated)
+
+posmo_annotated <- posmo_annotated[order(posmo_annotated$datetime, decreasing = FALSE),]
 
 ggplot()+
-  geom_point(data= posmo_dtm, aes(datetime, hoehe$altivrt))+
-  geom_path(data= posmo_dtm, aes(datetime, hoehe$altivrt))
+  geom_point(data= posmo_annotated, aes(datetime, hoehe$altivrt, color = BBARTT_BEZ))+
+  geom_path(data= posmo_annotated, aes(datetime, hoehe$altivrt))
+```
 
-str(posmo_dtm)
+in this last visualization we can see very clearly, that the combination
+of ground type and elevation will probably make for great criteria to
+filter the pattern. In order to filter it from hiking, we will further
+add the speed. But first, it needs to be defined that we only want
+downhill movements on not paved roads for the further evaluation.
+
+That the height difference is clearly visible, we will compute the
+height difference every half minute, which equals 6 points.
+
+```{r}
+posmo_height <- posmo_dtm |> 
+  mutate(
+    h_minus1 = (lag(X)-X)^2 + (lag(Y)-Y)^2),
+    h_minus2 = (lag(X,2)-X)^2 + (lag(Y,2)-Y)^2),
+    h_minus3 = (lag(X,2)-X)^2 + (lag(Y,2)-Y)^2),
+    h_plus1 = difftime(lead(datetime, 2), datetime),
+    h_plus2 = difftime(lag(datetime), datetime),
+    h_plus3 = difftime(lag(datetime, 2), datetime),
+  )
 ```
 
 ## Combination of criteria
