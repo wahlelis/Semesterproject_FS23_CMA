@@ -8,7 +8,7 @@ editor_options:
     wrap: 72
 ---
 
-## Load Libraries
+### Libraries
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -27,7 +27,7 @@ library(tmap)
 mycolors4 <- brewer.pal(4, "BrBG")
 ```
 
-## Read Data
+### Data
 
 ```{r}
 posmo <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
@@ -50,7 +50,7 @@ posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
 posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
 ```
 
-## first plots, visualization
+### Visualizations
 
 ```{r}
 # overview datapoints
@@ -77,7 +77,9 @@ labelled as "car", wherease some points are labelled as "walk". We now
 want to try to find out some criteria in order to be able to isolate
 that downhill biking part and label it as "downhill biking"
 
-## pattern
+## Isolation of mountainbiking pattern
+
+### Criteria I: speed
 
 how to isolate downhill biking pattern?
 
@@ -247,10 +249,10 @@ bike descent. i try to isolate the bike segments.
 
 ```
 
+### Criteria II: Ground cover
 
-### classification according to DEM and ground cover
-
-in a second step, we will try to do the according filtering but by using a classification according to the DEM and to ground cover.
+in a second step, we will try to do the according filtering but by using
+a classification according to the DEM and to ground cover.
 
 ```{r}
 #csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html 
@@ -283,42 +285,56 @@ bodenbedeckung <- read_sf("data/MOPUBE/data/MOPUBE_BBF_ausschnitt.shp")
 
 bodenbedeckung <- bodenbedeckung[,-4:-13]
 
-# plot(bodenbedeckung)
 
 # alle Werte im Layer Bodenbedekcung anzeigen, damit dann die passenden für das Mountainbiken definiert werden können.
 unique(bodenbedeckung$BBARTT_BEZ)
 
 ```
 
-We could now see, that there are 23 different groundtypes to describe what the surface consists of. In order to be able to work faster and to save memory space, we are now going to spatially join the two layers bodenbedeckung and posmo, deleting all polygons that do not intersect with the nodes of the posmo data.
+We could now see, that there are 23 different groundtypes to describe
+what the surface consists of. In order to be able to work faster and to
+save memory space, we are now going to spatially join the two layers
+bodenbedeckung and posmo, deleting all polygons that do not intersect
+with the nodes of the posmo data.
 
 ```{r}
 boden_cropped <- bodenbedeckung[posmo,]
 plot(posmo_cropped)
 
 tmap_mode("view")
-tm_shape(posmo_cropped)+
+tm_shape(boden_cropped)+
   tm_polygons("BBARTT_BEZ")+
   tm_shape(posmo)+
   tm_dots()+
   tmap_options(check.and.fix = TRUE)
 ```
 
-This worked well. Looking at the map, we can now see, that the posmo data is pretty exact and that mostly, the streets are also declared as streets. The mountainbiking part, however, is simply on "Acker, Wiese, Weide" terrain. This is not an identifyer for mountainbiking, as it could also be hiking or other outdoor activities. We will now annotate the groundtype data to the posmo data and then do the same with the topo to also add height information to the data in order to achieve filtering of mountainbiking.
+This worked well. Looking at the map, we can now see, that the posmo
+data is pretty exact and that mostly, the streets are also declared as
+streets. The mountainbiking part, however, is simply on "Acker, Wiese,
+Weide" terrain. This is not an identifyer for mountainbiking, as it
+could also be hiking or other outdoor activities. We will now annotate
+the groundtype data to the posmo data and then do the same with the topo
+to also add height information to the data in order to achieve filtering
+of mountainbiking.
 
 ```{r}
-posmo_boden <- st_intersection(posmo, posmo_boden)
+posmo_boden <- st_intersection(posmo, boden_cropped)
 ```
+
+### Criteria III: Elevation model
 
 now i will do the same with the terrainmodel
 
 ```{r}
-posmo_dtm <- extract(sdf, posmo_boden, fun=mean)
+posmo_dtm <- posmo_boden |> 
+  mutate(hoehe = extract(sdf, posmo_boden, fun=mean))
 
-posmo_boden$hoehe <- posmo_dtm$altivrt
+ggplot()+
+  geom_point(data= posmo_dtm, aes(datetime, hoehe$altivrt))+
+  geom_path(data= posmo_dtm, aes(datetime, hoehe$altivrt))
+
+str(posmo_dtm)
 ```
 
-```{r}
-ggplot()+
-  geom_point(data= posmo_boden, aes(datetime, hoehe)) +
-  geom_path(data= posmo_boden, aes(datetime, hoehe))
+## Combination of criteria

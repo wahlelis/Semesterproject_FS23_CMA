@@ -1,0 +1,1233 @@
+<VRTDataset rasterXSize="34000" rasterYSize="58000">
+  <SRS dataAxisToSRSAxisMapping="1,2">PROJCS["CH1903+ / LV95",GEOGCS["CH1903+",DATUM["CH1903+",SPHEROID["Bessel 1841",6377397.155,299.1528128,AUTHORITY["EPSG","7004"]],AUTHORITY["EPSG","6150"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4150"]],PROJECTION["Hotine_Oblique_Mercator_Azimuth_Center"],PARAMETER["latitude_of_center",46.9524055555556],PARAMETER["longitude_of_center",7.43958333333333],PARAMETER["azimuth",90],PARAMETER["rectified_grid_angle",90],PARAMETER["scale_factor",1],PARAMETER["false_easting",2600000],PARAMETER["false_northing",1200000],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","2056"]]</SRS>
+  <GeoTransform>  2.6010000000000000e+06,  5.0000000000000000e-01,  0.0000000000000000e+00,  1.1840000000000000e+06,  0.0000000000000000e+00, -5.0000000000000000e-01</GeoTransform>
+  <VRTRasterBand dataType="Float32" band="1">
+    <NoDataValue>-9999</NoDataValue>
+    <ColorInterp>Gray</ColorInterp>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2601-1157_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="0" yOff="52000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2601-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="0" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2602-1157_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="2000" yOff="52000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2602-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="2000" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2602-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="2000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2603-1156_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="4000" yOff="54000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2603-1157_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="4000" yOff="52000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2603-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="4000" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2603-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="4000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2603-1160_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="4000" yOff="46000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2604-1156_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="6000" yOff="54000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2604-1157_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="6000" yOff="52000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2604-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="6000" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2604-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="6000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2604-1160_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="6000" yOff="46000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2604-1161_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="6000" yOff="44000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1155_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="56000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1156_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="54000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1157_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="52000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1160_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="46000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1161_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="44000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2605-1162_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="8000" yOff="42000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1156_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="54000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1157_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="52000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1160_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="46000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1161_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="44000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1162_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="42000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1163_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="40000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2606-1164_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="10000" yOff="38000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1157_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="52000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1160_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="46000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1161_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="44000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1162_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="42000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1163_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="40000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1164_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="38000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2607-1165_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="12000" yOff="36000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1158_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="50000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1160_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="46000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1161_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="44000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1162_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="42000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1163_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="40000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1164_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="38000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1165_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="36000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2608-1166_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="14000" yOff="34000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1159_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="48000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1160_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="46000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1161_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="44000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1162_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="42000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1163_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="40000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1164_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="38000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1165_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="36000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1166_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="34000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2609-1167_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="16000" yOff="32000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1161_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="44000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1162_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="42000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1163_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="40000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1164_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="38000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1165_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="36000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1166_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="34000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1167_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="32000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1168_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="30000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1178_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="10000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1179_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="8000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1180_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="6000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1181_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="4000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1182_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="2000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2610-1183_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="18000" yOff="0" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1163_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="40000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1164_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="38000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1165_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="36000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1166_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="34000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1167_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="32000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1168_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="30000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1169_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="28000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1170_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="26000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1174_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="18000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1175_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="16000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1176_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="14000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1177_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="12000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1178_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="10000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1179_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="8000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1180_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="6000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1181_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="4000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1182_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="2000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2611-1183_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="20000" yOff="0" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1165_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="36000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1166_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="34000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1167_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="32000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1168_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="30000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1169_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="28000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1170_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="26000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1171_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="24000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1172_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="22000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1173_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="20000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1174_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="18000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1175_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="16000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1176_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="14000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1177_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="12000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1178_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="10000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1179_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="8000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1180_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="6000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1181_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="4000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1182_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="2000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2612-1183_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="22000" yOff="0" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1166_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="34000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1167_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="32000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1168_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="30000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1169_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="28000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1170_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="26000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1171_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="24000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1172_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="22000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1173_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="20000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1174_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="18000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1175_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="16000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1176_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="14000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1177_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="12000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1178_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="10000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1179_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="8000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1180_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="6000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1181_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="4000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2613-1182_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="24000" yOff="2000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1168_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="30000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1169_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="28000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1170_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="26000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1171_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="24000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1172_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="22000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1173_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="20000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1174_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="18000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1175_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="16000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1176_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="14000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1177_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="12000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2614-1178_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="26000" yOff="10000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2615-1169_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="28000" yOff="28000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2615-1170_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="28000" yOff="26000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2615-1171_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="28000" yOff="24000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2615-1172_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="28000" yOff="22000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2615-1173_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="28000" yOff="20000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2615-1174_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="28000" yOff="18000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2615-1175_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="28000" yOff="16000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2616-1170_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="30000" yOff="26000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2616-1171_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="30000" yOff="24000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2616-1172_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="30000" yOff="22000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2616-1173_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="30000" yOff="20000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2616-1174_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="30000" yOff="18000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2617-1171_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="32000" yOff="24000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">C:\Users\wahle\OneDrive\Documents\University\Master\ZHAW\Patterns and Trends\Modul_CMA\Semesterproject_FS23_CMA\data/alti3d_05/swissalti3d_2019_2617-1172_0.5_2056_5728.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2000" RasterYSize="2000" DataType="Float32" BlockXSize="128" BlockYSize="128" />
+      <SrcRect xOff="0" yOff="0" xSize="2000" ySize="2000" />
+      <DstRect xOff="32000" yOff="22000" xSize="2000" ySize="2000" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+  </VRTRasterBand>
+  <OverviewList resampling="nearest">2 4 8</OverviewList>
+</VRTDataset>
