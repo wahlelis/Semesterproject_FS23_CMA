@@ -3,6 +3,9 @@ title: "Rproject_semesterproj"
 author: "Lisa Wahlen"
 date: "`r Sys.Date()`"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ## Load Libraries
@@ -30,7 +33,8 @@ mycolors4 <- brewer.pal(4, "BrBG")
 posmo <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
 ```
 
-Evtl. könnte man die Daten auf die AV-Daten legen. So kann man dann alle Trajectories löschen, welche sich auf einer Strasse befinden.
+Evtl. könnte man die Daten auf die AV-Daten legen. So kann man dann alle
+Trajectories löschen, welche sich auf einer Strasse befinden.
 
 ```{r}
 posmo <- st_as_sf(posmo, coords = c("lon_x","lat_y"), crs = 4326) |>
@@ -47,6 +51,7 @@ posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
 ```
 
 ## first plots, visualization
+
 ```{r}
 # overview datapoints
 ggplot(posmo, aes(x=X, y=Y))+
@@ -64,20 +69,26 @@ tm_shape(posmo_transport)+
   tm_dots("transport_mode")
 
 ```
-most of the trajectory is labelled with the transport mode "car". The loop located in the south of the trajectory shows the part where Lisa went downhill-biking in Diemtigtal, Allmiried. Most of that section is labelled as "car", wherease some points are labelled as "walk". We now want to try to find out some criteria in order to be able to isolate that downhill biking part and label it as "downhill biking"
+
+most of the trajectory is labelled with the transport mode "car". The
+loop located in the south of the trajectory shows the part where Lisa
+went downhill-biking in Diemtigtal, Allmiried. Most of that section is
+labelled as "car", wherease some points are labelled as "walk". We now
+want to try to find out some criteria in order to be able to isolate
+that downhill biking part and label it as "downhill biking"
 
 ## pattern
 
 how to isolate downhill biking pattern?
 
-things to try
-- setting speed threshold
-- compare to street map
-- compare to elevation model (topography)
-- segmentation into segments expressing different sinuosity (Laube, computational movement analysis, 2014)
+things to try - setting speed threshold - compare to street map -
+compare to elevation model (topography) - segmentation into segments
+expressing different sinuosity (Laube, computational movement analysis,
+2014)
 
-speed threshold
-compute movement parameter speed for every fix and a profile of the movement parameter. (Dodge et al., 2009)
+speed threshold compute movement parameter speed for every fix and a
+profile of the movement parameter. (Dodge et al., 2009)
+
 ```{r}
 head(posmo_transport) # there is an outlier. one point was recorded the night before the tour started.
 
@@ -132,7 +143,6 @@ length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
 
 ```
 
-
 Aurelia 19.06.2023
 
 ```{r}
@@ -166,8 +176,9 @@ tm_shape(posmo_transport)+
 
 ```
 
-Aurelia 20.06.2023
-moving parameter (MP) profile for speed (Dodge et al., 2009)
+Aurelia 20.06.2023 moving parameter (MP) profile for speed (Dodge et
+al., 2009)
+
 ```{r}
 head(posmo_transport)
 
@@ -178,6 +189,7 @@ ggplot(posmo_transport, aes(x = datetime, y = speedmean))+
 ```
 
 Segments visualisation
+
 ```{r}
 
 ggplot(posmo_segments, aes(X, Y))+
@@ -187,6 +199,7 @@ ggplot(posmo_segments, aes(X, Y))+
 
 
 ```
+
 assign unique IDs to the segments
 
 ```{r}
@@ -204,6 +217,7 @@ posmo_segments <- posmo_segments |>
 ```
 
 Visualize the moving segments by colourizing them by segment_ID.
+
 ```{r}
 
 posmo_segments <- posmo_segments |> 
@@ -224,9 +238,87 @@ ggplot(posmo_segments, aes(x = datetime, y = speedmean))+
   geom_hline(yintercept = mean(posmo_transport$speedmean))
 ```
 
-from the speed profile plot i suppose that the biking pattern starts around 9 o'clock and ends around half past one. 
-to set a reasonable speed range or threshold, i want to figure out the average speed of a bike descent. i try to isolate the bike segments.    
+from the speed profile plot i suppose that the biking pattern starts
+around 9 o'clock and ends around half past one. to set a reasonable
+speed range or threshold, i want to figure out the average speed of a
+bike descent. i try to isolate the bike segments.
+
 ```{r}
 
 ```
 
+
+### classification according to DEM and ground cover
+
+in a second step, we will try to do the according filtering but by using a classification according to the DEM and to ground cover.
+
+```{r}
+#csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html 
+# all_tif <- read.csv("data/alti3D_all.csv", header = FALSE)
+
+# terra help https://rspatial.org/spatial-terra/8-rastermanip.html 
+
+#download all files to an empty folder
+# for (fi in all_tif$V1){
+  # outfile <- basename(fi)
+  # print(outfile)
+  # download.file(fi, paste0("data/alti3d_05/", outfile),mode = "wb") # mode (binary) very important
+# }
+
+# list takes all files with .tif from a folder
+file_list <- list.files("data/alti3d_05/",".tif",full.names = TRUE)
+
+# makes a virtual raster layer from the files
+vrt(file_list, "altivrt.vrt",overwrite = TRUE)
+
+# import the data from the virtual raster layer
+sdf <- rast("altivrt.vrt")
+
+# plotting is very fast (for 190 tiles with 15MB data)
+plot(sdf)
+```
+
+```{r}
+bodenbedeckung <- read_sf("data/MOPUBE/data/MOPUBE_BBF_ausschnitt.shp")
+
+bodenbedeckung <- bodenbedeckung[,-4:-13]
+
+# plot(bodenbedeckung)
+
+# alle Werte im Layer Bodenbedekcung anzeigen, damit dann die passenden für das Mountainbiken definiert werden können.
+unique(bodenbedeckung$BBARTT_BEZ)
+
+```
+
+We could now see, that there are 23 different groundtypes to describe what the surface consists of. In order to be able to work faster and to save memory space, we are now going to spatially join the two layers bodenbedeckung and posmo, deleting all polygons that do not intersect with the nodes of the posmo data.
+
+```{r}
+boden_cropped <- bodenbedeckung[posmo,]
+plot(posmo_cropped)
+
+tmap_mode("view")
+tm_shape(posmo_cropped)+
+  tm_polygons("BBARTT_BEZ")+
+  tm_shape(posmo)+
+  tm_dots()+
+  tmap_options(check.and.fix = TRUE)
+```
+
+This worked well. Looking at the map, we can now see, that the posmo data is pretty exact and that mostly, the streets are also declared as streets. The mountainbiking part, however, is simply on "Acker, Wiese, Weide" terrain. This is not an identifyer for mountainbiking, as it could also be hiking or other outdoor activities. We will now annotate the groundtype data to the posmo data and then do the same with the topo to also add height information to the data in order to achieve filtering of mountainbiking.
+
+```{r}
+posmo_boden <- st_intersection(posmo, posmo_boden)
+```
+
+now i will do the same with the terrainmodel
+
+```{r}
+posmo_dtm <- extract(sdf, posmo_boden, fun=mean)
+
+posmo_boden$hoehe <- posmo_dtm$altivrt
+```
+
+```{r}
+ggplot()+
+  geom_point(data= posmo_boden, aes(datetime, hoehe)) +
+  geom_path(data= posmo_boden, aes(datetime, hoehe))
