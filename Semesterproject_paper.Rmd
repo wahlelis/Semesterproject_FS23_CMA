@@ -43,3 +43,6 @@ Dodge, S., Laube, P., & Weibel, R. (2012). Movement similarity assessment using 
 Dodge, S., Weibel, R., & Forootan, E. (2009). Revealing the physics of movement: Com-
 paring the similarity of movement characteristics of different types of moving objects.
 *Computers, Environment and Urban Systems, 33*(6), 419–434. https://doi.org/10.1016/j.compenvurbsys.2009.07.008
+
+Laube, P. & Purves, R.(2011) How fast is a cow? Cross-scale Analysis of Movement Data, *Transactions in GIS, 15*(3), 401–418, John Wiley & Sons Ltd, DOI:
+10.1111/j.1467-9671.2011.01256.x

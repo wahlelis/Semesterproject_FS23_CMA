@@ -73,9 +73,9 @@ tm_shape(posmo_transport)+
 most of the trajectory is labelled with the transport mode "car". The
 loop located in the south of the trajectory shows the part where Lisa
 went downhill-biking in Diemtigtal, Allmiried. Most of that section is
-labelled as "car", wherease some points are labelled as "walk". We now
+labelled as "car", whereas some points are labelled as "walk". We now
 want to try to find out some criteria in order to be able to isolate
-that downhill biking part and label it as "downhill biking"
+the downhill biking part and label it as "downhill biking"
 
 ## Isolation of mountainbiking pattern
 
@@ -88,7 +88,7 @@ compare to elevation model (topography) - segmentation into segments
 expressing different sinuosity (Laube, computational movement analysis,
 2014)
 
-speed threshold compute movement parameter speed for every fix and a
+speed threshold. compute movement parameter speed for every fix and a
 profile of the movement parameter. (Dodge et al., 2009)
 
 ```{r}
@@ -129,25 +129,24 @@ posmo_transport <- posmo_transport |>
   ) |> 
   ungroup() # otherwise each row would represent a group, we don't want that
 
-# somehow returns incorrect mean values
+```
+
+Similar to Laube et al. (2011) we calculated the speed between two fixes.  for each point of the dataset the average speed of the 
 
 
-# explore what we just did
+```{r}
+# plot / explore what we just did
 ggplot(posmo_transport, aes(speedmean))+
   geom_histogram(binwidth = 1)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE)) #no vline because of nan values
+  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE)) #why is there no vline?
+
+# no vline because of nan values
+posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
 
 range(posmo_transport$speedmean, na.rm=TRUE)
-
-posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
 pt <- is.finite(posmo_transport$speedmean) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
 length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
 
-```
-
-Aurelia 19.06.2023
-
-```{r}
 # plot points with inf and non numeric value. let's see which points are affected.
 
 inf_filter <- posmo_transport |> 
@@ -159,9 +158,9 @@ tm_shape(posmo_transport)+
   tm_shape(inf_filter)+
   tm_dots("transport_mode")
 
-# of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
+# of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a speed threshold can be taken. 
 
-# new dataset to work with segments
+# new dataset for segmentation
 posmo_segments <- posmo_transport |> 
     mutate(static = !is.finite(posmo_transport$speedmean))
 
@@ -171,10 +170,7 @@ posmo_transport <- posmo_transport |>
 
 ggplot(posmo_transport, aes(speedmean))+
   geom_histogram(binwidth = 1)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean))
-
-tm_shape(posmo_transport)+
-  tm_dots("transport_mode")
+  geom_vline(xintercept = mean(posmo_transport$speedmean)) # vline appears now. average speed around 10 m/s
 
 ```
 
