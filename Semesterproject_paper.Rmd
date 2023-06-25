@@ -38,7 +38,8 @@ In this paper we will work on the following two research questions:
 For our project, we used the movement trajectories that were created by ourselves when going mountainbiking. The data was created by using posmo.ch. As the sampling rate is at 10 seconds, the sampling rate is rather low. 
 To filter the movement pattern of mountainbiking we further used the following data: 
 
-- SwissAlti3D (year, auflösung, quelle)
+- posmo trajectories: sampling rate, 10 s
+- SwissAlti3D: This elevation data is provided by the government of switzerland in a resolution of 0.5 m. It is provided in grids of 1 km2 for all of Switzerland as bot a .tif file and a .xyz file. For the project here, we used the .tif files.
 - MOPUBE BBF: Ground type of the canton of Bern
 
 ### Preprocessing

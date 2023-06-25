@@ -73,22 +73,15 @@ tm_shape(posmo_transport)+
 most of the trajectory is labelled with the transport mode "car". The
 loop located in the south of the trajectory shows the part where Lisa
 went downhill-biking in Diemtigtal, Allmiried. Most of that section is
-labelled as "car", whereas some points are labelled as "walk". We now
+labelled as "car", wherease some points are labelled as "walk". We now
 want to try to find out some criteria in order to be able to isolate
-the downhill biking part and label it as "downhill biking"
+that downhill biking part and label it as "downhill biking"
 
 ## Isolation of mountainbiking pattern
 
 ### Criteria I: speed
 
-how to isolate downhill biking pattern?
-
-things to try - setting speed threshold - compare to street map -
-compare to elevation model (topography) - segmentation into segments
-expressing different sinuosity (Laube, computational movement analysis,
-2014)
-
-speed threshold. compute movement parameter speed for every fix and a
+Speed threshold compute movement parameter speed for every fix and a
 profile of the movement parameter. (Dodge et al., 2009)
 
 ```{r}
@@ -129,24 +122,25 @@ posmo_transport <- posmo_transport |>
   ) |> 
   ungroup() # otherwise each row would represent a group, we don't want that
 
-```
-
-Similar to Laube et al. (2011) we calculated the speed between two fixes.  for each point of the dataset the average speed of the 
+# somehow returns incorrect mean values
 
 
-```{r}
-# plot / explore what we just did
+# explore what we just did
 ggplot(posmo_transport, aes(speedmean))+
   geom_histogram(binwidth = 1)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE)) #why is there no vline?
-
-# no vline because of nan values
-posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
+  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE)) #no vline because of nan values
 
 range(posmo_transport$speedmean, na.rm=TRUE)
+
+posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
 pt <- is.finite(posmo_transport$speedmean) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
 length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
 
+```
+
+Aurelia 19.06.2023
+
+```{r}
 # plot points with inf and non numeric value. let's see which points are affected.
 
 inf_filter <- posmo_transport |> 
@@ -158,9 +152,9 @@ tm_shape(posmo_transport)+
   tm_shape(inf_filter)+
   tm_dots("transport_mode")
 
-# of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a speed threshold can be taken. 
+# of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
 
-# new dataset for segmentation
+# new dataset to work with segments
 posmo_segments <- posmo_transport |> 
     mutate(static = !is.finite(posmo_transport$speedmean))
 
@@ -170,7 +164,10 @@ posmo_transport <- posmo_transport |>
 
 ggplot(posmo_transport, aes(speedmean))+
   geom_histogram(binwidth = 1)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean)) # vline appears now. average speed around 10 m/s
+  geom_vline(xintercept = mean(posmo_transport$speedmean))
+
+tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
 
 ```
 
@@ -186,6 +183,13 @@ ggplot(posmo_transport, aes(x = datetime, y = speedmean))+
 
 ```
 
+**Looking at the plot above, we can see, that the mountainbiking pattern
+must have been taking place between 9 am and about 1.30 pm. Therefore we
+will look a bit closer at the exact speed in this location**
+
+```         
+```
+
 Segments visualisation
 
 ```{r}
@@ -194,8 +198,6 @@ ggplot(posmo_segments, aes(X, Y))+
   geom_path()+
   geom_point(aes(color = static))+
   coord_fixed()
-
-
 ```
 
 assign unique IDs to the segments
@@ -295,6 +297,7 @@ unique(boden_subset$BBARTT_BEZ)
 # check the data
 plot(boden_subset[,'BBARTT_BEZ'])
 plot(posmo_subset[,'datetime'])
+
 ```
 
 We could now see, that there are 23 different groundtypes to describe
@@ -313,6 +316,7 @@ with the nodes of the posmo data.
 #   tm_raster()+
 #   tmap_options(check.and.fix = TRUE)
 
+
 plot(sdf)
 plot(posmo_subset, add=TRUE)
 plot(boden_subset, add=TRUE)
@@ -329,6 +333,27 @@ of mountainbiking.
 
 ```{r}
 posmo_annotated <- st_intersection(posmo_subset, boden_subset)
+
+
+# suitable for Mountainbiking are the following groundtypes: 
+# Acker, Wiese, Weide
+# Fels
+# (Gartenanlage)
+# Geschlossener Wald
+# übrige bestockte
+# übrige humusierte
+
+mountainbike <- c("Acker, Wiese, Weide", "Fels", "geschlossener Wald",  "übrige bestockte", "übrige humusierte")
+
+posmo_annotated2 <- posmo_annotated |>
+  filter(BBARTT_BEZ %in% mountainbike) |>  
+  mutate(mountainbike = "yes")
+
+posmo_annotated2 <- posmo_annotated |>
+  select(BBARTT_BEZ, c("Acker, Wiese, Weide", "Fels", "geschlossener Wald",  "übrige bestockte", "übrige humusierte")) |>  
+  mutate(mountainbike = "yes")
+
+unique(posmo_annotated2$BBARTT_BEZ)
 ```
 
 ### Criteria III: Elevation model
@@ -357,17 +382,15 @@ add the speed. But first, it needs to be defined that we only want
 downhill movements on not paved roads for the further evaluation.
 
 That the height difference is clearly visible, we will compute the
-height difference every half minute, which equals 6 points.
+height difference every half minute, which equals 4 points.
 
 ```{r}
 posmo_annotated <- posmo_annotated |> 
   mutate(
     h_minus1 = (lag(hoehe$altivrt)-hoehe$altivrt),
     h_minus2 = (lag(hoehe$altivrt, 2)-hoehe$altivrt),
-    h_minus3 = (lag(hoehe$altivrt, 3)-hoehe$altivrt),
     h_plus1 = (lead(hoehe$altivrt) -hoehe$altivrt),
-    h_plus2 = (lead(hoehe$altivrt, 2)- hoehe$altivrt),
-    h_plus3 = (lag(hoehe$altivrt, 3)- hoehe$altivrt),
+    h_plus2 = (lead(hoehe$altivrt, 2)- hoehe$altivrt)
   )
 
 posmo_annotated <- na.omit(posmo_annotated)
