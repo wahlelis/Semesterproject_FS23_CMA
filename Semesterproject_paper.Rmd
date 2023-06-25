@@ -11,22 +11,52 @@ Length of report (approx. 15000 char (incl. spaces, incl. References list, excl.
 
 # had to install Rtools43 before i could run the code below : https://cran.rstudio.com/bin/windows/Rtools/rtools43/rtools.html
 
-devtools::install_github("benmarwick/wordcountaddin",  type = "source", dependencies = TRUE)
+# devtools::install_github("benmarwick/wordcountaddin",  type = "source", dependencies = TRUE)
+# wordcountaddin:::text_stats() # to check character count
+# install.packages("koRpus")
 
-wordcountaddin:::text_stats() # to check character count
+library(wordcountaddin)
+library(koRpus)
+
 ```
 
 ## Abstract
 
 ## Introduction
+As mountainbiking is becoming a more and more populat sport in Switzerland, new questions and issues arrive in both environmentalist regimes as well as in politics. It is deemed necessary, to find a way to not only meet the requirements of bikers, hikers but also of nature. But to be able to talk about the issues on an objective level, it is necessary to first know, where and how the mountainbikers ride their bikes. 
+In this project, we therefore aimed at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers. 
 
 ## Research Question
 
-## Materials and Methods
 
-how to isolate downhill biking pattern?
 
-things to try - setting speed threshold - compare to street map - compare to elevation model (topography) - segmentation into segments expressing different sinuosity (Laube, 2014)
+## Data and Methods
+
+### Dataset
+For our project, we used the movement trajectories that were created by ourselves when going mountainbiking. The data was created by using posmo.ch. As the sampling rate is at 10 seconds, the sampling rate is rather low. 
+To filter the movement pattern of mountainbiking we further used the following data: 
+
+- SwissAlti3D (year, auflösung, quelle)
+- MOPUBE BBF: Ground type of the canton of Bern
+
+### Preprocessing
+
+
+### Methods
+In order to filter the mountainbiking pattern, we defined three criteria with which we should be able to have a unique identifier. Those three criteria consist of the speed with which the person is moving, the groundtype on which the trajectory is laying and furthermore the steepness of the trajectory, which needs to be directed downhill. 
+Using just one or two of the criteria will always still allow for other activities. Such that a trajectory placed on grass and in forests could still also be a hiker, which also applies to the downhill movement. The Speed of a mountainbiker is hard to define, but it is also not a unique identifier for this movement pattern. 
+
+#### Speed
+
+#### Groundtype
+
+
+#### Steepness
+
+#### Combination of all criteria
+
+### Limitations
+- we should try our code on another mountainbike pattern from Lisa to find whether its applicable to all patterns. 
 
 ## Results
 
