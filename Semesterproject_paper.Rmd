@@ -27,7 +27,9 @@ As mountainbiking is becoming a more and more populat sport in Switzerland, new 
 In this project, we therefore aimed at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers. 
 
 ## Research Question
-
+In this paper we will work on the following two research questions: 
+- With which criteria can we filter a downhill oriented mountainbiking movement pattern from Posmo data? 
+- Is this combination of criteria applicable to all our data?
 
 
 ## Data and Methods
