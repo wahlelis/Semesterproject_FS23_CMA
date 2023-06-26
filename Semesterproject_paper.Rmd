@@ -23,7 +23,7 @@ library(koRpus)
 ## Abstract
 
 ## Introduction
-As mountainbiking is becoming a more and more populat sport in Switzerland, new questions and issues arrive in both environmentalist regimes as well as in politics. It is deemed necessary, to find a way to not only meet the requirements of bikers, hikers but also of nature. But to be able to talk about the issues on an objective level, it is necessary to first know, where and how the mountainbikers ride their bikes. 
+As mountainbiking is becoming a more and more popular sport in Switzerland, new questions and issues arrive in both environmentalist regimes as well as in politics. It is deemed necessary to find a way to not only meet the requirements of bikers and hikers but also of nature. But to be able to talk about the issues on an objective level, it is necessary to first know, where and how the mountainbikers ride their bikes. 
 In this project, we therefore aimed at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers. 
 
 ## Research Question

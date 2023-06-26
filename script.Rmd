@@ -24,7 +24,10 @@ library(SimilarityMeasures)
 library(RColorBrewer)
 library(tmap)
 
+
 mycolors4 <- brewer.pal(4, "BrBG")
+# BrBG palette: #a6611a, #dfc27d, #80cdc1, #018571
+theme_set(theme_light())
 ```
 
 ### Data
@@ -113,38 +116,45 @@ posmo_transport <- posmo_transport |>
     s_minus2 = d_minus2/-as.numeric(t_minus2)
   )
 
-# calculate mean speed within window of two neighboring points. not exactly a temporal window because the sampling time varies slightly
+# calculate mean speed within window of two neighboring points. not exactly a temporal window because the sampling time varies slightly. mean in m/s and km/h.
 
 posmo_transport <- posmo_transport |>
   rowwise() |>  # so the mean per row is computed
   mutate(
-    speedmean = mean(c(s_plus1, s_plus2, s_minus1, s_minus2), na.rm=TRUE)
+    speedmean_ms = mean(c(s_plus1, s_plus2, s_minus1, s_minus2), na.rm=TRUE)
   ) |> 
-  ungroup() # otherwise each row would represent a group, we don't want that
+  ungroup() |> # otherwise each row would represent a group, we don't want that.
+  # now  we calculated the mean speed in m/s.
+  # calculate mean speed in km per hour. 1 m/s = 3.6 km/h
+  mutate(speedmean_kmh = speedmean_ms * 3.6)
 
-# somehow returns incorrect mean values
-
-
-# explore what we just did
-ggplot(posmo_transport, aes(speedmean))+
-  geom_histogram(binwidth = 1)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean, na.rm=TRUE)) #no vline because of nan values
-
-range(posmo_transport$speedmean, na.rm=TRUE)
-
-posmo_transport$speedmean[1:50] # how did i get inf values? something divided by 0 returns inf. 0/0 returns NaN
-pt <- is.finite(posmo_transport$speedmean) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
-length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
 
 ```
 
-Aurelia 19.06.2023
+
+visualisation of average speed
 
 ```{r}
+# explore what we just did
+ggplot(posmo_transport, aes(speedmean_ms))+
+  geom_histogram(binwidth = 1)+
+  geom_vline(xintercept = mean(posmo_transport$speedmean_ms, na.rm=TRUE)) # why is there no vline?
+
+ggplot(posmo_transport, aes(speedmean_kmh))+
+  geom_histogram(binwidth = 1)+
+  geom_vline(xintercept = mean(posmo_transport$speedmean_kmh, na.rm=TRUE)) # still no vline?
+
+
+range(posmo_transport$speedmean_ms, na.rm=TRUE)
+
+posmo_transport$speedmean_ms[1:50] # how did i get inf and NaN values? something divided by 0 returns inf. 0/0 returns NaN. no vline because of nan values
+pt <- is.finite(posmo_transport$speedmean_ms) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
+length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
+
 # plot points with inf and non numeric value. let's see which points are affected.
 
 inf_filter <- posmo_transport |> 
-  filter(!is.finite(speedmean))
+  filter(!is.finite(speedmean_ms))
 
 tmap_mode("view")
 tm_shape(posmo_transport)+
@@ -156,48 +166,58 @@ tm_shape(posmo_transport)+
 
 # new dataset to work with segments
 posmo_segments <- posmo_transport |> 
-    mutate(static = !is.finite(posmo_transport$speedmean))
+    mutate(static = !is.finite(posmo_transport$speedmean_ms))
 
 # "clean" dataset for visualisation of moving point parameter profile
 posmo_transport <- posmo_transport |>
-  filter(is.finite(speedmean))
+  filter(is.finite(speedmean_ms))
 
-ggplot(posmo_transport, aes(speedmean))+
+ggplot(posmo_transport, aes(speedmean_ms))+
   geom_histogram(binwidth = 1)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean))
-
-tm_shape(posmo_transport)+
-  tm_dots("transport_mode")
+  geom_vline(xintercept = mean(posmo_transport$speedmean_ms)) # vline is visible, average speed on that day was around 10 m/s
 
 ```
 
-Aurelia 20.06.2023 moving parameter (MP) profile for speed (Dodge et
+moving parameter (MP) profile for speed (Dodge et
 al., 2009)
 
 ```{r}
 head(posmo_transport)
 
-ggplot(posmo_transport, aes(x = datetime, y = speedmean))+
+ggplot(posmo_transport, aes(x = datetime, y = speedmean_kmh))+
   geom_line()+
-  geom_hline(yintercept = mean(posmo_transport$speedmean))
+  geom_point(col ="#dfc27d", alpha = .2)
+
 
 ```
 
 **Looking at the plot above, we can see, that the mountainbiking pattern
 must have been taking place between 9 am and about 1.30 pm. Therefore we
-will look a bit closer at the exact speed in this location**
+will look a bit closer at the exact speed during this time**
 
-```         
-```
-
-Segments visualisation
+from the speed profile plot i suppose that the biking pattern starts
+around 9 o'clock and ends around half past one. to set a reasonable
+speed range or threshold, i want to figure out the average speed of a
+bike descent. i try to isolate the bike segments.
 
 ```{r}
 
+```
+
+
+Segments visualisation
+where are the static points in the allmiried area? i see static points at the talstation, bergstation and halfway on the trail. (breaks to wait for each other, slow movements waiting for the funiculare)
+```{r}
+
 ggplot(posmo_segments, aes(X, Y))+
-  geom_path()+
   geom_point(aes(color = static))+
   coord_fixed()
+
+tmap_mode("view")
+tm_shape(posmo_transport)+
+  tm_dots()+
+  tm_shape(posmo_segments)+
+  tm_dots("static")
 ```
 
 assign unique IDs to the segments
@@ -212,7 +232,6 @@ rle_id <- function(vec) {
 
 posmo_segments <- posmo_segments |> 
   mutate(ID=rle_id(static))
-
 
 ```
 
@@ -233,19 +252,43 @@ tm_shape(posmo_segments)+
   tmap_options(max.categories = 37)
 
 # MP profile
-ggplot(posmo_segments, aes(x = datetime, y = speedmean))+
-  geom_line(aes(color = ID))+
-  geom_hline(yintercept = mean(posmo_transport$speedmean))
+ggplot(posmo_segments, aes(x = datetime, y = speedmean_kmh))+
+  geom_line(aes(color = ID))
+
+
 ```
 
-from the speed profile plot i suppose that the biking pattern starts
-around 9 o'clock and ends around half past one. to set a reasonable
-speed range or threshold, i want to figure out the average speed of a
-bike descent. i try to isolate the bike segments.
-
+looks like the segments 12, 14, 16, 18, 20, 22, 24, 26 are mountainbiking segments
+selecting the segments between 9:00 and 13:00
 ```{r}
+posmo_threshold <- posmo_segments |> 
+  filter(ID == c(12, 14, 16, 18, 20, 22, 24, 26))
 
+ggplot(posmo_threshold, aes(y=speedmean_kmh))+
+  geom_boxplot()
+
+summary(posmo_threshold$speedmean_kmh)
+summary(posmo_threshold$speedmean_ms)
+sd(posmo_threshold$speedmean_kmh)
 ```
+speed summary for kmh
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+ 0.08902  2.85510  8.26566  7.80428 10.30834 26.95490 
+
+speed summary for ms
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.02473 0.79308 2.29602 2.16786 2.86343 7.48747 
+
+according to the speed statistics i will choose the range of the 1st and 3rd quartile kmh (2.855 to 10.308) as the speed defining mountainbiking.
+
+rename rows of points within the speed range with mountainbiking.
+```{r}
+# posmo_transport |>
+#   mutate(transport_mode = mtb =
+#   filter(speedmean_kmh > 2.85510 | speedmean_kmh < 10.30834))
+```
+
+
 
 ### Criteria II: Ground cover
 
