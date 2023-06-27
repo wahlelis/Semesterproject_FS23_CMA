@@ -7,7 +7,7 @@ output: html_document
 
 Length of report (approx. 15000 char (incl. spaces, incl. References list, excl. Code listing), 20000 char max)
 
-```{r}
+```{r setup, include=FALSE}
 
 # had to install Rtools43 before i could run the code below : https://cran.rstudio.com/bin/windows/Rtools/rtools43/rtools.html
 
@@ -23,8 +23,10 @@ library(koRpus)
 ## Abstract
 
 ## Introduction
-As mountainbiking is becoming a more and more popular sport in Switzerland, new questions and issues arrive in both environmentalist regimes as well as in politics. It is deemed necessary to find a way to not only meet the requirements of bikers and hikers but also of nature. But to be able to talk about the issues on an objective level, it is necessary to first know, where and how the mountainbikers ride their bikes. 
-In this project, we therefore aimed at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers. 
+As mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), both environmental and policy issues arise (Pröbstl-Haider et al., 2018). It is deemed necessary to find a way to not only meet the requirements of bikers and hikers but also of nature. In order to be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
+In this project, we aim at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers.
+
+In this project, we aim at defining criteria that indicate mountainbiking movement patterns, and try to provide information about the characteristics of mountainbiking. 
 
 ## Research Question
 In this paper we will work on the following two research questions: 
@@ -33,6 +35,11 @@ In this paper we will work on the following two research questions:
 
 
 ## Data and Methods
+
+The movement Data is provided by Lisa Wahlen's gps-tracking App *posmo*. Lisa completed 6 mountainbiking tours in the period from the 4th of May to the 18th of May 2023. All tours except for one were done in Switzerland in the areas of Allmiried (Diemtigtal), Valbirse and Solothurn. One tour was tracked in Germany, near Todtnau. 
+
+
+For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). 
 
 ### Dataset
 For our project, we used the movement trajectories that were created by ourselves when going mountainbiking. The data was created by using posmo.ch. As the sampling rate is at 10 seconds, the sampling rate is rather low. 
@@ -69,6 +76,8 @@ Using just one or two of the criteria will always still allow for other activiti
 
 APA 7th edition instructions: <https://libguides.jcu.edu.au/apa/books#s-lg-box-21191622>
 
+Amt für Geoinformation des Kantons Bern. (2023). *Amtliche Vermessung vereinfacht* [Map].  2023https://www.agi.dij.be.ch/de/start/geoportal/geodaten/detail.html?type=geoproduct&code=MOPUBE
+
 Laube, P. (2014). *Computational Movement Analysis*. Springer Cham. <https://doi.org/10.1007/978-3-319-10268-9>
 
 Dodge, S., Laube, P., & Weibel, R. (2012). Movement similarity assessment using symbolic representation of trajectories. *International Journal of Geographical Information Science, 26*(9), 1563-1588. https://doi.org/10.1080/13658816.2011.630003
@@ -79,3 +88,10 @@ paring the similarity of movement characteristics of different types of moving o
 
 Laube, P. & Purves, R.(2011) How fast is a cow? Cross-scale Analysis of Movement Data, *Transactions in GIS, 15*(3), 401–418, John Wiley & Sons Ltd, DOI:
 10.1111/j.1467-9671.2011.01256.x
+
+Fischer, A., Lamprecht, M., & Bürgi, R. (2021). *Mountainbiken in der
+Schweiz 2020: Auswertung Mountainbikeland-Befragung 2019
+und Sekundäranalyse von «Sport Schweiz 2020»*. Bundesamt für Strassen ASTRA und Stiftung
+SchweizMobil. https://www.astra.admin.ch/astra/de/home/themen/langsamverkehr/materialien.html
+
+Pröbstl-Haider, U., Lund-Durlacher, D., Antonschmidt, H. & Hödl, C. (2018). Mountain bike tourism in Austria and the Alpine region – towards a sustainable model for multi-stakeholder product development. *Journal of Sustainable Tourism, 26*(4), 567-582. https://doi.org/10.1080/09669582.2017.1361428
