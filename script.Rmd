@@ -264,6 +264,9 @@ selecting the segments between 9:00 and 13:00
 posmo_threshold <- posmo_segments |> 
   filter(ID == c(12, 14, 16, 18, 20, 22, 24, 26))
 
+# covers the time range between 08:42 - 13:13 which corresponds to biking
+# figure out which speed range makes sense to define mountainbiking
+
 ggplot(posmo_threshold, aes(y=speedmean_kmh))+
   geom_boxplot()
 
@@ -281,13 +284,44 @@ speed summary for ms
 
 according to the speed statistics i will choose the range of the 1st and 3rd quartile kmh (2.855 to 10.308) as the speed defining mountainbiking.
 
-rename rows of points within the speed range with mountainbiking.
+rename / overwrite rows of points within the speed range of mountainbiking.
 ```{r}
-# posmo_transport |>
-#   mutate(transport_mode = mtb =
-#   filter(speedmean_kmh > 2.85510 | speedmean_kmh < 10.30834))
-```
 
+# posmo_transport$transport_mode[posmo_transport$speedmean_kmh >= 2.855 & posmo_transport$speedmean_kmh <= 10.308] <- "mtb"
+# 
+# tm_shape(posmo_transport)+
+#   tm_dots("transport_mode")
+
+# zooming into the allmiried area we can see that the cable car is labelled as mtb. the speed range therefore applies mainly to the cable car. let's see if by adjusting the range to include lower values as the set threshold changes anything.
+
+# posmo_transport$transport_mode[posmo_transport$speedmean_kmh <= 10.308] <- "mtb"
+# 
+# tm_shape(posmo_transport)+
+#   tm_dots("transport_mode")
+
+# a few more points are included, a great deal of the downhill parts are still not covered though. adjust upper threshold, choose max value of statistics output above. exclude range of cable car
+
+posmo_transport$transport_mode[posmo_transport$speedmean_kmh <= 26.95490 & !(posmo_transport$speedmean_kmh >= 2.855 & posmo_transport$speedmean_kmh <= 10.308)] <- "mtb"
+
+tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
+
+# zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car.
+
+ggplot(posmo_threshold, aes(x = datetime, y = speedmean_kmh))+
+  geom_line()+
+  geom_point(col ="#dfc27d", alpha = .7)
+
+```
+choosing the average speeds including the full range of the mountainbiking speeds did not exclude the cable car. taking a closer look a the moving parameter profile of the mountainbike segments we see that the cable car travels probably at an average of 8kmh. since average walking speed 
+
+now i have to make it compatible with the other dataset with the ground cover. there, mountainbiking is labelled in a separate column with the criteria "yes".
+```{r}
+posmo_transport <- posmo_transport |> 
+  mutate(mountainbike = transport_mode =="mtb")
+
+posmo_transport$mountainbike[posmo_transport$mountainbike == TRUE] <- "yes"
+```
 
 
 ### Criteria II: Ground cover
