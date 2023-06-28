@@ -18,6 +18,7 @@ Length of report (approx. 15000 char (incl. spaces, incl. References list, excl.
 library(wordcountaddin)
 library(koRpus)
 
+wordcountaddin:::text_stats()
 ```
 
 ## Abstract
@@ -28,6 +29,8 @@ In this project, we aim at filtering mountainbiking movement patterns in crowdso
 
 In this project, we aim at defining criteria that indicate mountainbiking movement patterns, and try to provide information about the characteristics of mountainbiking. 
 
+what are characteristics of mountainbiking? -> downhill (not uphill), in vegetated areas / trails (not on streets), within a certain speed range. 
+
 ## Research Question
 In this paper we will work on the following two research questions: 
 - With which criteria can we filter a downhill oriented mountainbiking movement pattern from Posmo data? 
@@ -36,27 +39,46 @@ In this paper we will work on the following two research questions:
 
 ## Data and Methods
 
-The movement Data is provided by Lisa Wahlen's gps-tracking App *posmo*. Lisa completed 6 mountainbiking tours in the period from the 4th of May to the 18th of May 2023. All tours except for one were done in Switzerland in the areas of Allmiried (Diemtigtal), Valbirse and Solothurn. One tour was tracked in Germany, near Todtnau. 
+### Datasets
 
+For our project, we used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. Lisa completed 6 mountainbiking tours in the period from the 4th of May to the 18th of May 2023. All tours except for one were done in Switzerland in the areas of Allmiried (Diemtigtal), Valbirse and Solothurn. One tour was tracked in Germany, near Todtnau. 
 
-For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). 
+For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2.
 
-### Dataset
-For our project, we used the movement trajectories that were created by ourselves when going mountainbiking. The data was created by using posmo.ch. As the sampling rate is at 10 seconds, the sampling rate is rather low. 
-To filter the movement pattern of mountainbiking we further used the following data: 
+We chose the tour Lisa made on the 18th of May in Allmiried to define the characteristics of the biking movement pattern and tried to apply the criteria to the tours of XXX and YYY for verification. The Allmiried trajectory also included the car ride from Solothurn to the biking location and back. 
+
+**To filter the movement pattern of mountainbiking we further used the following data: 
 
 - posmo trajectories: sampling rate, 10 s
 - SwissAlti3D: This elevation data is provided by the government of switzerland in a resolution of 0.5 m. It is provided in grids of 1 km2 for all of Switzerland as bot a .tif file and a .xyz file. For the project here, we used the .tif files.
-- MOPUBE BBF: Ground type of the canton of Bern
+- MOPUBE BBF: Ground type of the canton of Bern**
 
 ### Preprocessing
 
+The Allmiried table was first converted to a georeferenced sf feature. A temporal outlier recorded the night before the trip started was removed, as well as unnecessary or redundant information about Lisa's user ID, the weekday, or the place name.
+
+Preprocessing Bodenbedeckung?
+
+Preprocessing swissALTI3D?
 
 ### Methods
 In order to filter the mountainbiking pattern, we defined three criteria with which we should be able to have a unique identifier. Those three criteria consist of the speed with which the person is moving, the groundtype on which the trajectory is laying and furthermore the steepness of the trajectory, which needs to be directed downhill. 
 Using just one or two of the criteria will always still allow for other activities. Such that a trajectory placed on grass and in forests could still also be a hiker, which also applies to the downhill movement. The Speed of a mountainbiker is hard to define, but it is also not a unique identifier for this movement pattern. 
 
 #### Speed
+
+A first visualisation of transport modes of the data revealed that most of the mountainbiking part of the trajectory was labelled as "car" in the by the posmo app. 
+
+For every fix of the trajectory we calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference of the two points before and after the fix, respectively.
+
+Movement parameter profile (Dodge et al., 2009). 
+
+Segmentation based on static points, where it is assumed that the transport mode changed. the approach proposed by Laube & Purves (2011) was used. where the average speed resulted in non finite values dividing distance values by 0 time difference.
+
+select the segments of biking by 
+
+defining threshold: the values of the second and the third quartiles of the speed distribution were excluded from 
+
 
 #### Groundtype
 
@@ -78,20 +100,27 @@ APA 7th edition instructions: <https://libguides.jcu.edu.au/apa/books#s-lg-box-2
 
 Amt für Geoinformation des Kantons Bern. (2023). *Amtliche Vermessung vereinfacht* [Map].  2023https://www.agi.dij.be.ch/de/start/geoportal/geodaten/detail.html?type=geoproduct&code=MOPUBE
 
-Laube, P. (2014). *Computational Movement Analysis*. Springer Cham. <https://doi.org/10.1007/978-3-319-10268-9>
-
-Dodge, S., Laube, P., & Weibel, R. (2012). Movement similarity assessment using symbolic representation of trajectories. *International Journal of Geographical Information Science, 26*(9), 1563-1588. https://doi.org/10.1080/13658816.2011.630003
+Bundesamt für Landestopografie swisstopo. (2022). *swissALTI3D: das hochaufgelöste Terrainmodell der Schweiz* [Map]. https://www.swisstopo.admin.ch/de/geodata/height/alti3d.html
 
 Dodge, S., Weibel, R., & Forootan, E. (2009). Revealing the physics of movement: Com-
 paring the similarity of movement characteristics of different types of moving objects.
 *Computers, Environment and Urban Systems, 33*(6), 419–434. https://doi.org/10.1016/j.compenvurbsys.2009.07.008
-
-Laube, P. & Purves, R.(2011) How fast is a cow? Cross-scale Analysis of Movement Data, *Transactions in GIS, 15*(3), 401–418, John Wiley & Sons Ltd, DOI:
-10.1111/j.1467-9671.2011.01256.x
 
 Fischer, A., Lamprecht, M., & Bürgi, R. (2021). *Mountainbiken in der
 Schweiz 2020: Auswertung Mountainbikeland-Befragung 2019
 und Sekundäranalyse von «Sport Schweiz 2020»*. Bundesamt für Strassen ASTRA und Stiftung
 SchweizMobil. https://www.astra.admin.ch/astra/de/home/themen/langsamverkehr/materialien.html
 
+Genossenschaft Posmo Schweiz. (2022). *Posmo Project App - Tracking für Gruppen*. https://posmo.coop/produkte/posmo-project-tracking-fuer-gruppen
+
+Laube, P. (2014). *Computational Movement Analysis*. Springer Cham. <https://doi.org/10.1007/978-3-319-10268-9>
+
+Laube, P. & Purves, R.(2011) How fast is a cow? Cross-scale Analysis of Movement Data, *Transactions in GIS, 15*(3), 401–418, John Wiley & Sons Ltd, DOI:
+10.1111/j.1467-9671.2011.01256.x
+
+***Dodge, S., Laube, P., & Weibel, R. (2012). Movement similarity assessment using symbolic representation of trajectories. *International Journal of Geographical Information Science, 26*(9), 1563-1588. https://doi.org/10.1080/13658816.2011.630003***
+
+
 Pröbstl-Haider, U., Lund-Durlacher, D., Antonschmidt, H. & Hödl, C. (2018). Mountain bike tourism in Austria and the Alpine region – towards a sustainable model for multi-stakeholder product development. *Journal of Sustainable Tourism, 26*(4), 567-582. https://doi.org/10.1080/09669582.2017.1361428
+
+

@@ -193,10 +193,7 @@ ggplot(posmo_transport, aes(x = datetime, y = speedmean_kmh))+
 
 **Looking at the plot above, we can see, that the mountainbiking pattern
 must have been taking place between 9 am and about 1.30 pm. Therefore we
-will look a bit closer at the exact speed during this time**
-
-from the speed profile plot i suppose that the biking pattern starts
-around 9 o'clock and ends around half past one. to set a reasonable
+will look a bit closer at the exact speed during this time**. to set a reasonable
 speed range or threshold, i want to figure out the average speed of a
 bike descent. i try to isolate the bike segments.
 
@@ -306,7 +303,7 @@ posmo_transport$transport_mode[posmo_transport$speedmean_kmh <= 26.95490 & !(pos
 tm_shape(posmo_transport)+
   tm_dots("transport_mode")
 
-# zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car.
+# zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car. otherwise, the result represents most of the downhill mountainbiking.
 
 ggplot(posmo_threshold, aes(x = datetime, y = speedmean_kmh))+
   geom_line()+
