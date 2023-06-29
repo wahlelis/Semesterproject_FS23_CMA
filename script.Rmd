@@ -49,6 +49,11 @@ posmo_coordinates <- st_coordinates(posmo)
 
 posmo <- cbind(posmo, posmo_coordinates)
 
+head(posmo) # there is an outlier. one point was recorded the night before the tour started.
+# remove outlier
+posmo <- posmo |> 
+  slice(-1)
+
 posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
 posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
 ```
@@ -88,13 +93,6 @@ Speed threshold compute movement parameter speed for every fix and a
 profile of the movement parameter. (Dodge et al., 2009)
 
 ```{r}
-head(posmo_transport) # there is an outlier. one point was recorded the night before the tour started.
-
-# remove outlier
-
-posmo_transport <- posmo_transport |> 
-  slice(-1)
-
 # calculate distance between points d_plusx for distance
 # calculate time between points
 # calculate speed
@@ -163,10 +161,11 @@ tm_shape(posmo_transport)+
   tm_dots("transport_mode")
 
 # of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
+# the inf/NaN/NA points are located where little movement is plausible (at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn). 
 
-# new dataset to work with segments
+# new dataset to create segmentation
 posmo_segments <- posmo_transport |> 
-    mutate(static = !is.finite(posmo_transport$speedmean_ms))
+    mutate(static = !is.finite(posmo_transport$speedmean_ms)) # returns TRUE for static points
 
 # "clean" dataset for visualisation of moving point parameter profile
 posmo_transport <- posmo_transport |>
@@ -176,6 +175,11 @@ ggplot(posmo_transport, aes(speedmean_ms))+
   geom_histogram(binwidth = 1)+
   geom_vline(xintercept = mean(posmo_transport$speedmean_ms)) # vline is visible, average speed on that day was around 10 m/s
 
+ggplot(posmo_transport, aes(speedmean_kmh))+
+  geom_histogram(binwidth = 1)+
+  geom_vline(xintercept = mean(posmo_transport$speedmean_kmh)) # vline is visible, average speed on that day was around 37.33548 km/h
+
+mean(posmo_transport$speedmean_kmh)
 ```
 
 moving parameter (MP) profile for speed (Dodge et
@@ -186,8 +190,10 @@ head(posmo_transport)
 
 ggplot(posmo_transport, aes(x = datetime, y = speedmean_kmh))+
   geom_line()+
-  geom_point(col ="#dfc27d", alpha = .2)
-
+  geom_point(col ="#dfc27d", alpha = .2)+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile for the average speed")
 
 ```
 
@@ -197,23 +203,11 @@ will look a bit closer at the exact speed during this time**. to set a reasonabl
 speed range or threshold, i want to figure out the average speed of a
 bike descent. i try to isolate the bike segments.
 
-```{r}
-
-```
-
-
 Segments visualisation
 where are the static points in the allmiried area? i see static points at the talstation, bergstation and halfway on the trail. (breaks to wait for each other, slow movements waiting for the funiculare)
 ```{r}
-
-ggplot(posmo_segments, aes(X, Y))+
-  geom_point(aes(color = static))+
-  coord_fixed()
-
 tmap_mode("view")
-tm_shape(posmo_transport)+
-  tm_dots()+
-  tm_shape(posmo_segments)+
+tm_shape(posmo_segments)+
   tm_dots("static")
 ```
 
@@ -250,7 +244,10 @@ tm_shape(posmo_segments)+
 
 # MP profile
 ggplot(posmo_segments, aes(x = datetime, y = speedmean_kmh))+
-  geom_line(aes(color = ID))
+  geom_line(aes(color = ID))+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile of average speed", subtitle = "for moving segments")
 
 
 ```
