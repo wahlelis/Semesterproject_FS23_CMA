@@ -10,6 +10,21 @@ editor_options:
 
 ### Libraries
 
+```{r}
+
+# had to install Rtools43 before i could run the code below : https://cran.rstudio.com/bin/windows/Rtools/rtools43/rtools.html
+
+# devtools::install_github("benmarwick/wordcountaddin",  type = "source", dependencies = TRUE)
+# wordcountaddin:::text_stats() # to check character count
+# install.packages("koRpus")
+
+library(wordcountaddin)
+library(koRpus)
+
+wordcountaddin:::text_stats()
+```
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 

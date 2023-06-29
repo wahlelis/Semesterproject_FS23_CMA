@@ -7,19 +7,63 @@ output: html_document
 
 Length of report (approx. 15000 char (incl. spaces, incl. References list, excl. Code listing), 20000 char max)
 
-```{r setup, include=FALSE}
-
-# had to install Rtools43 before i could run the code below : https://cran.rstudio.com/bin/windows/Rtools/rtools43/rtools.html
-
-# devtools::install_github("benmarwick/wordcountaddin",  type = "source", dependencies = TRUE)
-# wordcountaddin:::text_stats() # to check character count
-# install.packages("koRpus")
-
+```{r include = FALSE}
+# knitr::opts_chunk$set(include = FALSE)
 library(wordcountaddin)
 library(koRpus)
 
 wordcountaddin:::text_stats()
 ```
+
+```{r include=FALSE}
+# knitr::opts_chunk$set(echo = TRUE)
+
+
+library(readr) # to import tabular data (e.g. csv)
+library(dplyr) # to manipulate (tabular) data
+library(ggplot2) # to visualize data
+library(sf) # to handle spatial vector data
+library(terra) # To handle raster data
+library(lubridate) # To handle dates and times
+library(SimilarityMeasures)
+library(RColorBrewer)
+library(tmap)
+
+
+mycolors4 <- brewer.pal(4, "BrBG")
+# BrBG palette: #a6611a, #dfc27d, #80cdc1, #018571
+theme_set(theme_light())
+tmap_mode("view")
+```
+
+```{r include=FALSE}
+posmo <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
+
+posmo <- st_as_sf(posmo, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+head(posmo)
+
+posmo_coordinates <- st_coordinates(posmo)
+
+posmo <- cbind(posmo, posmo_coordinates)
+
+head(posmo) # there is an outlier. one point was recorded the night before the tour started.
+# remove outlier
+posmo <- posmo |> 
+  slice(-1)
+
+posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
+posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
+```
+
+```{r echo=FALSE}
+# overview transport mode
+
+tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
+```
+
 
 ## Abstract
 
