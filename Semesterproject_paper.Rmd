@@ -78,9 +78,9 @@ In this paper we will work on the following two research questions:
 
 ### Datasets
 
-For our project, we used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. Lisa completed 6 mountainbiking tours in the period from the 4th of May to the 18th of May 2023. All tours except for one were done in Switzerland in the areas of Allmiried (Diemtigtal), Valbirse and Solothurn. One tour was tracked in Germany, near Todtnau. 
+For our project, we used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. Lisa completed 6 mountainbiking tours in the period from the 4th of May to the 18th of May 2023. All tours except for one were done in Switzerland in the areas of Allmiried (Diemtigtal), Wierihorn, Valbirse and Solothurn. One tour was tracked in Germany, near Todtnau. 
 
-For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2.
+For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the mountainbike trajectories. 
 
 We chose the tour Lisa made on the 18th of May in Allmiried to define the characteristics of the biking movement pattern and tried to apply the criteria to the tours of XXX and YYY for verification. The Allmiried trajectory also included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that most of the mountainbiking part of the trajectory was labelled as "car" in by the posmo app. 
 
@@ -97,7 +97,7 @@ tm_shape(posmo_transport)+
 
 - posmo trajectories: sampling rate, 10 s
 - SwissAlti3D: This elevation data is provided by the government of switzerland in a resolution of 0.5 m. It is provided in grids of 1 km2 for all of Switzerland as bot a .tif file and a .xyz file. For the project here, we used the .tif files.
-- MOPUBE BBF: Ground type of the canton of Bern**
+- MOPUBE BBF: Ground type of the canton of Bern. We use a polygon extraction. 23 ground cover types**
 
 ### Preprocessing
 
@@ -112,6 +112,43 @@ In order to filter the mountainbiking pattern, we defined three criteria with wh
 Using just one or two of the criteria will always still allow for other activities. Such that a trajectory placed on grass and in forests could still also be a hiker, which also applies to the downhill movement. The Speed of a mountainbiker is hard to define, but it is also not a unique identifier for this movement pattern. 
 
 #### Speed
+
+```{r include=FALSE}
+# calculate distance between points d_plusx for distance
+# calculate time between points
+# calculate speed
+# calculate average speed between four fixes
+
+posmo_transport <- posmo_transport |> 
+  mutate(
+    d_plus1 = sqrt((lead(X)-X)^2 + (lead(Y)-Y)^2),
+    d_plus2 = sqrt((lead(X,2)-X)^2 + (lead(Y,2)-Y)^2), # new offset of 2 in function lead()
+    d_minus1 = sqrt((lag(X)-X)^2 + (lag(Y)-Y)^2),
+    d_minus2 = sqrt((lag(X,2)-X)^2 + (lag(Y,2)-Y)^2),
+    t_plus1 = difftime(lead(datetime), datetime),
+    t_plus2 = difftime(lead(datetime, 2), datetime),
+    t_minus1 = difftime(lag(datetime), datetime),
+    t_minus2 = difftime(lag(datetime, 2), datetime),
+    s_plus1 = d_plus1/as.numeric(t_plus1), # s for speed [m/s]
+    s_plus2 = d_plus2/as.numeric(t_plus2),
+    s_minus1 = d_minus1/-as.numeric(t_minus1),
+    s_minus2 = d_minus2/-as.numeric(t_minus2)
+  )
+
+# calculate mean speed within window of two neighboring points. not exactly a temporal window because the sampling time varies slightly. mean in m/s and km/h.
+
+posmo_transport <- posmo_transport |>
+  rowwise() |>  # so the mean per row is computed
+  mutate(
+    speedmean_ms = mean(c(s_plus1, s_plus2, s_minus1, s_minus2), na.rm=TRUE)
+  ) |> 
+  ungroup() |> # otherwise each row would represent a group, we don't want that.
+  # now  we calculated the mean speed in m/s.
+  # calculate mean speed in km per hour. 1 m/s = 3.6 km/h
+  mutate(speedmean_kmh = speedmean_ms * 3.6)
+
+```
+
 
 For every fix on the trajectory we calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference between the fix and the two points before and after, respectively. Fixes where the speed calculation could not be completed because either the distance or the time between two points was 0, were regarded as static. 80 points were labelled as static, and used for segmentation of the trajectory. They were located in places on the trajectory where little movement or a change in transport mode is plausible (e.g. at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn).
 

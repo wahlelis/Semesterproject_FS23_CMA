@@ -262,7 +262,7 @@ ggplot(posmo_segments, aes(x = datetime, y = speedmean_kmh))+
   geom_line(aes(color = ID))+
   ylab("average speed [km/h]")+
   xlab("time")+
-  labs(title = "Movement parameter profile of average speed", subtitle = "for moving segments")
+  labs(title = "Movement parameter profile of average speed", subtitle = "for moving segments of Allmiried tour")
 
 
 ```
@@ -272,6 +272,11 @@ selecting the segments between 9:00 and 13:00
 ```{r}
 posmo_threshold <- posmo_segments |> 
   filter(ID == c(12, 14, 16, 18, 20, 22, 24, 26))
+
+ggplot(posmo_threshold, aes(X, Y))+
+  geom_point(aes(color=ID))+
+  geom_path(aes(color=ID))+
+  coord_fixed()
 
 # covers the time range between 08:42 - 13:13 which corresponds to biking
 # figure out which speed range makes sense to define mountainbiking
@@ -329,7 +334,12 @@ now i have to make it compatible with the other dataset with the ground cover. t
 posmo_transport <- posmo_transport |> 
   mutate(mountainbike = transport_mode =="mtb")
 
+length(posmo_transport$mountainbike[posmo_transport$mountainbike == TRUE]) # 605 true
+
 posmo_transport$mountainbike[posmo_transport$mountainbike == TRUE] <- "yes"
+
+tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
 ```
 
 
@@ -341,14 +351,14 @@ a classification according to the DEM and to ground cover.
 ```{r}
 #csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html 
 # all_tif <- read.csv("data/alti3D_all.csv", header = FALSE)
-
-# terra help https://rspatial.org/spatial-terra/8-rastermanip.html 
-
-#download all files to an empty folder
+# 
+# # terra help https://rspatial.org/spatial-terra/8-rastermanip.html 
+# 
+# # download all files to an empty folder
 # for (fi in all_tif$V1){
-  # outfile <- basename(fi)
-  # print(outfile)
-  # download.file(fi, paste0("data/alti3d_05/", outfile),mode = "wb") # mode (binary) very important
+# outfile <- basename(fi)
+# print(outfile)
+# download.file(fi, paste0("data/alti3d_05/", outfile),mode = "wb") # mode (binary) very important
 # }
 
 # list takes all files with .tif from a folder
@@ -365,19 +375,25 @@ plot(sdf)
 ```
 
 ```{r}
-bodenbedeckung <- read_sf("data/MOPUBE/data/MOPUBE_BBF_ausschnitt.shp")
+bodenbedeckung <- read_sf("data/MOPUBE_ausschnitt/data/MOPUBE_BBF_ausschnitt.shp")
+head(bodenbedeckung)
 
 # remove all columns that are not required
 bodenbedeckung <- bodenbedeckung[,-4:-13]
 
-#Clip the Posmo Data to the extent of the groundtype layer
-boden_subset <- bodenbedeckung[posmo,]
-posmo_subset <- posmo[bodenbedeckung, ]
+ggplot(bodenbedeckung)+
+  geom_sf(aes(fill=BBARTT_BEZ))+
+  theme(legend.position = "none")+
+  coord_sf(datum = 2056) 
+
+#Clip the Posmo Data to the extent of the groundtype layer. 
+boden_subset <- bodenbedeckung[posmo,] # posmo daten 
+posmo_subset <- posmo[bodenbedeckung, ] # nur noch polygone angezeigt, die auf der trajectory liegen
 
 # st_is_valid(posmo_cropped, reason=TRUE)
 # st_make_valid(posmo_cropped)
 
-# alle Werte im Layer Bodenbedekcung anzeigen, damit dann die passenden für das Mountainbiken definiert werden können.
+# alle Werte im Layer Bodenbedeckung anzeigen, damit dann die passenden für das Mountainbiken definiert werden können.
 unique(boden_subset$BBARTT_BEZ)
 
 # check the data
@@ -429,18 +445,24 @@ posmo_annotated <- st_intersection(posmo_subset, boden_subset)
 # übrige bestockte
 # übrige humusierte
 
-mountainbike <- c("Acker, Wiese, Weide", "Fels", "geschlossener Wald",  "übrige bestockte", "übrige humusierte")
+mountainbike <- c("Acker, Wiese, Weide", "geschlossener Wald", "Fels", "übrige bestockte", "übrige humusierte")
 
 posmo_annotated2 <- posmo_annotated |>
   filter(BBARTT_BEZ %in% mountainbike) |>  
-  mutate(mountainbike = "yes")
+  mutate(mountainbike_gc = "yes") # mountainbike ground cover
 
-posmo_annotated2 <- posmo_annotated |>
-  select(BBARTT_BEZ, c("Acker, Wiese, Weide", "Fels", "geschlossener Wald",  "übrige bestockte", "übrige humusierte")) |>  
-  mutate(mountainbike = "yes")
+# posmo_annotated2 <- posmo_annotated |>
+#   select(BBARTT_BEZ, c("Acker, Wiese, Weide", "Fels", "geschlossener Wald",  "übrige bestockte", "übrige humusierte")) |>
+#   mutate(mountainbike = "yes")
 
 unique(posmo_annotated2$BBARTT_BEZ)
 ```
+
+```{r}
+tm_shape(posmo_annotated2)+
+  tm_dots("BBARTT_BEZ")
+```
+
 
 ### Criteria III: Elevation model
 
@@ -483,11 +505,13 @@ posmo_annotated <- na.omit(posmo_annotated)
 
 posmo_annotated <- posmo_annotated |>
   rowwise() |>
-  mutate(elevmean = mean(c(h_minus1, h_minus2, h_minus3,
-                      h_plus1, h_plus2, h_plus3), na.rm=TRUE), 
-         elevsum = sum(c(h_minus1, h_minus2, h_minus3,
-                      h_plus1, h_plus2, h_plus3), na.rm=TRUE)) |>
+  mutate(elevmean = mean(c(h_minus1, h_minus2,
+                      h_plus1, h_plus2), na.rm=TRUE), 
+         elevsum = sum(c(h_minus1, h_minus2,
+                      h_plus1, h_plus2), na.rm=TRUE)) |>
   ungroup()
+
+## relevant is summe -> wenn insgesamt bergauf oder bergab?
 ```
 
 ## Combination of criteria
