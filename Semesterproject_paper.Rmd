@@ -1,6 +1,6 @@
 ---
 title: "Semesterproject_paper"
-author: "Lisa Wahlen"
+author: "Lisa Wahlen, Aurelia Möri"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -33,7 +33,6 @@ library(tmap)
 mycolors4 <- brewer.pal(4, "BrBG")
 # BrBG palette: #a6611a, #dfc27d, #80cdc1, #018571
 theme_set(theme_light())
-tmap_mode("view")
 ```
 
 ```{r include=FALSE}
@@ -55,15 +54,9 @@ posmo <- posmo |>
 
 posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
 posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
+
+tmap_mode("view")
 ```
-
-```{r echo=FALSE}
-# overview transport mode
-
-tm_shape(posmo_transport)+
-  tm_dots("transport_mode")
-```
-
 
 ## Abstract
 
@@ -90,6 +83,15 @@ For our project, we used the movement trajectories that were created by Lisa Wah
 For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2.
 
 We chose the tour Lisa made on the 18th of May in Allmiried to define the characteristics of the biking movement pattern and tried to apply the criteria to the tours of XXX and YYY for verification. The Allmiried trajectory also included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that most of the mountainbiking part of the trajectory was labelled as "car" in by the posmo app. 
+
+
+```{r echo=FALSE}
+# overview transport mode
+tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
+```
+
+
 
 **To filter the movement pattern of mountainbiking we further used the following data: 
 
