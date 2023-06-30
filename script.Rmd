@@ -73,6 +73,106 @@ posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
 posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
 ```
 
+Dataset for verification
+wiriehorn
+```{r}
+wiriehorn <- read_csv("data/posmo/mtb_wiriehorn.csv")
+head(wiriehorn)
+wiriehorn <- st_as_sf(wiriehorn, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+wiriehorn_coordinates <- st_coordinates(wiriehorn)
+
+wiriehorn <- cbind(wiriehorn, wiriehorn_coordinates)
+head(wiriehorn)
+
+# again there is an outlier
+wiriehorn <- wiriehorn |> 
+  slice(-1)
+
+wiriehorn_transport <- select(wiriehorn, -c("weekday", "place_name", "user_id"))
+
+tmap_mode("view")
+tm_shape(wiriehorn_transport)+
+  tm_dots("transport_mode")+
+  tm_layout(title= 'Wiriehorn trajectory of the 6th of May', title.position = c('right', 'top'))
+
+# here we see that some parts of the trajectory were labelled as bike
+```
+
+take a look at the other datasets
+valbirse
+```{r}
+valbirse <- read_csv("data/posmo/mtb_valbirse.csv")
+head(valbirse)
+valbirse <- st_as_sf(valbirse, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+valbirse_coordinates <- st_coordinates(valbirse)
+
+valbirse <- cbind(valbirse, valbirse_coordinates)
+head(valbirse)
+
+# again there is an outlier
+valbirse <- valbirse |> 
+  slice(-1)
+
+valbirse_transport <- select(valbirse, -c("weekday", "place_name", "user_id"))
+
+tmap_mode("view")
+tm_shape(valbirse_transport)+
+  tm_dots("transport_mode")
+
+ggplot(valbirse, aes(x=X, y=Y))+
+  geom_path(aes(col=datetime))+
+  coord_fixed()
+```
+
+solothurn
+
+```{r}
+solothurn <- read_csv("data/posmo/mtb_solothurn.csv")
+head(solothurn)
+solothurn <- st_as_sf(solothurn, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+solothurn_coordinates <- st_coordinates(solothurn)
+
+solothurn <- cbind(solothurn, solothurn_coordinates)
+head(solothurn)
+
+solothurn_transport <- select(solothurn, -c("weekday", "place_name", "user_id"))
+
+tmap_mode("view")
+tm_shape(solothurn_transport)+
+  tm_dots("transport_mode")
+```
+
+miniride
+
+```{r}
+miniride <- read_csv("data/posmo/mtb_miniride.csv")
+head(miniride)
+miniride <- st_as_sf(miniride, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+miniride_coordinates <- st_coordinates(miniride)
+
+miniride <- cbind(miniride, miniride_coordinates)
+head(miniride)
+
+# again there is an outlier
+miniride <- miniride |> 
+  slice(-1)
+
+miniride_transport <- select(miniride, -c("weekday", "place_name", "user_id"))
+
+tmap_mode("view")
+tm_shape(miniride_transport)+
+  tm_dots("transport_mode")
+```
+
+
 ### Visualizations
 
 ```{r}
@@ -145,7 +245,7 @@ posmo_transport <- posmo_transport |>
 ```
 
 
-visualisation of average speed
+#### visualisation of average speed, dealing with NaN
 
 ```{r}
 # explore what we just did
@@ -197,7 +297,7 @@ ggplot(posmo_transport, aes(speedmean_kmh))+
 mean(posmo_transport$speedmean_kmh)
 ```
 
-moving parameter (MP) profile for speed (Dodge et
+#### moving parameter (MP) profile for speed (Dodge et
 al., 2009)
 
 ```{r}
@@ -226,6 +326,7 @@ tm_shape(posmo_segments)+
   tm_dots("static")
 ```
 
+#### segmentation
 assign unique IDs to the segments
 
 ```{r}
@@ -267,6 +368,7 @@ ggplot(posmo_segments, aes(x = datetime, y = speedmean_kmh))+
 
 ```
 
+#### choosing segments and defining range
 looks like the segments 12, 14, 16, 18, 20, 22, 24, 26 are mountainbiking segments
 selecting the segments between 9:00 and 13:00
 ```{r}
@@ -329,6 +431,7 @@ ggplot(posmo_threshold, aes(x = datetime, y = speedmean_kmh))+
 ```
 choosing the average speeds including the full range of the mountainbiking speeds did not exclude the cable car. taking a closer look a the moving parameter profile of the mountainbike segments we see that the cable car travels probably at an average of 8kmh. since average walking speed 
 
+#### assigning transport mode mtb
 now i have to make it compatible with the other dataset with the ground cover. there, mountainbiking is labelled in a separate column with the criteria "yes".
 ```{r}
 posmo_transport <- posmo_transport |> 

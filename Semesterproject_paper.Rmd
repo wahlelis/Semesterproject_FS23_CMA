@@ -36,6 +36,8 @@ theme_set(theme_light())
 ```
 
 ```{r include=FALSE}
+# read Data of the example tour Wiriehorn 05-18
+
 posmo <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
 
 posmo <- st_as_sf(posmo, coords = c("lon_x","lat_y"), crs = 4326) |>
@@ -44,7 +46,6 @@ posmo <- st_as_sf(posmo, coords = c("lon_x","lat_y"), crs = 4326) |>
 head(posmo)
 
 posmo_coordinates <- st_coordinates(posmo)
-
 posmo <- cbind(posmo, posmo_coordinates)
 
 head(posmo) # there is an outlier. one point was recorded the night before the tour started.
@@ -58,10 +59,53 @@ posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
 tmap_mode("view")
 ```
 
+```{r include=FALSE}
+# read data for Wiriehorn 05-07 for verification
+
+wiriehorn <- read_csv("data/posmo/mtb_wiriehorn.csv")
+head(wiriehorn)
+wiriehorn <- st_as_sf(wiriehorn, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+wiriehorn_coordinates <- st_coordinates(wiriehorn)
+wiriehorn <- cbind(wiriehorn, wiriehorn_coordinates)
+head(wiriehorn)
+
+# again there is an outlier
+wiriehorn <- wiriehorn |> 
+  slice(-1)
+
+wiriehorn_transport <- select(wiriehorn, -c("weekday", "place_name", "user_id"))
+```
+
+```{r include=FALSE}
+# read data of the valbirse tour on 05-06
+
+valbirse <- read_csv("data/posmo/mtb_valbirse.csv")
+head(valbirse)
+valbirse <- st_as_sf(valbirse, coords = c("lon_x","lat_y"), crs = 4326) |>
+  st_transform(2056)
+
+valbirse_coordinates <- st_coordinates(valbirse)
+valbirse <- cbind(valbirse, valbirse_coordinates)
+head(valbirse)
+
+# again there is an outlier
+valbirse <- valbirse |> 
+  slice(-1)
+
+valbirse_transport <- select(valbirse, -c("weekday", "place_name", "user_id"))
+
+tmap_mode("view")
+```
+
+
 ## Abstract
 
 ## Introduction
 As mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), both environmental and policy issues arise (Pröbstl-Haider et al., 2018). It is deemed necessary to find a way to not only meet the requirements of bikers and hikers but also of nature. In order to be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
+
+movement data of interest. describing movement in GIScience
 In this project, we aim at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers.
 
 In this project, we aim at defining criteria that indicate mountainbiking movement patterns, and try to provide information about the characteristics of mountainbiking. 
@@ -78,16 +122,34 @@ In this paper we will work on the following two research questions:
 
 ### Datasets
 
-For our project, we used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. Lisa completed 6 mountainbiking tours in the period from the 4th of May to the 18th of May 2023. All tours except for one were done in Switzerland in the areas of Allmiried (Diemtigtal), Wierihorn, Valbirse and Solothurn. One tour was tracked in Germany, near Todtnau. 
+For our project, we used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. We include 3 mountainbiking tours Lisa completed in the period from the 6th of May to the 18th of May 2023. The tours were recorded in Switzerland in the areas of Wiriehorn (2 tours) and Valbirse (1 tour). 
 
 For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the mountainbike trajectories. 
 
-We chose the tour Lisa made on the 18th of May in Allmiried to define the characteristics of the biking movement pattern and tried to apply the criteria to the tours of XXX and YYY for verification. The Allmiried trajectory also included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that most of the mountainbiking part of the trajectory was labelled as "car" in by the posmo app. 
+We chose the tour Lisa made on the 18th of May in the Wiriehorn area to define the characteristics of the biking movement pattern and tried to apply the criteria to the tour at Wiriehorn on the 7th of May and the tour in Valbirse on the 6th of May for verification. The trajectories also included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that the mountainbiking part of the trajectories were labelled as "Car", "Bus", "Other" - and sometimes almost correctly with "Bike" - by the posmo app. 
 
-
+**Wiriehorn trajectory of the 18th of May**  
+*Navigating to the south of the trajectory you'll find the mountainbiking part.*
 ```{r echo=FALSE}
 # overview transport mode
+
 tm_shape(posmo_transport)+
+  tm_dots("transport_mode")
+```
+
+**Wiriehorn trajectory of the 7th of May**  
+*Navigating to the south of the trajectory you'll find the mountainbiking part.*
+```{r echo=FALSE}
+
+tm_shape(wiriehorn_transport)+
+  tm_dots("transport_mode")
+```
+
+
+**Valbirse trajectory of the 6th of May**  
+*Navigating to the northeast of the trajectory you'll find the mountainbiking part.*
+```{r, echo=FALSE}
+tm_shape(valbirse_transport)+
   tm_dots("transport_mode")
 ```
 
