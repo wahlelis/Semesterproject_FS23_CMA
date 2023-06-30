@@ -663,8 +663,10 @@ head(try)
 
 try <- na.omit(try)
 
-# tm_shape(try)+
-#   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
+
+
+tm_shape(try)+
+  tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
 # 
 # 
 # try$mtb <- as.numeric(try$mtb)
