@@ -38,8 +38,8 @@ library(lubridate) # To handle dates and times
 library(SimilarityMeasures)
 library(RColorBrewer)
 library(tmap)
-library(rgdal)
-library(raster)
+# library(rgdal)
+# library(raster)
 
 
 mycolors4 <- brewer.pal(4, "BrBG")
@@ -158,7 +158,6 @@ miniride <- st_as_sf(miniride, coords = c("lon_x","lat_y"), crs = 4326) |>
   st_transform(2056)
 
 miniride_coordinates <- st_coordinates(miniride)
-
 miniride <- cbind(miniride, miniride_coordinates)
 head(miniride)
 
@@ -612,12 +611,35 @@ posmo_annotated <- na.omit(posmo_annotated)
 posmo_annotated <- posmo_annotated |>
   rowwise() |>
   mutate(elevmean = mean(c(h_minus1, h_minus2,
-                      h_plus1, h_plus2), na.rm=TRUE), 
+                      h_plus1, h_plus2), na.rm=TRUE),
          elevsum = sum(c(h_minus1, h_minus2,
                       h_plus1, h_plus2), na.rm=TRUE)) |>
   ungroup()
 
+# posmo_annotated <- posmo_annotated |>
+#   rowwise() |>
+#   mutate(elevmean = mean(c(h_minus1,
+#                       h_plus1), na.rm=TRUE),
+#          elevsum = sum(c(h_minus1,
+#                       h_plus1), na.rm=TRUE)) |>
+#   ungroup()
+
+ggplot()+
+  geom_point(data= posmo_annotated,
+             aes(datetime, elevmean, color = groundcover))+
+  geom_path(data= posmo_annotated,
+            aes(datetime, elevmean))+
+  labs(title = "mean height change over time and ground cover of trajectory", subtitle = "Wiriehorn 05-18")+
+  ylab("altitude [m.a.s.l.]")+
+  xlab("time")
 ## relevant is summe -> wenn insgesamt bergauf oder bergab?
+
+range(posmo_annotated$elevmean)
+range(posmo_annotated$elevsum)
+
+## where sum is smaller than 0 we have a descent
+posmo_annotated <- posmo_annotated |> 
+  mutate(mtb_elevation = elevsum < 0)
 ```
 
 ## Combination of criteria
@@ -628,7 +650,25 @@ groundtype is either Acker, Wiese, Weide or else geschlossener Wald oder
 these criteria match mountainbiking.
 
 ```{r}
+speed_ground_join <- st_join(posmo_transport, posmo_annotated2, suffix = c("_speed", "_ground"))
+speed_ground_elev <- st_join(speed_ground_join, posmo_annotated, suffix = c("", "_elev"))
 
+try <- speed_ground_elev |> 
+  select(datetime, mtb_speed, mtb_gc, mtb_elevation, geometry) |> 
+  rowwise() |> 
+  mutate(mtb = sum(mtb_speed, mtb_gc, mtb_elevation, na.rm=TRUE)) |> 
+  ungroup()
+
+head(try)
+
+try <- na.omit(try)
+
+# tm_shape(try)+
+#   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
+# 
+# 
+# try$mtb <- as.numeric(try$mtb)
+# count(try$mtb == 3)
 ```
 
 
