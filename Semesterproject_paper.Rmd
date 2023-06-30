@@ -1,6 +1,6 @@
 ---
-title: "Semesterproject_paper"
-author: "Lisa Wahlen, Aurelia Möri"
+title: "Semesterproject paper"
+author: "Aurelia Möri, Lisa Wahlen"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -11,7 +11,6 @@ Length of report (approx. 15000 char (incl. spaces, incl. References list, excl.
 # knitr::opts_chunk$set(include = FALSE)
 library(wordcountaddin)
 library(koRpus)
-
 wordcountaddin:::text_stats()
 ```
 
@@ -124,9 +123,9 @@ In this paper we will work on the following two research questions:
 
 For our project, we used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. We include 3 mountainbiking tours Lisa completed in the period from the 6th of May to the 18th of May 2023. The tours were recorded in Switzerland in the areas of Wiriehorn (2 tours) and Valbirse (1 tour). 
 
-For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the mountainbike trajectories. 
+For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the spatial extent of the trajectories. 
 
-We chose the tour Lisa made on the 18th of May in the Wiriehorn area to define the characteristics of the biking movement pattern and tried to apply the criteria to the tour at Wiriehorn on the 7th of May and the tour in Valbirse on the 6th of May for verification. The trajectories also included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that the mountainbiking part of the trajectories were labelled as "Car", "Bus", "Other" - and sometimes almost correctly with "Bike" - by the posmo app. 
+We chose the tour Lisa made on the 18th of May in the Wiriehorn area (Wiriehorn 05-18) to define the characteristics of the biking movement pattern and tried to apply the criteria to the tour at Wiriehorn on the 7th of May (Wiriehorn 05-07) and the tour in Valbirse on the 6th of May (Valbirse 05-06) for verification. The trajectories also included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that the mountainbiking part of the trajectories were labelled by the posmo app as "Car", "Bus", "Other" - and sometimes almost correctly with "Bike". 
 
 **Wiriehorn trajectory of the 18th of May**  
 *Navigating to the south of the trajectory you'll find the mountainbiking part.*
@@ -153,13 +152,6 @@ tm_shape(valbirse_transport)+
   tm_dots("transport_mode")
 ```
 
-
-
-**To filter the movement pattern of mountainbiking we further used the following data: 
-
-- posmo trajectories: sampling rate, 10 s
-- SwissAlti3D: This elevation data is provided by the government of switzerland in a resolution of 0.5 m. It is provided in grids of 1 km2 for all of Switzerland as bot a .tif file and a .xyz file. For the project here, we used the .tif files.
-- MOPUBE BBF: Ground type of the canton of Bern. We use a polygon extraction. 23 ground cover types**
 
 ### Preprocessing
 

@@ -27,7 +27,7 @@ wordcountaddin:::text_stats()
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+# install.packages("rgdal")
 
 library(readr) # to import tabular data (e.g. csv)
 library(dplyr) # to manipulate (tabular) data
@@ -38,6 +38,8 @@ library(lubridate) # To handle dates and times
 library(SimilarityMeasures)
 library(RColorBrewer)
 library(tmap)
+library(rgdal)
+library(raster)
 
 
 mycolors4 <- brewer.pal(4, "BrBG")
@@ -45,7 +47,7 @@ mycolors4 <- brewer.pal(4, "BrBG")
 theme_set(theme_light())
 ```
 
-### Data
+### Data and first viusalisations
 
 ```{r}
 posmo <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
@@ -72,7 +74,7 @@ posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
 posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
 ```
 
-Dataset for verification
+Datasets for verification
 wiriehorn
 ```{r}
 wiriehorn <- read_csv("data/posmo/mtb_wiriehorn.csv")
@@ -178,11 +180,8 @@ I decided to use those three datasets: Valbirse, Wiriehorn, and posmo (also from
 # st_write(posmo, "data/shapefiles/posmo.shp")
 ```
 
-
-### Visualizations
-
 ```{r}
-# 
+# ggplot method 
 # # overview transport mode
 # ggplot(posmo_transport, aes(x=X, y=Y, color=transport_mode))+
 #   geom_point()+
@@ -190,7 +189,7 @@ I decided to use those three datasets: Valbirse, Wiriehorn, and posmo (also from
 
 ```
 
-most of the trajectory is labelled with the transport mode "car". The
+most of the trajectories is labelled with the transport mode "car". The
 loop located in the south of the trajectory shows the part where Lisa
 went downhill-biking in Diemtigtal, Allmiried. Most of that section is
 labelled as "car", wherease some points are labelled as "walk". We now
@@ -250,11 +249,6 @@ ggplot(posmo_transport, aes(speedmean_ms))+
   geom_histogram(binwidth = 1)+
   geom_vline(xintercept = mean(posmo_transport$speedmean_ms, na.rm=TRUE)) # why is there no vline?
 
-ggplot(posmo_transport, aes(speedmean_kmh))+
-  geom_histogram(binwidth = 1)+
-  geom_vline(xintercept = mean(posmo_transport$speedmean_kmh, na.rm=TRUE)) # still no vline?
-
-
 range(posmo_transport$speedmean_ms, na.rm=TRUE)
 
 posmo_transport$speedmean_ms[1:50] # how did i get inf and NaN values? something divided by 0 returns inf. 0/0 returns NaN. no vline because of nan values
@@ -266,7 +260,6 @@ length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
 inf_filter <- posmo_transport |> 
   filter(!is.finite(speedmean_ms))
 
-tmap_mode("view")
 tm_shape(posmo_transport)+
   tm_dots()+
   tm_shape(inf_filter)+
@@ -294,18 +287,19 @@ ggplot(posmo_transport, aes(speedmean_kmh))+
 mean(posmo_transport$speedmean_kmh)
 ```
 
-#### moving parameter (MP) profile for speed (Dodge et
-al., 2009)
+
+#### moving parameter (MP) profile, visualisation of static points 
+for speed (Dodge et al., 2009)
 
 ```{r}
 head(posmo_transport)
 
 ggplot(posmo_transport, aes(x = datetime, y = speedmean_kmh))+
-  geom_line()+
+  geom_path()+
   geom_point(col ="#dfc27d", alpha = .2)+
   ylab("average speed [km/h]")+
   xlab("time")+
-  labs(title = "Movement parameter profile for the average speed")
+  labs(title = "Movement parameter profile for average speed", subtitle = "Wiriehorn tour 05-18")
 
 ```
 
@@ -315,10 +309,9 @@ will look a bit closer at the exact speed during this time**. to set a reasonabl
 speed range or threshold, i want to figure out the average speed of a
 bike descent. i try to isolate the bike segments.
 
-Segments visualisation
+static points visualisation
 where are the static points in the allmiried area? i see static points at the talstation, bergstation and halfway on the trail. (breaks to wait for each other, slow movements waiting for the funiculare)
 ```{r}
-tmap_mode("view")
 tm_shape(posmo_segments)+
   tm_dots("static")
 ```
@@ -347,20 +340,19 @@ posmo_segments <- posmo_segments |>
   filter(!static) # select rows where the static value is not TRUE to select the moving segments
 
 ggplot(posmo_segments, aes(X, Y))+
-  geom_point()+
   geom_path(aes(color=ID))+
-  coord_fixed()
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 tm_shape(posmo_segments)+
-  tm_dots("ID")+
-  tmap_options(max.categories = 37)
+  tm_dots("ID")
 
 # MP profile
 ggplot(posmo_segments, aes(x = datetime, y = speedmean_kmh))+
   geom_line(aes(color = ID))+
   ylab("average speed [km/h]")+
   xlab("time")+
-  labs(title = "Movement parameter profile of average speed", subtitle = "for moving segments of Allmiried tour")
+  labs(title = "Movement parameter profile of average speed", subtitle = "moving segments of Wiriehorn 05-18")
 
 
 ```
@@ -381,7 +373,10 @@ ggplot(posmo_threshold, aes(X, Y))+
 # figure out which speed range makes sense to define mountainbiking
 
 ggplot(posmo_threshold, aes(y=speedmean_kmh))+
-  geom_boxplot()
+  geom_boxplot(color="#a6611a", fill="#dfc27d", alpha=0.2)+
+  ylab("mean speed [kmh]")+
+  scale_x_discrete(labels = NULL, breaks = NULL)+
+  labs(title = "Average speed distribution of mountainbiking segments", subtitle = "Wiriehorn 05-18")
 
 summary(posmo_threshold$speedmean_kmh)
 summary(posmo_threshold$speedmean_ms)
@@ -422,8 +417,11 @@ tm_shape(posmo_transport)+
 # zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car. otherwise, the result represents most of the downhill mountainbiking.
 
 ggplot(posmo_threshold, aes(x = datetime, y = speedmean_kmh))+
-  geom_line()+
-  geom_point(col ="#dfc27d", alpha = .7)
+  geom_path()+
+  geom_point(col ="#dfc27d", alpha = .6)+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile for average speed", subtitle = "mountainbike segments Wiriehorn tour 05-18")
 
 ```
 choosing the average speeds including the full range of the mountainbiking speeds did not exclude the cable car. taking a closer look a the moving parameter profile of the mountainbike segments we see that the cable car travels probably at an average of 8kmh. since average walking speed 
@@ -432,11 +430,9 @@ choosing the average speeds including the full range of the mountainbiking speed
 now i have to make it compatible with the other dataset with the ground cover. there, mountainbiking is labelled in a separate column with the criteria "yes".
 ```{r}
 posmo_transport <- posmo_transport |> 
-  mutate(mountainbike = transport_mode =="mtb")
+  mutate(mtb_speed = transport_mode =="mtb")
 
-length(posmo_transport$mountainbike[posmo_transport$mountainbike == TRUE]) # 605 true
-
-posmo_transport$mountainbike[posmo_transport$mountainbike == TRUE] <- "yes"
+length(posmo_transport$mtb_speed[posmo_transport$mtb_speed == TRUE]) # 605 true
 
 tm_shape(posmo_transport)+
   tm_dots("transport_mode")
@@ -445,8 +441,9 @@ tm_shape(posmo_transport)+
 
 ### Criteria II: Ground cover
 
-in a second step, we will try to do the according filtering but by using
-a classification according to the DEM and to ground cover.
+in a next step, we will try to find other criteria by using the digital elevation model (DEM) and a ground cover dataset.
+
+import of DEM swissALTI3D
 
 ```{r}
 # csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html
@@ -475,47 +472,22 @@ plot(sdf)
 ```
 
 
-do the same with adjusted spatial extent. so all three trajectories are included.
 ```{r}
-# csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html
-# all_inc_tif <- read.csv("data/alti3D_all_inc.csv", header = FALSE)
-# # 
-# # # terra help https://rspatial.org/spatial-terra/8-rastermanip.html
-# # 
-# # download all files to an empty folder
-# for (fi in all_inc_tif$V1){
-# outfile <- basename(fi)
-# print(outfile)
-# download.file(fi, paste0("data/alti3D_all_inc/", outfile),mode = "wb") # mode (binary) very important
-# }
-
-# list takes all files with .tif from a folder
-file_list <- list.files("data/alti3D_all_inc/",".tif",full.names = TRUE)
-
-# makes a virtual raster layer from the files
-vrt(file_list, "altivrt.vrt",overwrite = TRUE)
-
-# import the data from the virtual raster layer
-alti <- rast("altivrt.vrt")
-
-# plotting is very fast
-plot(alti)
-```
-
-
-
-```{r}
-bodenbedeckung <- read_sf("data/MOPUBE_ausschnitt/data/MOPUBE_BBF_ausschnitt.shp")
-# bodenbedeckung <- read_sf("data/shapefiles/MOPUBE_traj.shp")
+# bodenbedeckung <- read_sf("data/MOPUBE_ausschnitt/data/MOPUBE_BBF_ausschnitt.shp")
+bodenbedeckung <- read_sf("data/shapefiles/MOPUBE_traj.shp")
 head(bodenbedeckung)
 
 # remove all columns that are not required
-bodenbedeckung <- bodenbedeckung[,-4:-13]
 
-ggplot(bodenbedeckung)+
-  geom_sf(aes(fill=BBARTT_BEZ))+
-  theme(legend.position = "none")+
-  coord_sf(datum = 2056) 
+bodenbedeckung <- bodenbedeckung |> 
+  transmute(BBFID = BBFID,
+            groundcover = BBARTT_BEZ,
+            geometry = geometry)
+
+# ggplot(bodenbedeckung)+
+#   geom_sf(aes(fill=groundcover))+
+#   theme(legend.position = "none")+
+#   coord_sf(datum = 2056) 
 
 
 #Clip the Posmo Data to the extent of the groundtype layer.
@@ -523,16 +495,22 @@ boden_subset <- bodenbedeckung[posmo,] # posmo daten
 posmo_subset <- posmo[bodenbedeckung, ] # nur noch polygone angezeigt, die auf der trajectory liegen
 
 # alle Werte im Layer Bodenbedeckung anzeigen, damit dann die passenden für das Mountainbiken definiert werden können.
-unique(boden_subset$BBARTT_BEZ)
+unique(boden_subset$groundcover)
 
 # check the data
-plot(boden_subset[,'BBARTT_BEZ'])
-plot(posmo_subset[,'datetime'])
+# plot(boden_subset[,'groundcover'])
+# plot(posmo_subset[,'datetime'])
 
+tm_shape(boden_subset)+
+  tm_polygons("groundcover")+
+  tmap_options(check.and.fix = TRUE)+
+  tm_shape(posmo_subset)+
+  tm_dots()
+  
 ```
 
-We could now see, that there are 23 different groundtypes to describe
-what the surface consists of. In order to be able to work faster and to
+We could now see, that there are 11 different groundtypes to describe
+what the surface our datapoints are in consists of. In order to be able to work faster and to
 save memory space, we are now going to spatially join the two layers
 bodenbedeckung and posmo, deleting all polygons that do not intersect
 with the nodes of the posmo data.
@@ -540,7 +518,7 @@ with the nodes of the posmo data.
 ```{r}
 # tmap_mode("view")
 # tm_shape(boden_subset)+
-#   tm_polygons("BBARTT_BEZ")+
+#   tm_polygons("groundcover")+
 #   tm_shape(posmo_subset)+
 #   tm_dots()+
 #   tm_shape(sdf)+
@@ -551,6 +529,7 @@ with the nodes of the posmo data.
 plot(sdf)
 plot(posmo_subset, add=TRUE)
 plot(boden_subset, add=TRUE)
+
 ```
 
 This worked well. Looking at the map, we can now see, that the posmo
@@ -565,6 +544,8 @@ of mountainbiking.
 ```{r}
 posmo_annotated <- st_intersection(posmo_subset, boden_subset)
 
+tm_shape(posmo_annotated)+
+  tm_dots("groundcover")
 
 # suitable for Mountainbiking are the following groundtypes: 
 # Acker, Wiese, Weide
@@ -577,19 +558,12 @@ posmo_annotated <- st_intersection(posmo_subset, boden_subset)
 mountainbike <- c("Acker, Wiese, Weide", "geschlossener Wald", "Fels", "übrige bestockte", "übrige humusierte")
 
 posmo_annotated2 <- posmo_annotated |>
-  filter(BBARTT_BEZ %in% mountainbike) |>  
-  mutate(mountainbike_gc = "yes") # mountainbike ground cover
-
-# posmo_annotated2 <- posmo_annotated |>
-#   select(BBARTT_BEZ, c("Acker, Wiese, Weide", "Fels", "geschlossener Wald",  "übrige bestockte", "übrige humusierte")) |>
-#   mutate(mountainbike = "yes")
-
-unique(posmo_annotated2$BBARTT_BEZ)
+  mutate(mtb_gc = groundcover %in% mountainbike) # mountainbike ground cover TRUE/FALSE vector
 ```
 
 ```{r}
 tm_shape(posmo_annotated2)+
-  tm_dots("BBARTT_BEZ")
+  tm_dots("mtb_gc")
 ```
 
 
@@ -599,17 +573,20 @@ now i will do the same with the terrainmodel
 
 ```{r}
 posmo_annotated <- posmo_annotated |> 
-  mutate(hoehe = extract(sdf, posmo_annotated))
+  mutate(hoehe = extract(sdf, posmo_annotated)) # extract values froam a Raster for a set of locations.
 
-posmo_annotated <- na.omit(posmo_annotated)
+# posmo_annotated <- na.omit(posmo_annotated)
 
 posmo_annotated <- posmo_annotated[order(posmo_annotated$datetime, decreasing = FALSE),]
 
 ggplot()+
   geom_point(data= posmo_annotated,
-             aes(datetime, hoehe$altivrt, color = BBARTT_BEZ))+
+             aes(datetime, hoehe$altivrt, color = groundcover))+
   geom_path(data= posmo_annotated,
-            aes(datetime, hoehe$altivrt))
+            aes(datetime, hoehe$altivrt))+
+  labs(title = "Height change over time and ground cover of trajectory", subtitle = "Wiriehorn 05-18")+
+  ylab("altitude [m.a.s.l.]")+
+  xlab("time")
 ```
 
 in this last visualization we can see very clearly, that the combination
@@ -653,3 +630,63 @@ these criteria match mountainbiking.
 ```{r}
 
 ```
+
+
+
+## Verification on other trajectories
+
+import DEM with adjusted spatial extent which covers all three trajectories.
+
+```{r}
+# csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html
+# all_inc_tif <- read.csv("data/alti3D_all_inc.csv", header = FALSE)
+# # 
+# # # terra help https://rspatial.org/spatial-terra/8-rastermanip.html
+# # 
+# # download all files to an empty folder
+# for (fi in all_inc_tif$V1){
+# outfile <- basename(fi)
+# print(outfile)
+# download.file(fi, paste0("data/alti3D_all_inc/", outfile),mode = "wb") # mode (binary) very important
+# }
+
+# list takes all files with .tif from a folder
+file_list <- list.files("data/alti3D_all_inc/",".tif",full.names = TRUE)
+
+# makes a virtual raster layer from the files
+vrt(file_list, "altivrt.vrt",overwrite = TRUE)
+
+# import the data from the virtual raster layer
+alti <- rast("altivrt.vrt")
+
+plot(alti)
+plot(posmo_transport, add=TRUE)
+plot(valbirse, add=TRUE)
+# the extent is huge. try to crop it:
+
+# crop_extent <- readOGR("data/shapefiles/MOPUBE_traj.shp")
+# plot(crop_extent,
+#      main = "Shapefile imported into R - crop extent",
+#      axes = TRUE,
+#      border = "blue")
+# 
+# # crop the lidar raster using the vector extent
+# alti_crop <- crop(alti, crop_extent, mask = TRUE)
+# plot(alti_crop, main = "Cropped alti")
+# 
+# # add shapefile on top of the existing raster
+# plot(crop_extent, add = TRUE)
+
+# didn't work 
+
+# try to export it so i can crop it in 
+# writeRaster(alti, filename = "data/alti.tif")
+
+# writeRaster(alti, filename = "data/alti.tif", options = "TWF=YES")
+
+# filename=file.path(tmp, "test.tif"), format="GTiff", overwrite=TRUE
+```
+
+
+
+
