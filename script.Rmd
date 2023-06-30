@@ -61,7 +61,6 @@ posmo <- st_as_sf(posmo, coords = c("lon_x","lat_y"), crs = 4326) |>
 head(posmo)
 
 posmo_coordinates <- st_coordinates(posmo)
-
 posmo <- cbind(posmo, posmo_coordinates)
 
 head(posmo) # there is an outlier. one point was recorded the night before the tour started.
@@ -172,24 +171,22 @@ tm_shape(miniride_transport)+
   tm_dots("transport_mode")
 ```
 
+I decided to use those three datasets: Valbirse, Wiriehorn, and posmo (also from Wiriehorn). In order to do some preprocessing in ArcGIS i export the files to shapefiles. in ArcGIS, i try to clip the ground cover Dataset MOPUBE to the relevant buffered area surrounding the trajectory.
+```{r}
+# st_write(valbirse, "data/shapefiles/valbirse.shp")
+# st_write(wiriehorn, "data/shapefiles/wiriehorn.shp")
+# st_write(posmo, "data/shapefiles/posmo.shp")
+```
+
 
 ### Visualizations
 
 ```{r}
-# overview datapoints
-ggplot(posmo, aes(x=X, y=Y))+
-  geom_point()+
-  coord_fixed()
-
-# overview transport mode
-ggplot(posmo_transport, aes(x=X, y=Y, color=transport_mode))+
-  geom_point()+
-  coord_fixed()
-
-# overview with map background
-tmap_mode("view")
-tm_shape(posmo_transport)+
-  tm_dots("transport_mode")
+# 
+# # overview transport mode
+# ggplot(posmo_transport, aes(x=X, y=Y, color=transport_mode))+
+#   geom_point()+
+#   coord_fixed()
 
 ```
 
@@ -452,10 +449,10 @@ in a second step, we will try to do the according filtering but by using
 a classification according to the DEM and to ground cover.
 
 ```{r}
-#csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html 
+# csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html
 # all_tif <- read.csv("data/alti3D_all.csv", header = FALSE)
 # 
-# # terra help https://rspatial.org/spatial-terra/8-rastermanip.html 
+# # terra help https://rspatial.org/spatial-terra/8-rastermanip.html
 # 
 # # download all files to an empty folder
 # for (fi in all_tif$V1){
@@ -477,8 +474,39 @@ sdf <- rast("altivrt.vrt")
 plot(sdf)
 ```
 
+
+do the same with adjusted spatial extent. so all three trajectories are included.
+```{r}
+# csv has all download paths from alti3d tiles:  https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html
+# all_inc_tif <- read.csv("data/alti3D_all_inc.csv", header = FALSE)
+# # 
+# # # terra help https://rspatial.org/spatial-terra/8-rastermanip.html
+# # 
+# # download all files to an empty folder
+# for (fi in all_inc_tif$V1){
+# outfile <- basename(fi)
+# print(outfile)
+# download.file(fi, paste0("data/alti3D_all_inc/", outfile),mode = "wb") # mode (binary) very important
+# }
+
+# list takes all files with .tif from a folder
+file_list <- list.files("data/alti3D_all_inc/",".tif",full.names = TRUE)
+
+# makes a virtual raster layer from the files
+vrt(file_list, "altivrt.vrt",overwrite = TRUE)
+
+# import the data from the virtual raster layer
+alti <- rast("altivrt.vrt")
+
+# plotting is very fast
+plot(alti)
+```
+
+
+
 ```{r}
 bodenbedeckung <- read_sf("data/MOPUBE_ausschnitt/data/MOPUBE_BBF_ausschnitt.shp")
+# bodenbedeckung <- read_sf("data/shapefiles/MOPUBE_traj.shp")
 head(bodenbedeckung)
 
 # remove all columns that are not required
@@ -489,12 +517,10 @@ ggplot(bodenbedeckung)+
   theme(legend.position = "none")+
   coord_sf(datum = 2056) 
 
-#Clip the Posmo Data to the extent of the groundtype layer. 
-boden_subset <- bodenbedeckung[posmo,] # posmo daten 
-posmo_subset <- posmo[bodenbedeckung, ] # nur noch polygone angezeigt, die auf der trajectory liegen
 
-# st_is_valid(posmo_cropped, reason=TRUE)
-# st_make_valid(posmo_cropped)
+#Clip the Posmo Data to the extent of the groundtype layer.
+boden_subset <- bodenbedeckung[posmo,] # posmo daten
+posmo_subset <- posmo[bodenbedeckung, ] # nur noch polygone angezeigt, die auf der trajectory liegen
 
 # alle Werte im Layer Bodenbedeckung anzeigen, damit dann die passenden für das Mountainbiken definiert werden können.
 unique(boden_subset$BBARTT_BEZ)

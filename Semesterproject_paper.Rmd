@@ -166,6 +166,7 @@ tm_shape(valbirse_transport)+
 The Allmiried table was first converted to a georeferenced sf feature. A temporal outlier recorded the night before the trip started was removed, as well as unnecessary or redundant information about Lisa's user ID, the weekday, or the place name.
 
 Preprocessing Bodenbedeckung?
+50m buffer from trajectory line
 
 Preprocessing swissALTI3D?
 
