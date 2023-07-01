@@ -220,6 +220,8 @@ To isolate the cable car and determine the relevant speed range for mounainbikin
 
 ### Limitations
 - we should try our code on another mountainbike pattern from Lisa to find whether its applicable to all patterns. 
+- visually choosing relevant segments
+- quantyfying mountainbiking points, evaluation
 
 ## Results
 
