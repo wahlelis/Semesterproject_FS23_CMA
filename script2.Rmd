@@ -301,7 +301,6 @@ rle_id <- function(vec) {
 
 wirie0518_segments <- wirie0518_segments |> 
   mutate(ID=rle_id(static))
-
 ```
 
 Visualize the moving segments by colourizing them by segment_ID.
@@ -644,6 +643,76 @@ ggplot(wirie0518_sumlong, aes(fill = criteria, x = ID, y = points)) +
 minimum/maximum duration of downhill tours?
 exclusion criteria (in case two criteria are ok)
 segments wit x percentage of 3TRUE are mountainbiking.
+
+#### new segmentation
+```{r}
+
+wirie0518_try <- wirie0518 |> 
+  mutate(
+    min3 = lead(mtb_count3) == TRUE |lead(mtb_count3,2)==TRUE |lead(mtb_count3,3) == TRUE | lag(mtb_count3) == TRUE | lag(mtb_count3,2)==TRUE | lag(mtb_count3,3)==TRUE
+  ) # innerhalb einer minute muss mindestens einmal der Wert drei vorkommen - also drei kriterien erfüllt sein. 
+
+tm_shape(wirie0518_try)+
+  tm_dots("min3")
+
+wirie0518_try <- wirie0518_try |>
+  mutate(
+    c_plus1 = lead(mtb),
+    c_plus2 = lead(mtb,2), # new offset of 2 in function lead()
+    c_minus1 = lag(mtb),
+    c_minus2 = lag(mtb,2)
+  ) # berechnen, wie viele kriterien bei den benachbarten punkten zutreffen und so versuchen, die punkte wo weniger kriterien zutreffen, aussschliessen. ausreichend bike punkte eingeschlossen, die nicht alle kriterien erfüllen
+
+wirie0518_try <- wirie0518_try |> 
+  rowwise() |> 
+  mutate(c_sum = sum(c(c_plus1, c_plus2, c_minus1, c_minus2))) |> 
+  ungroup()
+
+
+# wirie0518_try <- wirie0518_try |> 
+#   filter(is.finite(c_sum))
+
+wirie0518_try <- wirie0518_try |> 
+  mutate(mtb_sum = c_sum >= 4) |> 
+  mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
+
+tm_shape(wirie0518_try)+
+  tm_dots("mtb_sum")
+
+# wirie0518_try <- wirie0518_try|> 
+#   mutate(segm_plus_1 = as.numeric(lead(mtb_sum)),
+#          segm_plus_2 = as.numeric(lead(mtb_sum, 2)),
+#          segm_minus_1 = as.numeric(lag(mtb_sum)),
+#          segm_minus_2 = as.numeric(lag(mtb_sum, 2)))|> 
+#   rowwise() |> 
+#   mutate(segm_sum = sum(c(segm_plus_1, segm_plus_2, segm_minus_1, segm_minus_2))) |> 
+#   ungroup()
+# 
+# wirie0518_try <- wirie0518_try |> 
+#   mutate(lastsegm = segm_sum >= 3) # threshold for last segmentation
+
+tm_shape(wirie0518_try)+
+  tm_dots("lastsegm")
+
+wirie0518_try <- wirie0518_try |> 
+  mutate(ID_mtb=rle_id(lastsegm))
+
+tm_shape(wirie0518_try)+
+  tm_dots("lastsegm")
+
+# wirie0518_segments <- wirie0518_segments |> 
+#   mutate(ID=rle_id(static))
+
+wirie0518_try <- wirie0518_try |> 
+  filter(lastsegm==TRUE) # select rows where the static value is not TRUE to select the moving segments
+
+ggplot(wirie0518_try, aes(X, Y))+
+  geom_path(aes(color=ID_mtb))+
+  geom_point(aes(color = ID_mtb))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
 
 
 ## Verification on other trajectories
@@ -1009,7 +1078,7 @@ these criteria match mountainbiking.
 
 ```{r}
 wirie0507 <- wirie0507_alti |> 
-  select(ID, datetime, mtb_speed, mtb_gc, mtb_elevation, geometry) |> 
+  select(ID, datetime, mtb_speed, mtb_gc, mtb_elevation, X, Y, geometry) |> 
   rowwise() |> 
   mutate(mtb = sum(mtb_speed, mtb_gc, mtb_elevation, na.rm=TRUE)) |> 
   ungroup()
@@ -1030,13 +1099,93 @@ wirie0507 <- wirie0507 |>
 length(wirie0507$mtb_count3[wirie0507$mtb_count3 == TRUE]) # 318 true
 
 wirie0507_summary <- wirie0507 |> 
+  select(ID, mtb) |> 
   group_by(ID) |> 
-  summarise(criteria3 = sum(mtb==3),
-            criteria2 = sum(mtb==2),
-            criteria1 = sum(mtb==1),
-            tourtime=difftime(last(datetime), first(datetime)))
+  summarise(n_1 = sum(mtb==3),
+            n_2 = sum(mtb==2),
+            n_3 = sum(mtb==1)
+            # sumcriteria = sum(mtb),
+            # tourtime=difftime(last(datetime), first(datetime))
+            )
+
+wirie0507_sumlong <- pivot_longer(wirie0507_summary, 2:4,
+               names_to = "criteria",
+               values_to = "points")
+
+# ggplot(wirie0507_sumlong, aes(fill = criteria, x = ID, y = points)) +
+#   geom_bar(position = "dodge", stat = "identity")+
+#   scale_fill_manual(values = c("n_1" = "#dfc27d",
+#                                "n_2" = "#80cdc1",
+#                                "n_3" = "#018571"
+#                                ))
+
+ggplot(wirie0507_sumlong, aes(fill = criteria, x = ID, y = points)) +
+  geom_bar(position = "stack", stat = "identity") +
+  scale_fill_manual(values = c("n_1" = "#dfc27d",
+                               "n_2" = "#80cdc1",
+                               "n_3" = "#018571"
+                               ))+
+  xlab("Segment ID")+
+  ylab("number of points on trajectory")+
+  labs(title = "Number of criteria applying to segments", subtitle = "Wiriehorn 05-07")+
+  geom_text(data=subset(wirie0507_sumlong,points > 5), aes(label = points), stat = "identity", colour = "black", position = position_stack(vjust = 0.5), size=2)
 
 ```
+
+
+#### new segmentation
+```{r}
+
+wirie0507_try <- wirie0507 |> 
+  mutate(
+    c_plus1 = lead(mtb),
+    c_plus2 = lead(mtb,2), # new offset of 2 in function lead()
+    c_minus1 = lag(mtb),
+    c_minus2 = lag(mtb,2)
+  )
+
+wirie0507_try <- wirie0507_try |> 
+  rowwise() |> 
+  mutate(c_sum = sum(c(c_plus1, c_plus2, c_minus1, c_minus2))) |> 
+  ungroup()
+
+wirie0507_try <- wirie0507_try |> 
+  mutate(mtb_sum = c_sum >= 6) 
+
+tm_shape(wirie0507_try)+
+  tm_dots("mtb_sum")
+
+wirie0507_try <- wirie0507_try|> 
+  mutate(segm_plus_1 = as.numeric(lead(mtb_sum)),
+         segm_plus_2 = as.numeric(lead(mtb_sum, 2)),
+         segm_minus_1 = as.numeric(lag(mtb_sum)),
+         segm_minus_2 = as.numeric(lag(mtb_sum, 2)))|> 
+  rowwise() |> 
+  mutate(segm_sum = sum(c(segm_plus_1, segm_plus_2, segm_minus_1, segm_minus_2))) |> 
+  ungroup()
+
+wirie0507_try <- wirie0507_try |> 
+  mutate(lastsegm = segm_sum >= 3) |> # threshold for last segmentation
+  mutate(ID_mtb=rle_id(lastsegm)) # last segmentation
+
+tm_shape(wirie0507_try)+
+  tm_dots("lastsegm")
+
+# wirie0507_segments <- wirie0507_segments |> 
+#   mutate(ID=rle_id(static))
+
+wirie0507_try <- wirie0507_try |> 
+  filter(lastsegm==TRUE) # select rows where the static value is not TRUE to select the moving segments
+
+ggplot(wirie0507_try, aes(X, Y))+
+  geom_path(aes(color = ID_mtb))+
+  geom_point(aes(color = ID_mtb))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+
 
 ## Verification 2
 
@@ -1387,7 +1536,7 @@ these criteria match mountainbiking.
 
 ```{r}
 valbirse <- valbirse_alti |> 
-  select(datetime, ID, mtb_speed, mtb_gc, mtb_elevation, geometry) |> 
+  select(datetime, ID, mtb_speed, mtb_gc, mtb_elevation, X, Y, geometry) |> 
   rowwise() |> 
   mutate(mtb = sum(mtb_speed, mtb_gc, mtb_elevation, na.rm=TRUE)) |> 
   ungroup()
@@ -1399,22 +1548,123 @@ tm_shape(valbirse)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
 
 length(valbirse$mtb_speed[valbirse$mtb_speed == TRUE]) # 184 true (of 1015 rows)
-length(valbirse$mtb_gc[valbirse$mtb_gc == TRUE]) # 297 true
+length(valbirse$mtb_gc[valbirse$mtb_gc == TRUE]) # 329 true
 length(valbirse$mtb_elevation[valbirse$mtb_elevation == TRUE]) # 290 true
 
 
 valbirse <- valbirse |> 
   mutate(mtb_count3 = mtb == 3)
 
-length(valbirse$mtb_count3[valbirse$mtb_count3 == TRUE]) # x true
+length(valbirse$mtb_count3[valbirse$mtb_count3 == TRUE]) # 61 true
 
-valbirse <- valbirse |> 
+valbirse_summary <- valbirse |> 
+  select(ID, mtb) |> 
   group_by(ID) |> 
-  summarise(criteria3 = sum(mtb==3),
-            criteria2 = sum(mtb==2),
-            criteria1 = sum(mtb==1),
-            tourtime=difftime(last(datetime), first(datetime)))
+  summarise(n_1 = sum(mtb==3),
+            n_2 = sum(mtb==2),
+            n_3 = sum(mtb==1)
+            # sumcriteria = sum(mtb),
+            # tourtime=difftime(last(datetime), first(datetime))
+            )
 
-````
+valbirse_sumlong <- pivot_longer(valbirse_summary, 2:4,
+               names_to = "criteria",
+               values_to = "points")
+
+# ggplot(valbirse_sumlong, aes(fill = criteria, x = ID, y = points)) +
+#   geom_bar(position = "dodge", stat = "identity")+
+#   scale_fill_manual(values = c("n_1" = "#dfc27d",
+#                                "n_2" = "#80cdc1",
+#                                "n_3" = "#018571"
+#                                ))
+
+ggplot(valbirse_sumlong, aes(fill = criteria, x = ID, y = points)) +
+  geom_bar(position = "stack", stat = "identity") +
+  scale_fill_manual(values = c("n_1" = "#dfc27d",
+                               "n_2" = "#80cdc1",
+                               "n_3" = "#018571"
+                               ))+
+  xlab("Segment ID")+
+  ylab("number of points on trajectory")+
+  labs(title = "Number of criteria applying to segments", subtitle = "Wiriehorn 05-18")+
+  geom_text(data=subset(valbirse_sumlong,points > 5), aes(label = points), stat = "identity", colour = "black", position = position_stack(vjust = 0.5), size=2)
+```
+
+
+#### new segmentation
+```{r}
+
+valbirse_try <- valbirse |> 
+  mutate(
+    c_plus1 = lead(mtb),
+    c_plus2 = lead(mtb,2), # new offset of 2 in function lead()
+    c_minus1 = lag(mtb),
+    c_minus2 = lag(mtb,2)
+  )
+
+valbirse_try <- valbirse_try |> 
+  rowwise() |> 
+  mutate(c_sum = sum(c(c_plus1, c_plus2, c_minus1, c_minus2))) |> 
+  ungroup()
+
+# valbirse_try <- valbirse_try |> 
+#   filter(is.finite(c_sum))
+
+
+valbirse_try <- valbirse_try |> 
+  mutate(mtb_sum = c_sum >= 7) 
+
+tm_shape(valbirse_try)+
+  tm_dots("mtb_sum")
+
+valbirse_try <- valbirse_try|> 
+  mutate(segm_plus_1 = as.numeric(lead(mtb_sum)),
+         segm_plus_2 = as.numeric(lead(mtb_sum, 2)),
+         segm_minus_1 = as.numeric(lag(mtb_sum)),
+         segm_minus_2 = as.numeric(lag(mtb_sum, 2)))|> 
+  rowwise() |> 
+  mutate(segm_sum = sum(c(segm_plus_1, segm_plus_2, segm_minus_1, segm_minus_2))) |> 
+  ungroup()
+
+valbirse_try <- valbirse_try |> 
+  mutate(lastsegm = segm_sum >= 3) # threshold for last segmentation
+
+tm_shape(valbirse_try)+
+  tm_dots("lastsegm")
+
+valbirse_try <- valbirse_try |> 
+  mutate(ID_mtb=rle_id(lastsegm))
+
+tm_shape(valbirse_try)+
+  tm_dots("lastsegm")
+
+# valbirse_segments <- valbirse_segments |> 
+#   mutate(ID=rle_id(static))
+
+valbirse_try <- valbirse_try |> 
+  filter(lastsegm==TRUE) # select rows where the static value is not TRUE to select the moving segments
+
+ggplot(valbirse_try, aes(X, Y))+
+  geom_path(aes(color=ID_mtb))+
+  geom_point(aes(color = ID_mtb))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+tm_shape(valbirse_try)+
+  tm_dots("lastsegm")
+```
+
+
+
+```{r}
+valbirse_min3 <- valbirse |> 
+  mutate(
+    min3 = lead(mtb_count3) == TRUE |lead(mtb_count3,2)==TRUE |lead(mtb_count3,3) == TRUE | lag(mtb_count3) == TRUE | lag(mtb_count3,2)==TRUE | lag(mtb_count3,3)==TRUE
+  )
+
+tm_shape(valbirse_min3)+
+  tm_dots("min3")
+
+```
 
 
