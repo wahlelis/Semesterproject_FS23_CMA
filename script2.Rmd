@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(readr) # to import tabular data (e.g. csv)
 library(dplyr) # to manipulate (tabular) data
+library(tidyr)
 library(ggplot2) # to visualize data
 library(sf) # to handle spatial vector data
 library(terra) # To handle raster data
@@ -447,7 +448,8 @@ bodenbedeckung <- bodenbedeckung |>
             geometry = geometry)
 
 tm_shape(bodenbedeckung)+
-  tm_polygons("groundcover")
+  tm_polygons("groundcover")+
+  tmap_options(check.and.fix = TRUE)
 
 # in total, we have 22 ground cover types. since we assume that mountainbiking takes place on vegetated and/or natural groundcovers, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". we could argue that water bodies are not suitable as well, but depending on their size it is not impossible to encounter such features when biking.
 ```
@@ -530,9 +532,7 @@ alti <- rast("altivrt.vrt")
 associate the height to the points on the trajectory, visualize
 ```{r}
 wirie0518_alti <- wirie0518_gc |> 
-  mutate(hoehe = extract(alti, wirie0518_gc)) # extract values froam a Raster for a set of locations.
-
-# posmo_annotated <- na.omit(posmo_annotated)
+  mutate(hoehe = terra::extract(alti, wirie0518_gc)) # extract values froam a Raster for a set of locations. becauses function "extract" is masked from the tidyr library, the terra pkg needs to be specified
 
 wirie0518_alti <- wirie0518_alti[order(wirie0518_alti$datetime, decreasing = FALSE),]
 
@@ -586,13 +586,12 @@ these criteria match mountainbiking.
 
 ```{r}
 wirie0518 <- wirie0518_alti |> 
-  select(datetime, ID, mtb_speed, mtb_gc, mtb_elevation, geometry) |> 
+  select(datetime, ID, mtb_speed, mtb_gc, mtb_elevation, X, Y, geometry) |> 
   rowwise() |> 
   mutate(mtb = sum(mtb_speed, mtb_gc, mtb_elevation, na.rm=TRUE)) |> 
   ungroup()
 
 head(wirie0518)
-
 wirie0518 <- na.omit(wirie0518)
 
 tm_shape(wirie0518)+
@@ -604,20 +603,42 @@ length(wirie0518_alti$mtb_speed[wirie0518_alti$mtb_speed == TRUE]) # 493 true
 length(wirie0518_alti$mtb_gc[wirie0518_alti$mtb_gc == TRUE]) # 874 true
 length(wirie0518_alti$mtb_elevation[wirie0518_alti$mtb_elevation == TRUE]) # 807 true
 
-wirie0518 <- wirie0518 |> 
+wirie0518 <- wirie0518 |>
   mutate(mtb_count3 = mtb == 3)
 
 length(wirie0518$mtb_count3[wirie0518$mtb_count3 == TRUE]) # 318 true
 
 wirie0518_summary <- wirie0518 |> 
+  select(ID, mtb) |> 
   group_by(ID) |> 
-  summarise(criteria3 = sum(mtb==3),
-            criteria2 = sum(mtb==2),
-            criteria1 = sum(mtb==1),
-            tourtime=difftime(last(datetime), first(datetime)))
+  summarise(n_1 = sum(mtb==3),
+            n_2 = sum(mtb==2),
+            n_3 = sum(mtb==1)
+            # sumcriteria = sum(mtb),
+            # tourtime=difftime(last(datetime), first(datetime))
+            )
 
-# ggplot(wirie0518_summary)+
-#   geom_col( aes(criteria3))
+wirie0518_sumlong <- pivot_longer(wirie0518_summary, 2:4,
+               names_to = "criteria",
+               values_to = "points")
+
+# ggplot(wirie0518_sumlong, aes(fill = criteria, x = ID, y = points)) +
+#   geom_bar(position = "dodge", stat = "identity")+
+#   scale_fill_manual(values = c("n_1" = "#dfc27d",
+#                                "n_2" = "#80cdc1",
+#                                "n_3" = "#018571"
+#                                ))
+
+ggplot(wirie0518_sumlong, aes(fill = criteria, x = ID, y = points)) +
+  geom_bar(position = "stack", stat = "identity") +
+  scale_fill_manual(values = c("n_1" = "#dfc27d",
+                               "n_2" = "#80cdc1",
+                               "n_3" = "#018571"
+                               ))+
+  xlab("Segment ID")+
+  ylab("number of points on trajectory")+
+  labs(title = "Number of criteria applying to segments", subtitle = "Wiriehorn 05-18")+
+  geom_text(data=subset(wirie0518_sumlong,points > 5), aes(label = points), stat = "identity", colour = "black", position = position_stack(vjust = 0.5), size=2)
 
 ```
 minimum/maximum duration of downhill tours?
@@ -661,10 +682,8 @@ wirie0507_speed <- wirie0507_speed |>
   mutate(
     speedmean_ms = mean(c(s_plus1, s_plus2, s_minus1, s_minus2), na.rm=TRUE)
   ) |> 
-  ungroup() |> # otherwise each row would represent a group, we don't want that.
-  # now  we calculated the mean speed in m/s.
-  # calculate mean speed in km per hour. 1 m/s = 3.6 km/h
-  mutate(speedmean_kmh = speedmean_ms * 3.6)
+  ungroup() |> 
+  mutate(speedmean_kmh = speedmean_ms * 3.6) # calculate mean speed in km per hour. 1 m/s = 3.6 km/h
 ```
 
 
@@ -678,7 +697,7 @@ ggplot(wirie0507_speed, aes(speedmean_ms))+
 
 range(wirie0507_speed$speedmean_ms, na.rm=TRUE)
 
-wirie0507_speed$speedmean_ms[1:50] # how did i get inf and NaN values? something divided by 0 returns inf. 0/0 returns NaN. no vline because of nan values
+wirie0507_speed$speedmean_ms[1:60] 
 pt <- is.finite(wirie0507_speed$speedmean_ms) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
 length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 30 of those
 
@@ -747,15 +766,14 @@ tm_shape(wirie0507_segments)+
 assign unique IDs to the segments
 
 ```{r}
-# function for assigning unique ID to the subtrajectories
-
-rle_id <- function(vec) {
-    x <- rle(vec)$lengths
-    as.factor(rep(seq_along(x), times = x))
-}
 
 wirie0507_segments <- wirie0507_segments |> 
   mutate(ID=rle_id(static))
+
+ggplot(wirie0507_segments, aes(X, Y))+
+  geom_path(aes(color=ID))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ```
 
@@ -786,17 +804,17 @@ ggplot(wirie0507_segments, aes(x = datetime, y = speedmean_kmh))+
 ```
 
 #### choosing segments and defining range
-looks like the segments 2, 4, 6, 8, 10, 12 are mountainbiking segments
+looks like the segments 4, 6, 8, 10 are mountainbiking segments
 selecting the segments between 8:30 and 11:30
 ```{r}
-# wirie0507_threshold <- wirie0507_segments |> 
-#   filter(ID == c(2, 4, 6, 8, 10, 12))
-# 
-# ggplot(wirie0507_threshold, aes(X, Y))+
-#   geom_point(aes(color=ID))+
-#   geom_path(aes(color=ID))+
-#   coord_fixed()
-# 
+wirie0507_threshold <- wirie0507_segments |>
+  filter(ID == c(4, 6, 8, 10))
+
+ggplot(wirie0507_threshold, aes(X, Y))+
+  geom_point(aes(color=ID))+
+  geom_path(aes(color=ID))+
+  coord_fixed()
+
 # # covers the time range between 08:42 - 13:13 which corresponds to biking
 # # figure out which speed range makes sense to define mountainbiking
 # 
@@ -936,7 +954,7 @@ we can see that the groundcover criteria does not exclude the cable car that Lis
 associate the height to the points on the trajectory, visualize
 ```{r}
 wirie0507_alti <- wirie0507_gc |> 
-  mutate(hoehe = extract(alti, wirie0507_gc)) # extract values froam a Raster for a set of locations.
+  mutate(hoehe = terra::extract(alti, wirie0507_gc)) # extract values froam a Raster for a set of locations.
 
 # posmo_annotated <- na.omit(posmo_annotated)
 
@@ -991,20 +1009,18 @@ these criteria match mountainbiking.
 
 ```{r}
 wirie0507 <- wirie0507_alti |> 
-  select(datetime, mtb_speed, mtb_gc, mtb_elevation, geometry) |> 
+  select(ID, datetime, mtb_speed, mtb_gc, mtb_elevation, geometry) |> 
   rowwise() |> 
   mutate(mtb = sum(mtb_speed, mtb_gc, mtb_elevation, na.rm=TRUE)) |> 
   ungroup()
 
 head(wirie0507)
 
-wirie0507 <- na.omit(try)
-
 tm_shape(wirie0507)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
 
 length(wirie0507_alti$mtb_speed[wirie0507_alti$mtb_speed == TRUE]) # 234 true (of 1015 rows)
-length(wirie0507_alti$mtb_gc[wirie0507_alti$mtb_gc == TRUE]) # 513 true
+length(wirie0507_alti$mtb_gc[wirie0507_alti$mtb_gc == TRUE]) # 516 true
 length(wirie0507_alti$mtb_elevation[wirie0507_alti$mtb_elevation == TRUE]) # 481 true
 
 
@@ -1144,13 +1160,6 @@ tm_shape(valbirse_segments)+
 assign unique IDs to the segments
 
 ```{r}
-# function for assigning unique ID to the subtrajectories
-
-rle_id <- function(vec) {
-    x <- rle(vec)$lengths
-    as.factor(rep(seq_along(x), times = x))
-}
-
 valbirse_segments <- valbirse_segments |> 
   mutate(ID=rle_id(static))
 
@@ -1186,13 +1195,13 @@ ggplot(valbirse_segments, aes(x = datetime, y = speedmean_kmh))+
 hard to tell which are mountainbiking segments, 14, 16, 18?
 selecting the segments between 8:30 and 11:30
 ```{r}
-# valbirse_threshold <- valbirse_segments |> 
-#   filter(ID == c(2, 4, 6, 8, 10, 12))
-# 
-# ggplot(valbirse_threshold, aes(X, Y))+
-#   geom_point(aes(color=ID))+
-#   geom_path(aes(color=ID))+
-#   coord_fixed()
+valbirse_threshold <- valbirse_segments |>
+  filter(ID == c(14, 16, 18))
+
+ggplot(valbirse_threshold, aes(X, Y))+
+  geom_point(aes(color=ID))+
+  geom_path(aes(color=ID))+
+  coord_fixed()
 # 
 # # covers the time range between 08:42 - 13:13 which corresponds to biking
 # # figure out which speed range makes sense to define mountainbiking
@@ -1323,7 +1332,7 @@ we can see that the groundcover criteria does not exclude the cable car that Lis
 associate the height to the points on the trajectory, visualize
 ```{r}
 valbirse_alti <- valbirse_gc |> 
-  mutate(hoehe = extract(alti, valbirse_gc)) # extract values froam a Raster for a set of locations.
+  mutate(hoehe = terra::extract(alti, valbirse_gc)) # extract values froam a Raster for a set of locations.
 
 # posmo_annotated <- na.omit(posmo_annotated)
 
@@ -1385,7 +1394,6 @@ valbirse <- valbirse_alti |>
 
 head(valbirse)
 
-valbirse <- na.omit(try)
 
 tm_shape(valbirse)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))

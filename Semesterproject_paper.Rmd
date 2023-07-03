@@ -124,7 +124,7 @@ In this paper we will work on the following two research questions:
 
 ### Datasets
 
-For our project, we used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. We include 3 mountainbiking tours Lisa completed in the period from the 6th of May to the 18th of May 2023. The tours were recorded in Switzerland in the areas of Wiriehorn (2 tours) and Valbirse (1 tour). 
+For the project, I used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. We include 3 mountainbiking tours Lisa completed in the period from the 6th of May to the 18th of May 2023. The tours were recorded in Switzerland in the areas of Wiriehorn (2 tours) and Valbirse (1 tour). 
 
 For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the spatial extent of the trajectories. 
 
