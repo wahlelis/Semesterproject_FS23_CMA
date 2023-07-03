@@ -102,7 +102,7 @@ tmap_mode("view")
 ## Abstract
 
 ## Introduction
-As mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), both environmental and policy issues arise (Pröbstl-Haider et al., 2018). It is deemed necessary to find a way to not only meet the requirements of bikers and hikers but also of nature. In order to be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
+As mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), both environmental and policy issues arise (Pröbstl-Haider et al., 2018). In order to better understand mountainbiking, this project takes a closer look at the movment of downhill mountainbiking. and be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
 
 movement data of interest. describing movement in GIScience
 In this project, we aim at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers.
@@ -166,7 +166,7 @@ Preprocessing swissALTI3D? polygon extract during acquisition.
 
 ### Methods
 
-Three relevant criteria for mountainbiking are speed, downhill movement and ground cover. For all three criteria I assessed the values and ranges fitting the mountainbiking pattern of the Wiriehorn 05-18 tour. Then I applied the criteria to the Wiriehorn 05-06 and the Valbirse tour.
+Three relevant criteria for mountainbiking are speed, downhill movement and ground cover. For all three criteria I assessed the values and ranges fitting the mountainbiking pattern of the Wiriehorn 05-18 tour. Then I applied the criteria to the Wiriehorn 05-06 and the Valbirse tour. 
 
 #### Speed
 
@@ -214,7 +214,9 @@ To isolate the cable car and determine the relevant speed range for mounainbikin
 
 #### Ground cover type
 
-in total, we have 22 ground cover types. since we assume that mountainbiking takes place on vegetated and/or natural groundcovers, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". we could argue that water bodies are not suitable as well, but depending on their size it is not impossible to encounter such features when biking.
+Intersection of ground cover dataset and the movement points for annotation. 
+track annotation with environmental data (Dodge et al., 2013) GlobCover (http://due.esrin.esa.int/page_globcover.php) is from 2009, MOPUBE is updated weekly.
+The map 22 ground cover types. Since we assume that mountainbiking takes place on vegetated and/or natural groundcovers, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". we could argue that water bodies are not suitable as well, but depending on their size it is not impossible to encounter such features when biking.
 
 #### Downhill movement
 
@@ -224,20 +226,30 @@ The elevation data was added to the dataset of the Wiriehorn 05-18 trajectory an
 
 For every point on the trajectory I counted how many of the three criteria applied. 
 
+- try new segmentation by criteria 1) within a window of 60 secs (3 plus,  3 minus), there must be a fix that complies to all three criteria. 2) within a window of 40 secs, the neighbouring 4 fixes must show a sum of matched criteria of at least 6. 
+
 ### Limitations
 - we should try our code on another mountainbike pattern from Lisa to find whether its applicable to all patterns. 
 - visually choosing relevant segments
 - quantyfying mountainbiking points, evaluation
 - cable car within segments. no segments only including biking
+- speed range chosen to exclude cable car.
+
 
 ## Results
 
 ### Speed
 The average Speed on the Allmiried tour was 37.33548 km/h. The biking segments (including the cable car) showed an average speed of 7.80428 km/h. Since Lisa took the cable car several times on the Allmiried tour, the second and the third quartile of the speed distribution represent the speed of the cable car. In consequence, the first and the fourth quartile of the distribution were chosen to represent mountainbiking, resulting in a range of speed values from 0 to 2.855 and from 10.308 to 26.95490. These criteria also preserve the transport mode "walking".
 
+
+
+map of all trajectories 
+
 ## Discussion
 
 track annotation with environmental data (Dodge et al., 2013) GlobCover (http://due.esrin.esa.int/page_globcover.php) is from 2009, MOPUBE is updated weekly.
+
+
 
 ## References
 

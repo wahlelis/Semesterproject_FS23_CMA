@@ -673,7 +673,7 @@ wirie0518_try <- wirie0518_try |>
 #   filter(is.finite(c_sum))
 
 wirie0518_try <- wirie0518_try |> 
-  mutate(mtb_sum = c_sum >= 4) |> 
+  mutate(mtb_sum = c_sum >= 6) |> 
   mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
 
 tm_shape(wirie0518_try)+
