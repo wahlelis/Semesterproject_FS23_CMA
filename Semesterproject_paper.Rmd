@@ -14,7 +14,7 @@ library(koRpus)
 wordcountaddin:::text_stats()
 ```
 
-```{r include=FALSE}
+```{r Libraries, include=FALSE}
 # knitr::opts_chunk$set(echo = TRUE)
 
 
@@ -22,6 +22,7 @@ library(readr) # to import tabular data (e.g. csv)
 library(dplyr) # to manipulate (tabular) data
 library(tidyr)
 library(ggplot2) # to visualize data
+library(gridExtra)
 library(sf) # to handle spatial vector data
 library(terra) # To handle raster data
 library(lubridate) # To handle dates and times
@@ -36,7 +37,7 @@ theme_set(theme_light())
 tmap_mode("view")
 ```
 
-```{r include=FALSE}
+```{r read first tour, include=FALSE}
 # read Data of the example tour Wiriehorn 05-18
 
 posmo <- read_csv("data/posmo_2023-05-18T00_00_00+02_00-2023-05-18T23_59_59+02_00.csv")
@@ -56,11 +57,9 @@ posmo <- posmo |>
 
 posmo_transport <- select(posmo, -c("weekday", "place_name", "user_id"))
 posmo <- select(posmo, -c("weekday", "place_name", "transport_mode", "user_id"))
-
-tmap_mode("view")
 ```
 
-```{r include=FALSE} 
+```{r read Wirie 0507, include=FALSE} 
 # read data for Wiriehorn 05-07 for verification
 
 wiriehorn <- read_csv("data/posmo/mtb_wiriehorn.csv")
@@ -79,7 +78,7 @@ wiriehorn <- wiriehorn |>
 wiriehorn_transport <- select(wiriehorn, -c("weekday", "place_name", "user_id"))
 ```
 
-```{r include=FALSE}
+```{r read Valbirse, include=FALSE}
 # read data of the valbirse tour on 05-06
 
 valbirse <- read_csv("data/posmo/mtb_valbirse.csv")
@@ -96,8 +95,6 @@ valbirse <- valbirse |>
   slice(-1)
 
 valbirse_transport <- select(valbirse, -c("weekday", "place_name", "user_id"))
-
-tmap_mode("view")
 ```
 
 
@@ -117,9 +114,11 @@ In order to filter the mountainbiking pattern, we defined three criteria with wh
 Using just one or two of the criteria will always still allow for other activities. Such that a trajectory placed on grass and in forests could still also be a hiker, which also applies to the downhill movement. The Speed of a mountainbiker is hard to define, but it is also not a unique identifier for this movement pattern. 
 
 ## Research Question
-In this paper we will work on the following two research questions: 
+In this project we will work on the following two research questions: 
 
-- Which criteria can be used to characterize the movement pattern of downhill mountainbiking? 
+- How can speed, ground cover and downward motion be used to characterize the movement pattern of downhill mountainbiking?
+
+- Can I detect segments where mountainbiking occurred based on speed, groundcover and downward motion?
 
 - Are the chosen criteria applicable to other movement trajectories?
 
@@ -170,11 +169,11 @@ Preprocessing swissALTI3D? polygon extract during acquisition.
 
 ### Methods
 
-Three relevant criteria for mountainbiking are speed, downhill movement and ground cover. For all three criteria I assessed the values and ranges fitting the mountainbiking pattern of the Wiriehorn 05-18 tour. Then I applied the criteria to the Wiriehorn 05-06 and the Valbirse tour. 
+Three relevant criteria for mountainbiking are speed, downhill movement and ground cover ***(Quelle)***. For all three criteria I assessed the values and ranges fitting the mountainbiking pattern of the Wiriehorn 05-18 tour. Then I applied the criteria to the Wiriehorn 05-06 and the Valbirse tour. 
 
 #### Speed and segmentation
 
-```{r include=FALSE}
+```{r calculate speed, include=FALSE}
 # calculate distance between points d_plusx for distance
 # calculate time between points
 # calculate speed
@@ -209,10 +208,7 @@ wirie0518_speed <- wirie0518_speed |>
   mutate(speedmean_kmh = speedmean_ms * 3.6)
 ```
 
-```{r include=FALSE}
-
-#### visualisation of average speed, dealing with NaN
-
+```{r visual average speed, dealing with NaN, include=FALSE}
 # explore what we just did
 ggplot(wirie0518_speed, aes(speedmean_ms))+
   geom_histogram(binwidth = 1)+
@@ -261,12 +257,10 @@ tm_shape(wirie0518_segments)+
   tm_dots("static")
 ```
 
-For every fix on the trajectory I calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference between the fix and the two points before and after, respectively. Fixes where the speed calculation could not be completed because either the distance or the time between two points was 0, were regarded as static. On the Wiriehorn 05-18 tour, 80 points were labelled as static, and used for segmentation of the trajectory. They were located in places on the trajectory where little movement or a change in transport mode is plausible (e.g. at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn).
-
-The extraction of the mountainbiking parts of the trajectory was based on visual assessment of the movement parameter profile based on Dodge et al. (2009) for the average speed. 
+For every fix on the trajectory I calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference between the fix and the two points before and after, respectively. Fixes where the speed calculation could not be completed because either the distance or the time between two points was 0, were regarded as static. On the Wiriehorn 05-18 tour, 80 points were labelled as static, and used for segmentation of the trajectory. They were located in places on the trajectory where little movement or a change in transport mode is plausible (e.g. at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn). The segments were used to identify parts of the trajectory where Lisa was mountainbiking. The relevant segments were selected based on visual assessment of the movement parameter profile (Dodge et al. 2009) of the average speed (Figure below). I assumed that short segments and segments with high velocities are not biking.
 
 
-```{r echo=FALSE}
+```{r MPP speed, include=FALSE}
 #### moving parameter (MP) profile, visualisation of static points 
 # for speed (Dodge et al., 2009)
 
@@ -279,8 +273,7 @@ ggplot(wirie0518_speed, aes(x = datetime, y = speedmean_kmh))+
 
 ```
 
-
-```{r include=FALSE}
+```{r segmentation function, include=FALSE}
 #### Segmentation
 # function for assigning unique ID to the subtrajectories
 
@@ -293,7 +286,7 @@ wirie0518_segments <- wirie0518_segments |>
   mutate(ID=rle_id(static))
 ```
 
-```{r echo=FALSE}
+```{r moving segments, include=FALSE}
 # Visualize the moving segments by colourizing them by segment_ID.
 
 wirie0518_segments <- wirie0518_segments |> 
@@ -302,11 +295,8 @@ wirie0518_segments <- wirie0518_segments |>
 ggplot(wirie0518_segments, aes(X, Y))+
   geom_path(aes(color=ID))+
   coord_fixed()+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-# tm_shape(wirie0518_segments)+
-#   tm_dots("ID")+
-#   tmap_options(max.categories = 37)
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  labs(title= "Moving segments by ID", subtitle = "Wiriehorn 05-18")
 
 # MP profile
 ggplot(wirie0518_segments, aes(x = datetime, y = speedmean_kmh))+
@@ -314,49 +304,352 @@ ggplot(wirie0518_segments, aes(x = datetime, y = speedmean_kmh))+
   ylab("average speed [km/h]")+
   xlab("time")+
   labs(title = "Movement parameter profile of average speed", subtitle = "moving segments of Wiriehorn 05-18")
-
-
 ```
 
+```{r MPP segments, echo=FALSE}
+# MP profile
+ggplot(wirie0518_segments, aes(x = datetime, y = speedmean_kmh))+
+  geom_line(aes(color = ID))+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile of average speed", subtitle = "moving segments of Wiriehorn 05-18")
+```
 
-
-MPP before and after segmentation
 
 However, the selected segments included the movement of the cable car Lisa took to get uphill to the trail start.
 To isolate the cable car and determine the relevant speed range for mounainbiking, the average speed distribution of the selected segments was calculated. The speed values that best characterized the movement of mountain biking were identified through a process of testing. 
 
 
+```{r choosing segments and defining range, include = FALSE}
+
+# looks like the segments 12, 14, 16, 18, 20, 22, 24, 26 are mountainbiking segments
+wirie0518_threshold <- wirie0518_segments |> 
+  filter(ID == c(12, 14, 16, 18, 20, 22, 24, 26))
+
+ggplot(wirie0518_threshold, aes(X, Y))+
+  geom_point(aes(color=ID))+
+  geom_path(aes(color=ID))+
+  coord_fixed()
+
+# covers the time range between 08:42 - 13:13 which corresponds to biking
+# figure out which speed range makes sense to define mountainbiking
+
+ggplot(wirie0518_threshold, aes(y=speedmean_kmh))+
+  geom_boxplot(color="#a6611a", fill="#dfc27d", alpha=0.2)+
+  ylab("mean speed [kmh]")+
+  scale_x_discrete(labels = NULL, breaks = NULL)+
+  labs(title = "Average speed distribution of mountainbiking segments", subtitle = "Wiriehorn 05-18")
+
+summary(wirie0518_threshold$speedmean_kmh)
+summary(wirie0518_threshold$speedmean_ms)
+sd(wirie0518_threshold$speedmean_kmh)
+```
+
+```{r rename / overwrite rows of points within the speed range of mountainbiking, include=FALSE}
+
+# wirie0518_speed$transport_mode[wirie0518_speed$speedmean_kmh >= 2.855 & wirie0518_speed$speedmean_kmh <= 10.308] <- "mtb"
+# 
+# tm_shape(wirie0518_speed)+
+#   tm_dots("transport_mode")
+
+# zooming into the allmiried area we can see that the cable car is labelled as mtb. the speed range therefore applies mainly to the cable car. let's see if by adjusting the range to include lower values as the set threshold changes anything.
+
+# wirie0518_speed$transport_mode[wirie0518_speed$speedmean_kmh <= 10.308] <- "mtb"
+# 
+# tm_shape(wirie0518_speed)+
+#   tm_dots("transport_mode")
+
+# a few more points are included, a great deal of the downhill parts are still not covered though. adjust upper threshold, choose max value of statistics output above. exclude range of cable car
+
+wirie0518_speed$transport_mode[wirie0518_speed$speedmean_kmh < 26.95490 & !(wirie0518_speed$speedmean_kmh >= 2.855 & wirie0518_speed$speedmean_kmh <= 10.308)] <- "mtb"
+
+# tm_shape(wirie0518_speed)+
+#   tm_dots("transport_mode")
+
+# zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car. otherwise, the result represents most of the downhill mountainbiking.
+
+wirie0518_segments$transport_mode[wirie0518_segments$speedmean_kmh <= 26.95490 & !(wirie0518_segments$speedmean_kmh >= 2.855 & wirie0518_segments$speedmean_kmh <= 10.308)] <- "mtb"
+
+# ggplot(wirie0518_threshold, aes(x = datetime, y = speedmean_kmh))+
+#   geom_path(color="#a6611a")+
+#   geom_point(col ="#dfc27d", alpha = .6)+
+#   ylab("average speed [km/h]")+
+#   xlab("time")+
+#   labs(title = "Movement parameter profile for average speed", subtitle = "mountainbike segments Wiriehorn tour 05-18")
+
+```
+
+```{r try it on moving segments, include=FALSE}
+wirie0518_segments$transport_mode[wirie0518_segments$speedmean_kmh <= 26.95490 & !(wirie0518_segments$speedmean_kmh >= 2.855 & wirie0518_segments$speedmean_kmh <= 10.308)] <- "mtb"
+
+wirie0518_segments <- wirie0518_segments |> 
+  mutate(mtb_speed = transport_mode =="mtb")
+
+length(wirie0518_segments$mtb_speed[wirie0518_segments$mtb_speed == TRUE]) # 605 true
+
+```
+
 #### Ground cover
 
 The MOPUBE dataset showed 22 ground cover types (see figure below). Knowing about the preference for natural contexts for mountainbiking (Zajc & Berzelak, 2016) I assume that Lisa rode on vegetated and/or natural groundcovers. Thus, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". We could argue that water bodies are not suitable as well, but depending on their size it is not impossible to cross such features when biking.
+
+
+```{r read ground cover data, echo = FALSE}
+bodenbedeckung <- read_sf("data/shapefiles/MOPUBE_traj.shp")
+# head(bodenbedeckung)
+
+# remove columns that are not required
+
+bodenbedeckung <- bodenbedeckung |> 
+  transmute(BBFID = BBFID,
+            groundcover = BBARTT_BEZ,
+            geometry = geometry)
+
+# unique(bodenbedeckung$groundcover)
+
+tm_shape(bodenbedeckung)+
+  tm_polygons("groundcover")+
+  tmap_options(check.and.fix = TRUE)+
+  tm_view(set.view = c(7.54170, 46.60981, 14))
+```
+
+```{r intersect the trajectory dataset, include=FALSE}
+
+wirie0518_gc <- st_intersection(wirie0518_segments, bodenbedeckung)
+
+# head(wirie0518_gc)
+# display values occurring on the trajectory.
+
+tm_shape(wirie0518_gc)+
+  tm_dots("groundcover")+
+  tmap_options(check.and.fix = TRUE)
+```
+
+```{r all natural gc types and true false vector for gc, include=FALSE}
+# vector with all ground cover types including natural / vegetated features.
+mountainbike <- c("Acker, Wiese, Weide", "Fels", "fliessendes Gewässer", "Gartenanlage", "Geröll, Sand", "geschlossener Wald", "Schilfgürtel", "Stehendes Gewässer", "übrige bestockte", "übrige humusierte", "übrige Intensivkultur", "übrige vegetationslose", "Wasserbecken", "Wytweide dicht", "Wytweide offen")
+
+wirie0518_gc <- wirie0518_gc |>
+  mutate(mtb_gc = groundcover %in% mountainbike) # mountainbike ground cover TRUE/FALSE vector
+```
+
 
 To determine on which parts of the trajectory Lisa moved offroad, I intersected the ground cover dataset MOPUBE and the movement points. This reduced the trajectories to the spatial extent of the Canton of Bern, therefore excluding parts of the car ride from and to Solothurn. This step called track annotation (Dodge et al., 2013) allowed to add environmental information to the points on the trajectory. All points associated with natural ground cover were considered as matching the criteria and labelled accordingly.
 
 #### Downhill movement
 
-The elevation data was added to the dataset of the Wiriehorn 05-18 trajectory and the difference in elevation to the next point within a 40 second window in the direction of movement was calculated. If within this 40 second window the difference in altidude was negative, it is assumed to be downhill movement.
+```{r import elevation data, include=FALSE}
+# list takes all files with .tif from a folder
+file_list <- list.files("data/alti3D_all_inc/",".tif",full.names = TRUE)
+
+# makes a virtual raster layer from the files
+vrt(file_list, "altivrt.vrt",overwrite = TRUE)
+
+# import the data from the virtual raster layer
+alti <- rast("altivrt.vrt")
+
+# check if extent matches the trajectories
+# plot(alti)
+# plot(wirie0518_speed, add=TRUE)
+# plot(valbirse, add=TRUE)
+
+```
+
+```{r annotate elevation to groundcover, include=FALSE}
+wirie0518_alti <- wirie0518_gc |> 
+  mutate(hoehe = terra::extract(alti, wirie0518_gc)) # extract values froam a Raster for a set of locations. becauses function "extract" is masked from the tidyr library, the terra pkg needs to be specified
+
+wirie0518_alti <- wirie0518_alti[order(wirie0518_alti$datetime, decreasing = FALSE),]
+
+ggplot(data= wirie0518_alti, aes(datetime, hoehe$altivrt))+
+  geom_point(aes(color = groundcover))+
+  geom_path()+
+  labs(title = "Height change over time and ground cover of trajectory", subtitle = "Wiriehorn 05-18")+
+  ylab("altitude [m.a.s.l.]")+
+  xlab("time")
+```
+
+```{r calculate and add height difference criteria, include=FALSE}
+wirie0518_alti <- wirie0518_alti|> 
+  mutate(h_plus4 = (lead(hoehe$altivrt, 4)- hoehe$altivrt))
+
+## if the next fix (within a window of 40 secs) is located at a lower altitude, the movement goes downhill. if the value of the difference between the following fix and the current fix is negative, i assume the movement goes downward.
+
+## where sum is smaller than 0 we have a descent
+wirie0518_alti <- wirie0518_alti |> 
+  mutate(mtb_elevation = h_plus4 < 0)
+
+tm_shape(wirie0518_alti)+
+  tm_dots("mtb_elevation")
+
+# TRUE means downward movement (negative elevation difference between two fixes)
+
+# since the car ride includes movement in both directions, it shows both values vor upwards and downwards. 
+```
+
+The elevation data was added to the dataset of the Wiriehorn 05-18 trajectory and the difference in elevation to the fourth point after the fix in the direction of movement was calculated. If within this 40 second window the difference in altidude was negative, it is assumed to be downhill movement.
 
 #### Combination of all criteria
+
+```{r wirie0518 combining all criteria, include=FALSE}
+wirie0518 <- wirie0518_alti |> 
+  select(datetime, ID, mtb_speed, mtb_gc, mtb_elevation, X, Y, geometry) |> 
+  rowwise() |> 
+  mutate(mtb = sum(mtb_speed, mtb_gc, mtb_elevation, na.rm=TRUE)) |> 
+  ungroup()
+
+# head(wirie0518)
+# wirie0518 <- na.omit(wirie0518)
+
+tm_shape(wirie0518)+
+  tm_dots("mtb", palette= brewer.pal(4, "BrBG"))+
+  tm_view(set.view = c(7.54170, 46.60981, 14))
+
+# green values show how many criteria apply for the fix
+
+```
+
+```{r wirie0518 quantifying, include=FALSE}
+length(wirie0518_alti$mtb_speed[wirie0518_alti$mtb_speed == TRUE]) # 493 true
+length(wirie0518_alti$mtb_gc[wirie0518_alti$mtb_gc == TRUE]) # 874 true
+length(wirie0518_alti$mtb_elevation[wirie0518_alti$mtb_elevation == TRUE]) # 807 true
+
+wirie0518 <- wirie0518 |>
+  mutate(mtb_count3 = mtb == 3)
+
+length(wirie0518$mtb_count3[wirie0518$mtb_count3 == TRUE]) # 318 true
+
+# wirie0518_summary <- wirie0518 |> 
+#   select(ID, mtb) |> 
+#   group_by(ID) |> 
+#   summarise(n_1 = sum(mtb==3),
+#             n_2 = sum(mtb==2),
+#             n_3 = sum(mtb==1)
+#             # sumcriteria = sum(mtb),
+#             # tourtime=difftime(last(datetime), first(datetime))
+#             )
+# 
+# wirie0518_sumlong <- pivot_longer(wirie0518_summary, 2:4,
+#                names_to = "criteria",
+#                values_to = "points")
+# 
+# ggplot(wirie0518_sumlong, aes(fill = criteria, x = ID, y = points)) +
+#   geom_bar(position = "stack", stat = "identity") +
+#   scale_fill_manual(values = c("n_1" = "#dfc27d",
+#                                "n_2" = "#80cdc1",
+#                                "n_3" = "#018571"
+#                                ))+
+#   xlab("Segment ID")+
+#   ylab("number of points on trajectory")+
+#   labs(title = "Number of criteria applying to segments", subtitle = "Wiriehorn 05-18")+
+#   geom_text(data=subset(wirie0518_sumlong,points > 5), aes(label = points), stat = "identity", colour = "black", position = position_stack(vjust = 0.5), size=2)
+```
 
 For every point on the trajectory I displayed how many of the three criteria applied. Based on the count of matching criteria, I isolated new segments that represent downhill mountainbiking according to the following conditions: 
 The neighboring four fixes must show a sum of at least 6 matched criteria, and, within one Minute, there is at least one fix that matches all three of the criteria. 
 
+```{r new segmentation, include=FALSE}
+
+wirie0518_try <- wirie0518 |> 
+  mutate(
+    min3 = lead(mtb_count3) == TRUE |lead(mtb_count3,2)==TRUE |lead(mtb_count3,3) == TRUE | lag(mtb_count3) == TRUE | lag(mtb_count3,2)==TRUE | lag(mtb_count3,3)==TRUE
+  ) # innerhalb einer minute muss mindestens einmal der Wert drei vorkommen - also drei kriterien erfüllt sein. 
+
+tm_shape(wirie0518_try)+
+  tm_dots("min3")
+
+wirie0518_try <- wirie0518_try |>
+  mutate(
+    c_plus1 = lead(mtb),
+    c_plus2 = lead(mtb,2), # new offset of 2 in function lead()
+    c_minus1 = lag(mtb),
+    c_minus2 = lag(mtb,2)
+  ) # berechnen, wie viele kriterien bei den benachbarten punkten zutreffen und so versuchen, die punkte wo weniger kriterien zutreffen, aussschliessen. ausreichend bike punkte eingeschlossen, die nicht alle kriterien erfüllen
+
+wirie0518_try <- wirie0518_try |> 
+  rowwise() |> 
+  mutate(c_sum = sum(c(c_plus1, c_plus2, c_minus1, c_minus2))) |> 
+  ungroup()
+
+wirie0518_try <- wirie0518_try |> 
+  mutate(mtb_sum = c_sum >= 6) |> 
+  mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
+
+tm_shape(wirie0518_try)+
+  tm_dots("mtb_sum")
+
+tm_shape(wirie0518_try)+
+  tm_dots("lastsegm")
+
+wirie0518_try <- wirie0518_try |> 
+  mutate(ID_mtb=rle_id(lastsegm))
+
+tm_shape(wirie0518_try)+
+  tm_dots("lastsegm")
+
+
+wirie0518_try <- wirie0518_try |>
+  filter(lastsegm==TRUE) # select rows where the value is TRUE to select the downhill mountainbiking segments
+
+ggplot(wirie0518_try, aes(X, Y))+
+  geom_path(aes(color=ID_mtb))+
+  geom_point(aes(color = ID_mtb))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
 ### Limitations
-- we should try our code on another mountainbike pattern from Lisa to find whether its applicable to all patterns. 
+- generalize 
 - visually choosing relevant segments
 - quantyfying mountainbiking points, evaluation
 - cable car within segments. no segments only including biking
 - speed range chosen to exclude cable car.
+- verification /double check with lisa
 
 
 ## Results
 
+the pattern detected with criteria. segments 
+
 ### Speed
-The average Speed on the Allmiried tour was 37.33548 km/h. The biking segments (including the cable car) showed an average speed of 7.80428 km/h. Since Lisa took the cable car several times on the Allmiried tour, the second and the third quartile of the speed distribution represent the speed of the cable car. In consequence, the first and the fourth quartile of the distribution were chosen to represent mountainbiking, resulting in a range of speed values from 0 to 2.855 and from 10.308 to 26.95490. These criteria also preserve the transport mode "walking".
+The average Speed on the Wiriehorn 05-18 tour was 37.33548 km/h. The biking segments (including the cable car) showed an average speed of 7.80428 km/h. Since Lisa took the cable car several times on the Allmiried tour, the second and the third quartile of the speed distribution represent the speed of the cable car. In consequence, the first and the fourth quartile of the distribution were chosen to represent mountainbiking, resulting in a range of speed values from 0 to 2.855 and from 10.308 to 26.95490. These criteria also preserve the transport mode "walking".
 
 
 
-map of all trajectories 
+map of  trajectories 
+
+```{r facets of every criteria Wirie0518, echo=FALSE}
+tm_shape(wirie0518)+
+  tm_dots(col = c("mtb_speed", "mtb_gc", "mtb_elevation"), palette=c('#a6611a', '#80cdc1'))+
+  tm_facets(sync = TRUE, ncol = 3)+
+  tm_view(set.view = c(7.53381, 46.60840, 14))
+```
+
+```{r "speed movement parameter plots", echo=FALSE}
+
+speed <- ggplot(wirie0518_alti, aes(x = datetime, y = speedmean_kmh))+
+  geom_line()+
+  geom_point(aes(col=mtb_speed))+
+  theme(legend.position="bottom")
+
+groundcover <- ggplot(wirie0518_alti, aes(x = datetime, y = speedmean_kmh))+
+  geom_line()+
+  geom_point(aes(col=mtb_gc))+
+  theme(legend.position="bottom")
+
+elevation <- ggplot(wirie0518_alti, aes(x = datetime, y = speedmean_kmh))+
+  geom_line()+
+  geom_point(aes(col=mtb_elevation))+
+  theme(legend.position="bottom")
+
+grid.arrange(speed, groundcover, elevation, ncol=3)
+```
+
+```{r}
+
+```
+
 
 ## Discussion
 

@@ -260,6 +260,7 @@ ggplot(wirie0518_speed, aes(speedmean_kmh))+
   geom_vline(xintercept = mean(wirie0518_speed$speedmean_kmh), col = "#a6611a") # vline is visible, average speed on that day was around 37.33548 km/h
 
 mean(wirie0518_speed$speedmean_kmh)
+
 ```
 
 
@@ -288,6 +289,8 @@ bike descent. i try to isolate the bike segments.
 static points visualisation
 where are the static points in the allmiried area? i see static points at the talstation, bergstation and halfway on the trail. (breaks to wait for each other, slow movements waiting for the funiculare)
 ```{r}
+# # static points visualisation
+# where are the static points in the allmiried area? i see static points at the talstation, bergstation and halfway on the trail. (breaks to wait for each other, slow movements waiting for the funiculare)
 tm_shape(wirie0518_segments)+
   tm_dots("static")
 ```
@@ -296,6 +299,7 @@ tm_shape(wirie0518_segments)+
 assign unique IDs to the segments
 
 ```{r}
+#### Segmentation
 # function for assigning unique ID to the subtrajectories
 
 rle_id <- function(vec) {
@@ -310,6 +314,7 @@ wirie0518_segments <- wirie0518_segments |>
 Visualize the moving segments by colourizing them by segment_ID.
 
 ```{r}
+# Visualize the moving segments by colourizing them by segment_ID.
 
 wirie0518_segments <- wirie0518_segments |> 
   filter(!static) # select rows where the static value is not TRUE to select the moving segments
@@ -333,10 +338,14 @@ ggplot(wirie0518_segments, aes(x = datetime, y = speedmean_kmh))+
 
 ```
 
+
 #### choosing segments and defining range
 looks like the segments 12, 14, 16, 18, 20, 22, 24, 26 are mountainbiking segments
 selecting the segments between 9:00 and 13:00
-```{r}
+
+```{r, choosing segments and defining range}
+
+# looks like the segments 12, 14, 16, 18, 20, 22, 24, 26 are mountainbiking segments
 wirie0518_threshold <- wirie0518_segments |> 
   filter(ID == c(12, 14, 16, 18, 20, 22, 24, 26))
 
@@ -345,6 +354,12 @@ ggplot(wirie0518_threshold, aes(X, Y))+
   geom_path(aes(color=ID))+
   coord_fixed()
 
+ggplot(wirie0518_threshold, aes(x = datetime, y = speedmean_kmh))+
+  geom_path(color="#a6611a")+
+  geom_point(col ="#dfc27d", alpha = .6)+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile for average speed", subtitle = "mountainbike segments Wiriehorn tour 05-18")
 # covers the time range between 08:42 - 13:13 which corresponds to biking
 # figure out which speed range makes sense to define mountainbiking
 
@@ -369,7 +384,8 @@ speed summary for ms
 according to the speed statistics i will choose the range of the 1st and 3rd quartile kmh (2.855 to 10.308) as the speed defining mountainbiking.
 
 rename / overwrite rows of points within the speed range of mountainbiking.
-```{r}
+
+```{r rename / overwrite rows of points within the speed range of mountainbiking}
 
 # wirie0518_speed$transport_mode[wirie0518_speed$speedmean_kmh >= 2.855 & wirie0518_speed$speedmean_kmh <= 10.308] <- "mtb"
 # 
@@ -394,12 +410,7 @@ tm_shape(wirie0518_speed)+
 
 wirie0518_segments$transport_mode[wirie0518_segments$speedmean_kmh <= 26.95490 & !(wirie0518_segments$speedmean_kmh >= 2.855 & wirie0518_segments$speedmean_kmh <= 10.308)] <- "mtb"
 
-ggplot(wirie0518_threshold, aes(x = datetime, y = speedmean_kmh))+
-  geom_path(color="#a6611a")+
-  geom_point(col ="#dfc27d", alpha = .6)+
-  ylab("average speed [km/h]")+
-  xlab("time")+
-  labs(title = "Movement parameter profile for average speed", subtitle = "mountainbike segments Wiriehorn tour 05-18")
+
 
 ```
 choosing the average speeds including the full range of the mountainbiking speeds did not exclude the cable car. taking a closer look a the moving parameter profile of the mountainbike segments we see that the cable car travels probably at an average of 8kmh. since average walking speed.
@@ -407,7 +418,7 @@ choosing the average speeds including the full range of the mountainbiking speed
 speed threshold might be adjusted according to the speed of the cable car on every mountain of the tour.
 
 try it on moving segments
-```{r}
+```{r, try it on moving segments}
 wirie0518_segments$transport_mode[wirie0518_segments$speedmean_kmh <= 26.95490 & !(wirie0518_segments$speedmean_kmh >= 2.855 & wirie0518_segments$speedmean_kmh <= 10.308)] <- "mtb"
 
 wirie0518_segments <- wirie0518_segments |> 
@@ -416,20 +427,21 @@ wirie0518_segments <- wirie0518_segments |>
 length(wirie0518_segments$mtb_speed[wirie0518_segments$mtb_speed == TRUE]) # 605 true
 
 tm_shape(wirie0518_segments)+
-  tm_dots("transport_mode")
+  tm_dots("mtb_speed")+
+  tm_view(set.view = c(7.54170, 46.60981, 14))
 ```
 
 
 #### assigning transport mode mtb
-now i have to make it compatible with the other dataset with the ground cover. there, mountainbiking is labelled in a separate column with the criteria "yes".
-```{r}
-wirie0518_speed <- wirie0518_speed |> 
-  mutate(mtb_speed = transport_mode =="mtb")
 
-length(wirie0518_speed$mtb_speed[wirie0518_speed$mtb_speed == TRUE]) # 605 true
-
-tm_shape(wirie0518_speed)+
-  tm_dots("transport_mode")
+```{r, assigning transport mode mtb}
+# wirie0518_speed <- wirie0518_speed |> 
+#   mutate(mtb_speed = transport_mode =="mtb")
+# 
+# length(wirie0518_speed$mtb_speed[wirie0518_speed$mtb_speed == TRUE]) # 605 true
+# 
+# tm_shape(wirie0518_speed)+
+#   tm_dots("mtb_speed")
 
 ```
 
@@ -438,8 +450,8 @@ tm_shape(wirie0518_speed)+
 
 #### read ground cover data
 in a next step, we will try to find other criteria by using the MOPUBE ground cover dataset.
-```{r}
-# bodenbedeckung <- read_sf("data/MOPUBE_ausschnitt/data/MOPUBE_BBF_ausschnitt.shp")
+
+```{r read ground cover data}
 bodenbedeckung <- read_sf("data/shapefiles/MOPUBE_traj.shp")
 head(bodenbedeckung)
 
@@ -473,7 +485,6 @@ tm_shape(wirie0518_gc)+
 ggplot(wirie0518_gc, aes(x=datetime, y=speedmean_kmh))+
   geom_line()+
   geom_point(aes(col=groundcover), alpha= .5)
-
 
 ```
 
@@ -574,6 +585,7 @@ wirie0518_alti <- wirie0518_alti |>
 tm_shape(wirie0518_alti)+
   tm_dots("mtb_elevation")
 
+
 # TRUE means downward movement (negative elevation difference between two fixes)
 
 # since the car ride includes movement in both directions, it shows both values vor upwards and downwards. 
@@ -600,6 +612,7 @@ wirie0518 <- na.omit(wirie0518)
 
 tm_shape(wirie0518)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
+
 
 # green values show how many criteria apply for the fix
 
@@ -701,18 +714,47 @@ wirie0518_try <- wirie0518_try |>
 tm_shape(wirie0518_try)+
   tm_dots("lastsegm")
 
-# wirie0518_segments <- wirie0518_segments |> 
-#   mutate(ID=rle_id(static))
 
-wirie0518_try <- wirie0518_try |> 
-  filter(lastsegm==TRUE) # select rows where the static value is not TRUE to select the moving segments
+# wirie0518_try <- wirie0518_try |> 
+#   filter(lastsegm==TRUE) # select rows where the value is TRUE to select the moving segments
+# 
+# ggplot(wirie0518_try, aes(X, Y))+
+#   geom_path(aes(color=ID_mtb))+
+#   geom_point(aes(color = ID_mtb))+
+#   coord_fixed()+
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-ggplot(wirie0518_try, aes(X, Y))+
-  geom_path(aes(color=ID_mtb))+
-  geom_point(aes(color = ID_mtb))+
-  coord_fixed()+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
 
+#### visualise new segments
+
+```{r}
+
+wirie0518_trysum <- wirie0518_try |> 
+  select(ID_mtb, mtb) |> 
+  group_by(ID_mtb) |> 
+  summarise(n_1 = sum(mtb==3),
+            n_2 = sum(mtb==2),
+            n_3 = sum(mtb==1)
+            # sumcriteria = sum(mtb),
+            # tourtime=difftime(last(datetime), first(datetime))
+            )
+
+wirie0518_trysumlong <- pivot_longer(wirie0518_trysum, 2:4,
+               names_to = "criteria",
+               values_to = "points")
+
+
+ggplot(wirie0518_trysumlong, aes(fill = criteria, x = ID_mtb, y = points)) +
+  geom_bar(position = "stack", stat = "identity") +
+  scale_fill_manual(values = c("n_1" = "#dfc27d",
+                               "n_2" = "#80cdc1",
+                               "n_3" = "#018571"
+                               ))+
+  xlab("Segment ID")+
+  ylab("number of points on trajectory")+
+  labs(title = "Number of criteria applying to segments", subtitle = "Wiriehorn 05-18")+
+  geom_text(data=subset(wirie0518_trysumlong,points > 5), aes(label = points), stat = "identity", colour = "black", position = position_stack(vjust = 0.5), size=2)
 ```
 
 
