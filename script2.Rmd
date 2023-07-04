@@ -557,14 +557,15 @@ wirie0518_alti <- wirie0518_alti|>
   mutate(
     h_plus1 = (lead(hoehe$altivrt) -hoehe$altivrt),
     h_plus2 = (lead(hoehe$altivrt, 2)- hoehe$altivrt),
-    h_plus3 = (lead(hoehe$altivrt, 3)- hoehe$altivrt)
+    h_plus3 = (lead(hoehe$altivrt, 3)- hoehe$altivrt),
+    h_plus4 = (lead(hoehe$altivrt, 4)- hoehe$altivrt)
   )
 
 ## if the next fix (within a window of 10 / 20 or 30 secs) is located at a lower altitude, the movement goes downhill. if the value of the difference between the following fix and the current fix is negative, i assume the movement goes downward.
 
 ## where sum is smaller than 0 we have a descent
 wirie0518_alti <- wirie0518_alti |> 
-  mutate(mtb_elevation = h_plus2 < 0)
+  mutate(mtb_elevation = h_plus4 < 0)
 
 tm_shape(wirie0518_alti)+
   tm_dots("mtb_elevation")
@@ -667,10 +668,6 @@ wirie0518_try <- wirie0518_try |>
   rowwise() |> 
   mutate(c_sum = sum(c(c_plus1, c_plus2, c_minus1, c_minus2))) |> 
   ungroup()
-
-
-# wirie0518_try <- wirie0518_try |> 
-#   filter(is.finite(c_sum))
 
 wirie0518_try <- wirie0518_try |> 
   mutate(mtb_sum = c_sum >= 6) |> 
@@ -1051,14 +1048,15 @@ wirie0507_alti <- wirie0507_alti|>
   mutate(
     h_plus1 = (lead(hoehe$altivrt) -hoehe$altivrt),
     h_plus2 = (lead(hoehe$altivrt, 2)- hoehe$altivrt),
-    h_plus3 = (lead(hoehe$altivrt, 3)- hoehe$altivrt)
+    h_plus3 = (lead(hoehe$altivrt, 3)- hoehe$altivrt),
+    h_plus4 = (lead(hoehe$altivrt, 4)- hoehe$altivrt)
   )
 
 ## uphill or downhill
 
 ## where sum is smaller than 0 we have a descent
 wirie0507_alti <- wirie0507_alti |> 
-  mutate(mtb_elevation = h_plus2 < 0)
+  mutate(mtb_elevation = h_plus4 < 0)
 
 # wirie0507_alti <- wirie0507_alti |> 
 #   mutate(mtb_elevation = elevmean < 0)
@@ -1138,11 +1136,19 @@ ggplot(wirie0507_sumlong, aes(fill = criteria, x = ID, y = points)) +
 
 wirie0507_try <- wirie0507 |> 
   mutate(
+    min3 = lead(mtb_count3) == TRUE |lead(mtb_count3,2)==TRUE |lead(mtb_count3,3) == TRUE | lag(mtb_count3) == TRUE | lag(mtb_count3,2)==TRUE | lag(mtb_count3,3)==TRUE
+  ) # innerhalb einer minute muss mindestens einmal der Wert drei vorkommen - also drei kriterien erfüllt sein. 
+
+tm_shape(wirie0507_try)+
+  tm_dots("min3")
+
+wirie0507_try <- wirie0507_try |>
+  mutate(
     c_plus1 = lead(mtb),
     c_plus2 = lead(mtb,2), # new offset of 2 in function lead()
     c_minus1 = lag(mtb),
     c_minus2 = lag(mtb,2)
-  )
+  ) # berechnen, wie viele kriterien bei den benachbarten punkten zutreffen und so versuchen, die punkte wo weniger kriterien zutreffen, aussschliessen. ausreichend bike punkte eingeschlossen, die nicht alle kriterien erfüllen
 
 wirie0507_try <- wirie0507_try |> 
   rowwise() |> 
@@ -1150,36 +1156,29 @@ wirie0507_try <- wirie0507_try |>
   ungroup()
 
 wirie0507_try <- wirie0507_try |> 
-  mutate(mtb_sum = c_sum >= 6) 
+  mutate(mtb_sum = c_sum >= 6) |> 
+  mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
 
 tm_shape(wirie0507_try)+
   tm_dots("mtb_sum")
 
-wirie0507_try <- wirie0507_try|> 
-  mutate(segm_plus_1 = as.numeric(lead(mtb_sum)),
-         segm_plus_2 = as.numeric(lead(mtb_sum, 2)),
-         segm_minus_1 = as.numeric(lag(mtb_sum)),
-         segm_minus_2 = as.numeric(lag(mtb_sum, 2)))|> 
-  rowwise() |> 
-  mutate(segm_sum = sum(c(segm_plus_1, segm_plus_2, segm_minus_1, segm_minus_2))) |> 
-  ungroup()
-
-wirie0507_try <- wirie0507_try |> 
-  mutate(lastsegm = segm_sum >= 3) |> # threshold for last segmentation
-  mutate(ID_mtb=rle_id(lastsegm)) # last segmentation
-
 tm_shape(wirie0507_try)+
   tm_dots("lastsegm")
 
-# wirie0507_segments <- wirie0507_segments |> 
-#   mutate(ID=rle_id(static))
-
 wirie0507_try <- wirie0507_try |> 
+  mutate(ID_mtb=rle_id(lastsegm))
+
+tm_shape(wirie0507_try)+
+  tm_dots("lastsegm")+
+  tm_shape(wirie0507_try)+
+  tm_dots("ID_mtb")
+
+wirie0507_try <- wirie0507_try |>
   filter(lastsegm==TRUE) # select rows where the static value is not TRUE to select the moving segments
 
 ggplot(wirie0507_try, aes(X, Y))+
-  geom_path(aes(color = ID_mtb))+
-  geom_point(aes(color = ID_mtb))+
+  geom_path(aes(color=ID_mtb))+
+  geom_point(aes(color = "lastsegm"))+
   coord_fixed()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
@@ -1509,14 +1508,15 @@ valbirse_alti <- valbirse_alti|>
   mutate(
     h_plus1 = (lead(hoehe$altivrt) -hoehe$altivrt),
     h_plus2 = (lead(hoehe$altivrt, 2)- hoehe$altivrt),
-    h_plus3 = (lead(hoehe$altivrt, 3)- hoehe$altivrt)
+    h_plus3 = (lead(hoehe$altivrt, 3)- hoehe$altivrt),
+    h_plus4 = (lead(hoehe$altivrt, 4)- hoehe$altivrt)
   )
 
 ## uphill or downhill
 
 ## where sum is smaller than 0 we have a descent
 valbirse_alti <- valbirse_alti |> 
-  mutate(mtb_elevation = h_plus2 < 0)
+  mutate(mtb_elevation = h_plus4 < 0)
 
 # valbirse_alti <- valbirse_alti |> 
 #   mutate(mtb_elevation = elevmean < 0)
@@ -1596,38 +1596,31 @@ ggplot(valbirse_sumlong, aes(fill = criteria, x = ID, y = points)) +
 
 valbirse_try <- valbirse |> 
   mutate(
+    min3 = lead(mtb_count3) == TRUE |lead(mtb_count3,2)==TRUE |lead(mtb_count3,3) == TRUE | lag(mtb_count3) == TRUE | lag(mtb_count3,2)==TRUE | lag(mtb_count3,3)==TRUE
+  ) # innerhalb einer minute muss mindestens einmal der Wert drei vorkommen - also drei kriterien erfüllt sein. 
+
+tm_shape(valbirse_try)+
+  tm_dots("min3")
+
+valbirse_try <- valbirse_try |>
+  mutate(
     c_plus1 = lead(mtb),
     c_plus2 = lead(mtb,2), # new offset of 2 in function lead()
     c_minus1 = lag(mtb),
     c_minus2 = lag(mtb,2)
-  )
+  ) # berechnen, wie viele kriterien bei den benachbarten punkten zutreffen und so versuchen, die punkte wo weniger kriterien zutreffen, aussschliessen. ausreichend bike punkte eingeschlossen, die nicht alle kriterien erfüllen
 
 valbirse_try <- valbirse_try |> 
   rowwise() |> 
   mutate(c_sum = sum(c(c_plus1, c_plus2, c_minus1, c_minus2))) |> 
   ungroup()
 
-# valbirse_try <- valbirse_try |> 
-#   filter(is.finite(c_sum))
-
-
 valbirse_try <- valbirse_try |> 
-  mutate(mtb_sum = c_sum >= 7) 
+  mutate(mtb_sum = c_sum >= 6) |> 
+  mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
 
 tm_shape(valbirse_try)+
   tm_dots("mtb_sum")
-
-valbirse_try <- valbirse_try|> 
-  mutate(segm_plus_1 = as.numeric(lead(mtb_sum)),
-         segm_plus_2 = as.numeric(lead(mtb_sum, 2)),
-         segm_minus_1 = as.numeric(lag(mtb_sum)),
-         segm_minus_2 = as.numeric(lag(mtb_sum, 2)))|> 
-  rowwise() |> 
-  mutate(segm_sum = sum(c(segm_plus_1, segm_plus_2, segm_minus_1, segm_minus_2))) |> 
-  ungroup()
-
-valbirse_try <- valbirse_try |> 
-  mutate(lastsegm = segm_sum >= 3) # threshold for last segmentation
 
 tm_shape(valbirse_try)+
   tm_dots("lastsegm")
@@ -1635,35 +1628,14 @@ tm_shape(valbirse_try)+
 valbirse_try <- valbirse_try |> 
   mutate(ID_mtb=rle_id(lastsegm))
 
-tm_shape(valbirse_try)+
-  tm_dots("lastsegm")
-
-# valbirse_segments <- valbirse_segments |> 
-#   mutate(ID=rle_id(static))
-
-valbirse_try <- valbirse_try |> 
-  filter(lastsegm==TRUE) # select rows where the static value is not TRUE to select the moving segments
+valbirse_try <- valbirse_try |>
+  filter(lastsegm==TRUE) # select rows where the criteria for the last segmentation are considered TRUE to select the moving segments
 
 ggplot(valbirse_try, aes(X, Y))+
   geom_path(aes(color=ID_mtb))+
   geom_point(aes(color = ID_mtb))+
   coord_fixed()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-tm_shape(valbirse_try)+
-  tm_dots("lastsegm")
-```
-
-
-
-```{r}
-valbirse_min3 <- valbirse |> 
-  mutate(
-    min3 = lead(mtb_count3) == TRUE |lead(mtb_count3,2)==TRUE |lead(mtb_count3,3) == TRUE | lag(mtb_count3) == TRUE | lag(mtb_count3,2)==TRUE | lag(mtb_count3,3)==TRUE
-  )
-
-tm_shape(valbirse_min3)+
-  tm_dots("min3")
 
 ```
 

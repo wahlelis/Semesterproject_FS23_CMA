@@ -20,6 +20,7 @@ wordcountaddin:::text_stats()
 
 library(readr) # to import tabular data (e.g. csv)
 library(dplyr) # to manipulate (tabular) data
+library(tidyr)
 library(ggplot2) # to visualize data
 library(sf) # to handle spatial vector data
 library(terra) # To handle raster data
@@ -29,9 +30,10 @@ library(RColorBrewer)
 library(tmap)
 
 
-mycolors4 <- brewer.pal(4, "BrBG")
 # BrBG palette: #a6611a, #dfc27d, #80cdc1, #018571
 theme_set(theme_light())
+
+tmap_mode("view")
 ```
 
 ```{r include=FALSE}
@@ -104,6 +106,8 @@ tmap_mode("view")
 ## Introduction
 As mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), both environmental and policy issues arise (Pröbstl-Haider et al., 2018). In order to better understand mountainbiking, this project takes a closer look at the movment of downhill mountainbiking. and be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
 
+Mountain biking can be practiced on different surfaces (on or off-road), there is a preference for natural areas (Zajc & Berzelak, 2016).
+
 movement data of interest. describing movement in GIScience
 In this project, we aim at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers.
 
@@ -126,9 +130,9 @@ In this paper we will work on the following two research questions:
 
 For the project, I used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. We include 3 mountainbiking tours Lisa completed in the period from the 6th of May to the 18th of May 2023. The tours were recorded in Switzerland in the areas of Wiriehorn (2 tours) and Valbirse (1 tour). 
 
-For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the spatial extent of the trajectories. 
+For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern, using the version last updated on the 23.05.23 (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the spatial extent of the trajectories within the Canton of Bern.
 
-We chose the tour Lisa made on the 18th of May in the Wiriehorn area (Wiriehorn 05-18) to define the characteristics of the biking movement pattern and tried to apply the criteria to the tour at Wiriehorn on the 7th of May (Wiriehorn 05-07) and the tour in Valbirse on the 6th of May for verification. The trajectories also included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that the mountainbiking part of the trajectories were labelled by the posmo app as "Car", "Bus", "Other" - and sometimes almost correctly with "Bike". 
+We chose the tour Lisa made on the 18th of May in the Wiriehorn area (Wiriehorn 05-18) to define the characteristics of the biking movement pattern and tried to apply the criteria to the tour at Wiriehorn on the 7th of May (Wiriehorn 05-07) and the tour in Valbirse on the 6th of May for verification. The trajectories included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that the mountainbiking part of the trajectories were labelled by the posmo app as "Car", "Bus", "Other" - and sometimes almost correctly with "Bike". 
 
 **Wiriehorn trajectory of the 18th of May**  
 *Navigating to the south of the trajectory you'll find the mountainbiking part.*
@@ -168,7 +172,7 @@ Preprocessing swissALTI3D? polygon extract during acquisition.
 
 Three relevant criteria for mountainbiking are speed, downhill movement and ground cover. For all three criteria I assessed the values and ranges fitting the mountainbiking pattern of the Wiriehorn 05-18 tour. Then I applied the criteria to the Wiriehorn 05-06 and the Valbirse tour. 
 
-#### Speed
+#### Speed and segmentation
 
 ```{r include=FALSE}
 # calculate distance between points d_plusx for distance
@@ -203,30 +207,32 @@ posmo_transport <- posmo_transport |>
   # now  we calculated the mean speed in m/s.
   # calculate mean speed in km per hour. 1 m/s = 3.6 km/h
   mutate(speedmean_kmh = speedmean_ms * 3.6)
-
 ```
 
 For every fix on the trajectory I calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference between the fix and the two points before and after, respectively. Fixes where the speed calculation could not be completed because either the distance or the time between two points was 0, were regarded as static. On the Wiriehorn 05-18 tour, 80 points were labelled as static, and used for segmentation of the trajectory. They were located in places on the trajectory where little movement or a change in transport mode is plausible (e.g. at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn).
 
-The extraction of the mountainbiking parts of the trajectory was based on visual assessment of the movement parameter profile (Dodge et al., 2009) for the average speed, and selection of the relevant segments. The selected moving segments included the cable car Lisa took to get uphill to the trail start.
-To isolate the cable car and determine the relevant speed range for mounainbiking, the average speed distribution of the selected segments was calculated. The speed values that best characterized the movement of mountain biking were identified through a process of testing.
+The extraction of the mountainbiking parts of the trajectory was based on visual assessment of the movement parameter profile based on Dodge et al. (2009) for the average speed. 
+
+MPP
+
+However, the selected segments included the movement of the cable car Lisa took to get uphill to the trail start.
+To isolate the cable car and determine the relevant speed range for mounainbiking, the average speed distribution of the selected segments was calculated. The speed values that best characterized the movement of mountain biking were identified through a process of testing. 
 
 
-#### Ground cover type
+#### Ground cover
 
-Intersection of ground cover dataset and the movement points for annotation. 
-track annotation with environmental data (Dodge et al., 2013) GlobCover (http://due.esrin.esa.int/page_globcover.php) is from 2009, MOPUBE is updated weekly.
-The map 22 ground cover types. Since we assume that mountainbiking takes place on vegetated and/or natural groundcovers, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". we could argue that water bodies are not suitable as well, but depending on their size it is not impossible to encounter such features when biking.
+The MOPUBE dataset showed 22 ground cover types (see figure below). Knowing about the preference for natural contexts for mountainbiking (Zajc & Berzelak, 2016) I assume that Lisa rode on vegetated and/or natural groundcovers. Thus, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". We could argue that water bodies are not suitable as well, but depending on their size it is not impossible to cross such features when biking.
+
+To determine on which parts of the trajectory Lisa moved offroad, I intersected the ground cover dataset MOPUBE and the movement points. This reduced the trajectories to the spatial extent of the Canton of Bern, therefore excluding parts of the car ride from and to Solothurn. This step called track annotation (Dodge et al., 2013) allowed to add environmental information to the points on the trajectory. All points associated with natural ground cover were considered as matching the criteria and labelled accordingly.
 
 #### Downhill movement
 
-The elevation data was added to the dataset of the Wiriehorn 05-18 trajectory and the difference in elevation to the next two points in the direction of movement was calculated. If within this 20 second window the difference in altidude was negative, it is assumed to be downhill movement.
+The elevation data was added to the dataset of the Wiriehorn 05-18 trajectory and the difference in elevation to the next point within a 40 second window in the direction of movement was calculated. If within this 40 second window the difference in altidude was negative, it is assumed to be downhill movement.
 
 #### Combination of all criteria
 
-For every point on the trajectory I counted how many of the three criteria applied. 
-
-- try new segmentation by criteria 1) within a window of 60 secs (3 plus,  3 minus), there must be a fix that complies to all three criteria. 2) within a window of 40 secs, the neighbouring 4 fixes must show a sum of matched criteria of at least 6. 
+For every point on the trajectory I displayed how many of the three criteria applied. Based on the count of matching criteria, I isolated new segments that represent downhill mountainbiking according to the following conditions: 
+The neighboring four fixes must show a sum of at least 6 matched criteria, and, within one Minute, there is at least one fix that matches all three of the criteria. 
 
 ### Limitations
 - we should try our code on another mountainbike pattern from Lisa to find whether its applicable to all patterns. 
@@ -282,3 +288,5 @@ Laube, P. & Purves, R.(2011) How fast is a cow? Cross-scale Analysis of Movement
 
 Pröbstl-Haider, U., Lund-Durlacher, D., Antonschmidt, H. & Hödl, C. (2018). Mountain bike tourism in Austria and the Alpine region – towards a sustainable model for multi-stakeholder product development. *Journal of Sustainable Tourism, 26*(4), 567-582. https://doi.org/10.1080/09669582.2017.1361428
 
+
+Zajc, P. & Berzelak, N. (2016). Riding styles and characteristics of rides among Slovenian mountain bikers and management challenges. *Journal of Outdoor Recreation and Tourism, 15*, 10-19. https://doi.org/10.1016/j.jort.2016.04.009
