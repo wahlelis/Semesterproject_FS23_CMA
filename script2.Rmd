@@ -216,6 +216,9 @@ wirie0518_speed <- wirie0518_speed |>
 #### visualisation of average speed, dealing with NaN
 
 ```{r}
+
+#### visualisation of average speed, dealing with NaN
+
 # explore what we just did
 ggplot(wirie0518_speed, aes(speedmean_ms))+
   geom_histogram(binwidth = 1)+
@@ -264,7 +267,8 @@ mean(wirie0518_speed$speedmean_kmh)
 for speed (Dodge et al., 2009)
 
 ```{r}
-head(wirie0518_speed)
+#### moving parameter (MP) profile, visualisation of static points 
+# for speed (Dodge et al., 2009)
 
 ggplot(wirie0518_speed, aes(x = datetime, y = speedmean_kmh))+
   geom_path(col = "#a6611a" )+

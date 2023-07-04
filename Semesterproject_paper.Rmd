@@ -101,8 +101,6 @@ tmap_mode("view")
 ```
 
 
-## Abstract
-
 ## Introduction
 As mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), both environmental and policy issues arise (Pröbstl-Haider et al., 2018). In order to better understand mountainbiking, this project takes a closer look at the movment of downhill mountainbiking. and be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
 
@@ -120,8 +118,10 @@ Using just one or two of the criteria will always still allow for other activiti
 
 ## Research Question
 In this paper we will work on the following two research questions: 
-- With which criteria can we filter a downhill oriented mountainbiking movement pattern from Posmo data? 
-- Is this combination of criteria applicable to all our data?
+
+- Which criteria can be used to characterize the movement pattern of downhill mountainbiking? 
+
+- Are the chosen criteria applicable to other movement trajectories?
 
 
 ## Data and Methods
@@ -180,7 +180,7 @@ Three relevant criteria for mountainbiking are speed, downhill movement and grou
 # calculate speed
 # calculate average speed between four fixes
 
-posmo_transport <- posmo_transport |> 
+wirie0518_speed <- posmo_transport |> 
   mutate(
     d_plus1 = sqrt((lead(X)-X)^2 + (lead(Y)-Y)^2),
     d_plus2 = sqrt((lead(X,2)-X)^2 + (lead(Y,2)-Y)^2), # new offset of 2 in function lead()
@@ -198,7 +198,7 @@ posmo_transport <- posmo_transport |>
 
 # calculate mean speed within window of two neighboring points. not exactly a temporal window because the sampling time varies slightly. mean in m/s and km/h.
 
-posmo_transport <- posmo_transport |>
+wirie0518_speed <- wirie0518_speed |>
   rowwise() |>  # so the mean per row is computed
   mutate(
     speedmean_ms = mean(c(s_plus1, s_plus2, s_minus1, s_minus2), na.rm=TRUE)
@@ -209,11 +209,118 @@ posmo_transport <- posmo_transport |>
   mutate(speedmean_kmh = speedmean_ms * 3.6)
 ```
 
+```{r include=FALSE}
+
+#### visualisation of average speed, dealing with NaN
+
+# explore what we just did
+ggplot(wirie0518_speed, aes(speedmean_ms))+
+  geom_histogram(binwidth = 1)+
+  geom_vline(xintercept = mean(wirie0518_speed$speedmean_ms, na.rm=TRUE)) # why is there no vline?
+
+range(wirie0518_speed$speedmean_ms, na.rm=TRUE)
+
+wirie0518_speed$speedmean_ms[1:50] # how did i get inf and NaN values? something divided by 0 returns inf. 0/0 returns NaN. no vline because of nan values
+pt <- is.finite(wirie0518_speed$speedmean_ms) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
+length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 80 of those
+
+# plot points with inf and non numeric value. let's see which points are affected.
+
+inf_filter <- wirie0518_speed |> 
+  filter(!is.finite(speedmean_ms))
+
+tm_shape(wirie0518_speed)+
+  tm_dots()+
+  tm_shape(inf_filter)+
+  tm_dots("transport_mode")
+
+# of 2,237 rows only 80 rows are affected (3.58 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
+# the inf/NaN/NA points are located where little movement is plausible (at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn). 
+
+# new dataset to create segmentation
+wirie0518_segments <- wirie0518_speed |> 
+    mutate(static = !is.finite(wirie0518_speed$speedmean_ms)) # returns TRUE for static points
+
+# "clean" dataset for visualisation of moving point parameter profile
+wirie0518_speed <- wirie0518_speed |>
+  filter(is.finite(speedmean_ms))
+
+ggplot(wirie0518_speed, aes(speedmean_ms))+
+  geom_histogram(binwidth = 1, fill ="#dfc27d")+
+  geom_vline(xintercept = mean(wirie0518_speed$speedmean_ms), col = "#a6611a") # vline is visible, average speed on that day was around 10 m/s
+
+ggplot(wirie0518_speed, aes(speedmean_kmh))+
+  geom_histogram(binwidth = 1, fill ="#dfc27d")+
+  geom_vline(xintercept = mean(wirie0518_speed$speedmean_kmh), col = "#a6611a") # vline is visible, average speed on that day was around 37.33548 km/h
+
+mean(wirie0518_speed$speedmean_kmh)
+
+# # static points visualisation
+# where are the static points in the allmiried area? i see static points at the talstation, bergstation and halfway on the trail. (breaks to wait for each other, slow movements waiting for the funiculare)
+tm_shape(wirie0518_segments)+
+  tm_dots("static")
+```
+
 For every fix on the trajectory I calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference between the fix and the two points before and after, respectively. Fixes where the speed calculation could not be completed because either the distance or the time between two points was 0, were regarded as static. On the Wiriehorn 05-18 tour, 80 points were labelled as static, and used for segmentation of the trajectory. They were located in places on the trajectory where little movement or a change in transport mode is plausible (e.g. at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn).
 
 The extraction of the mountainbiking parts of the trajectory was based on visual assessment of the movement parameter profile based on Dodge et al. (2009) for the average speed. 
 
-MPP
+
+```{r echo=FALSE}
+#### moving parameter (MP) profile, visualisation of static points 
+# for speed (Dodge et al., 2009)
+
+ggplot(wirie0518_speed, aes(x = datetime, y = speedmean_kmh))+
+  geom_path(col = "#a6611a" )+
+  geom_point(col ="#dfc27d", alpha = .2)+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile for average speed", subtitle = "Wiriehorn tour 05-18")
+
+```
+
+
+```{r include=FALSE}
+#### Segmentation
+# function for assigning unique ID to the subtrajectories
+
+rle_id <- function(vec) {
+    x <- rle(vec)$lengths
+    as.factor(rep(seq_along(x), times = x))
+}
+
+wirie0518_segments <- wirie0518_segments |> 
+  mutate(ID=rle_id(static))
+```
+
+```{r echo=FALSE}
+# Visualize the moving segments by colourizing them by segment_ID.
+
+wirie0518_segments <- wirie0518_segments |> 
+  filter(!static) # select rows where the static value is not TRUE to select the moving segments
+
+ggplot(wirie0518_segments, aes(X, Y))+
+  geom_path(aes(color=ID))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+# tm_shape(wirie0518_segments)+
+#   tm_dots("ID")+
+#   tmap_options(max.categories = 37)
+
+# MP profile
+ggplot(wirie0518_segments, aes(x = datetime, y = speedmean_kmh))+
+  geom_line(aes(color = ID))+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile of average speed", subtitle = "moving segments of Wiriehorn 05-18")
+
+
+```
+
+
+
+MPP before and after segmentation
 
 However, the selected segments included the movement of the cable car Lisa took to get uphill to the trail start.
 To isolate the cable car and determine the relevant speed range for mounainbiking, the average speed distribution of the selected segments was calculated. The speed values that best characterized the movement of mountain biking were identified through a process of testing. 
