@@ -99,7 +99,7 @@ valbirse_transport <- select(valbirse, -c("weekday", "place_name", "user_id"))
 
 
 ## Introduction
-As mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), both environmental and policy issues arise (Pröbstl-Haider et al., 2018). In order to better understand mountainbiking, this project takes a closer look at the movment of downhill mountainbiking. and be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
+Mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), that raises both environmental and policy issues (Pröbstl-Haider et al., 2018). In order to better understand mountainbiking, this project takes a closer look at the movment of downhill mountainbiking. and be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
 
 Mountain biking can be practiced on different surfaces (on or off-road), there is a preference for natural areas (Zajc & Berzelak, 2016).
 
@@ -654,7 +654,8 @@ elevation <- ggplot(wirie0518_alti, aes(x = datetime, y = speedmean_kmh))+
 grid.arrange(speed, groundcover, elevation, ncol=3)
 ```
 
-After applying the refining criteria, the basis for the new segmentation included all of the downhill biking trajectory except for 11 points.
+  
+After applying the refining criteria, the basis for the new segmentation included all of the downhill biking trajectory except for 11 points.  
 
 **Wiriehorn 05-18 trajectory. The points matching the refined criteria return TRUE.**
 ```{r basis for new segmentation, echo=FALSE}
@@ -663,7 +664,9 @@ tm_shape(wirie0518_try)+
   tm_view(set.view = c(7.54170, 46.60981, 14))
 ```
 
-The results of the second segmentation step represent the mountainbiking pattern. 
+The results of the second segmentation step represent the mountainbiking pattern.  
+
+
 ```{r new segmentation, echo=FALSE}
 wirie0518_try <- wirie0518_try |>
   filter(mtb_refined==TRUE) # select rows where the value is TRUE to select the downhill mountainbiking segments
@@ -672,7 +675,11 @@ ggplot(wirie0518_try, aes(X, Y))+
   geom_path(aes(color=ID_mtb))+
   geom_point(aes(color = ID_mtb))+
   coord_fixed()+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), legend.key.size = unit(1, 'cm'),
+        legend.key.height = unit(.5, 'cm'), #change legend key height
+        legend.key.width = unit(1, 'cm'), #change legend key width
+        legend.title = element_text(size=9), #change legend title font size
+        legend.text = element_text(size=6))+
   labs(title = "New segments based on refined criteria", subtitle = "Wiriehorn 05-18")
 ```
 
@@ -893,14 +900,15 @@ wirie0507_summary <- wirie0507 |>
 
 On the Wiriehorn 05-07 trajectory, a higher count of criteria matched is visible where Lisa went mountainbiking. The count varies depending on the criteria.
 
-***Wiriehorn 05-07. Number of matched criteria for mountainbiking (mtb) for each point.***
+**Wiriehorn 05-07. Number of matched criteria for mountainbiking (mtb) for each point.**
 ```{r wirie0507 all criteria, echo=FALSE}
 tm_shape(wirie0507)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))+
   tm_view(set.view = c(7.54170, 46.60981, 14))
 ```
 
-***Wiriehorn 05-17. Speed (mtb_speed), groundcover (mtb_gc), downwards movement (mtb_elevation)***
+
+**Wiriehorn 05-17. Speed (mtb_speed), groundcover (mtb_gc), downwards movement (mtb_elevation)**
 ```{r facets of every criteria Wirie0507, echo=FALSE}
 tm_shape(wirie0507)+
   tm_dots(col = c("mtb_speed", "mtb_gc", "mtb_elevation"), palette=c('#a6611a', '#80cdc1'))+
@@ -952,26 +960,28 @@ tm_shape(wirie0507_try)+
 wirie0507_try <- na.omit(wirie0507_try)
 ```
 
-***Wiriehorn 05-07 trajectory. The points matching the refined criteria return TRUE.***
+
+**Wiriehorn 05-07 trajectory. The points matching the refined criteria return TRUE.**
 ```{r wirie 0507 basis for new segmentation, echo=FALSE}
 tm_shape(wirie0507_try)+
   tm_dots("mtb_refined", palette=c('#a6611a', '#80cdc1'))+
   tm_view(set.view = c(7.54170, 46.60981, 14))
 ```
 
-The results of the refined segmentation step capture the mountainbiking pattern. 
+ 
 ```{r wirie0507 new segmentation and visualisation, echo=FALSE}
 wirie0507_try <- wirie0507_try |>
   filter(mtb_refined==TRUE) # select rows where the static value is not TRUE to select the moving segments
 
 ggplot(wirie0507_try, aes(X, Y))+
   geom_path(aes(color=ID_mtb))+
-  geom_point(aes(color = "mtb_refined"))+
+  geom_point(aes(color = ID_mtb))+
   coord_fixed()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
   labs(title = "New segments based on refined criteria", subtitle = "Wiriehorn 05-07")
 ```
 
+The results of the refined segmentation step capture the mountainbiking pattern.
 
 #### Valbirse
 
@@ -1010,7 +1020,261 @@ valbirse_speed <- valbirse_speed |>
   mutate(speedmean_kmh = speedmean_ms * 3.6)
 ```
 
+```{r valbirse visualisation of average speed, dealing with NaN, include=FALSE}
+# explore what we just did
+ggplot(valbirse_speed, aes(speedmean_ms))+
+  geom_histogram(binwidth = 1)+
+  geom_vline(xintercept = mean(valbirse_speed$speedmean_ms, na.rm=TRUE)) # why is there no vline?
 
+range(valbirse_speed$speedmean_ms, na.rm=TRUE)
+
+valbirse_speed$speedmean_ms[1:50] # how did i get inf and NaN values? something divided by 0 returns inf. 0/0 returns NaN. no vline because of nan values
+pt <- is.finite(valbirse_speed$speedmean_ms) # returns TRUE if it is not one of the values NA, NaN, Inf or -Inf
+length(pt[pt == FALSE]) # counts NA, NaN, Inf and -Inf. we have 125 of those
+
+# plot points with inf and non numeric value. let's see which points are affected.
+
+inf_filter <- valbirse_speed |> 
+  filter(!is.finite(speedmean_ms))
+
+tm_shape(valbirse_speed)+
+  tm_dots()+
+  tm_shape(inf_filter)+
+  tm_dots("transport_mode")
+
+# of 1.174 rows only 30 rows are affected (2,56 %). since the +-Inf, NaN and NA values emerge where either the distance or the time between two points is 0, the points in question seem to be static (either temporally or locally). where no speed can be computed, no evaluation regarding a threshold can be taken. 
+# the inf/NaN/NA points are located where little movement is plausible (at the bottom and the top of the cable car allmiried). 
+
+# new dataset to create segmentation
+valbirse_segments <- valbirse_speed |> 
+    mutate(static = !is.finite(valbirse_speed$speedmean_ms)) # returns TRUE for static points
+
+# "clean" dataset for visualisation of moving point parameter profile
+valbirse_speed <- valbirse_speed |>
+  filter(is.finite(speedmean_ms))
+
+ggplot(valbirse_speed, aes(speedmean_ms))+
+  geom_histogram(binwidth = 1, fill ="#dfc27d")+
+  geom_vline(xintercept = mean(valbirse_speed$speedmean_ms), col = "#a6611a") # vline is visible, average speed on that day was around 10 m/s
+
+ggplot(valbirse_speed, aes(speedmean_kmh))+
+  geom_histogram(binwidth = 1, fill ="#dfc27d")+
+  geom_vline(xintercept = mean(valbirse_speed$speedmean_kmh), col = "#a6611a") # vline is visible, average speed on that day was around 24.01725 km/h
+
+mean(valbirse_speed$speedmean_kmh)
+```
+
+```{r valbirse segment and visualize, include=FALSE}
+valbirse_segments <- valbirse_segments |> 
+  mutate(ID=rle_id(static))
+
+valbirse_segments <- valbirse_segments |> 
+  filter(!static) # select rows where the static value is not TRUE to select the moving segments
+
+ggplot(valbirse_segments, aes(X, Y))+
+  geom_path(aes(color=ID))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+# tm_shape(valbirse_segments)+
+#   tm_dots("ID")+
+#   tmap_options(max.categories = 37)
+
+# MP profile
+ggplot(valbirse_segments, aes(x = datetime, y = speedmean_kmh))+
+  geom_line(aes(color = ID))+
+  ylab("average speed [km/h]")+
+  xlab("time")+
+  labs(title = "Movement parameter profile of average speed", subtitle = "moving segments of Valbirse 05-07")
+
+# cable car not excluded
+```
+
+```{r valbirse setting speed range, include=FALSE}
+valbirse_speed$transport_mode[valbirse_speed$speedmean_kmh <= 26.95490 & !(valbirse_speed$speedmean_kmh >= 2.855 & valbirse_speed$speedmean_kmh <= 10.308)] <- "mtb"
+
+# tm_shape(valbirse_speed)+
+#   tm_dots("transport_mode")
+
+valbirse_segments$transport_mode[valbirse_segments$speedmean_kmh <= 26.95490 & !(valbirse_segments$speedmean_kmh >= 2.855 & valbirse_segments$speedmean_kmh <= 10.308)] <- "mtb"
+
+valbirse_segments <- valbirse_segments |> 
+  mutate(mtb_speed = transport_mode =="mtb")
+
+length(valbirse_segments$mtb_speed[valbirse_segments$mtb_speed == TRUE]) # 248 true
+
+# tm_shape(valbirse_segments)+
+#   tm_dots("transport_mode")
+```
+
+```{r valbirse groundcover, include=FALSE}
+
+valbirse_gc <- st_intersection(valbirse_segments, bodenbedeckung)
+
+head(valbirse_gc)
+# display values occurring on the trajectory.
+unique(valbirse_gc$groundcover)
+
+# tm_shape(valbirse_gc)+
+#   tm_dots("groundcover")
+  
+# ggplot(valbirse_gc, aes(x=datetime, y=speedmean_kmh))+
+#   geom_line()+
+#   geom_point(aes(col=groundcover), alpha= .5)
+
+valbirse_gc <- valbirse_gc |>
+  mutate(mtb_gc = groundcover %in% mountainbike) # mountainbike ground cover TRUE/FALSE vector
+```
+
+```{r valbirse downward movement, include=FALSE}
+valbirse_alti <- valbirse_gc |> 
+  mutate(hoehe = terra::extract(alti, valbirse_gc)) # extract values froam a Raster for a set of locations.
+
+# posmo_annotated <- na.omit(posmo_annotated)
+
+valbirse_alti <- valbirse_alti[order(valbirse_alti$datetime, decreasing = FALSE),]
+
+ggplot(data= valbirse_alti, aes(datetime, hoehe$altivrt))+
+  geom_point(aes(color = groundcover))+
+  geom_path()+
+  labs(title = "Height change over time and ground cover of trajectory", subtitle = "Valbirse 05-07")+
+  ylab("altitude [m.a.s.l.]")+
+  xlab("time")
+
+valbirse_alti <- valbirse_alti|> 
+  mutate(h_plus4 = (lead(hoehe$altivrt, 4)- hoehe$altivrt))
+
+## uphill or downhill
+
+## where sum is smaller than 0 we have a descent
+valbirse_alti <- valbirse_alti |> 
+  mutate(mtb_elevation = h_plus4 < 0)
+
+# tm_shape(valbirse_alti)+
+#   tm_dots("mtb_elevation")
+
+valbirse_alti <- na.omit(valbirse_alti)
+```
+
+```{r valbirse combination of criteria, quantification, include=FALSE}
+
+valbirse <- valbirse_alti |> 
+  select(datetime, ID, mtb_speed, mtb_gc, mtb_elevation, X, Y, geometry) |> 
+  rowwise() |> 
+  mutate(mtb = sum(mtb_speed, mtb_gc, mtb_elevation, na.rm=TRUE)) |> 
+  ungroup()
+
+head(valbirse)
+
+
+tm_shape(valbirse)+
+  tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
+
+length(valbirse$mtb_speed[valbirse$mtb_speed == TRUE]) # 184 true (of 1015 rows)
+length(valbirse$mtb_gc[valbirse$mtb_gc == TRUE]) # 329 true
+length(valbirse$mtb_elevation[valbirse$mtb_elevation == TRUE]) # 311 true
+
+
+valbirse <- valbirse |> 
+  mutate(mtb_count3 = mtb == 3)
+
+length(valbirse$mtb_count3[valbirse$mtb_count3 == TRUE]) # 65 true
+
+valbirse_summary <- valbirse |> 
+  select(ID, mtb) |> 
+  group_by(ID) |> 
+  summarise(n_1 = sum(mtb==3),
+            n_2 = sum(mtb==2),
+            n_3 = sum(mtb==1)
+            # sumcriteria = sum(mtb),
+            # tourtime=difftime(last(datetime), first(datetime))
+            )
+```
+
+On the Valbirse trajectory many points that are not part of the biking pattern fit more than one criteria. 
+
+**Valbirse. Number of matched criteria for mountainbiking (mtb) for each point.**
+```{r valbirse all criteria, echo=FALSE}
+tm_shape(valbirse)+
+  tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
+```
+
+Taking a closer look, parts of the cable car did not match the criteria of downward movement (mtb_elevation)
+
+**Valbirse. Speed (mtb_speed), groundcover (mtb_gc), downwards movement (mtb_elevation)**
+```{r valbirse facets of every criteria, echo=FALSE}
+tm_shape(valbirse)+
+  tm_dots(col = c("mtb_speed", "mtb_gc", "mtb_elevation"), palette=c('#a6611a', '#80cdc1'))+
+  tm_facets(sync = TRUE, ncol = 3)+
+  tm_view(set.view = c(7.27159, 47.23389, 14))
+```
+
+```{r valbirse new segmentation, include=FALSE}
+valbirse_try <- valbirse |> 
+  mutate(
+    min3 = lead(mtb_count3) == TRUE |lead(mtb_count3,2)==TRUE |lead(mtb_count3,3) == TRUE | lag(mtb_count3) == TRUE | lag(mtb_count3,2)==TRUE | lag(mtb_count3,3)==TRUE
+  ) # innerhalb einer minute muss mindestens einmal der Wert drei vorkommen - also drei kriterien erfüllt sein. 
+
+tm_shape(valbirse_try)+
+  tm_dots("min3")
+
+valbirse_try <- valbirse_try |>
+  mutate(
+    c_plus1 = lead(mtb),
+    c_plus2 = lead(mtb,2), # new offset of 2 in function lead()
+    c_minus1 = lag(mtb),
+    c_minus2 = lag(mtb,2)
+  ) # berechnen, wie viele kriterien bei den benachbarten punkten zutreffen und so versuchen, die punkte wo weniger kriterien zutreffen, aussschliessen. ausreichend bike punkte eingeschlossen, die nicht alle kriterien erfüllen
+
+valbirse_try <- valbirse_try |> 
+  rowwise() |> 
+  mutate(c_sum = sum(c(c_plus1, c_plus2, c_minus1, c_minus2))) |> 
+  ungroup()
+
+valbirse_try <- valbirse_try |> 
+  mutate(mtb_sum = c_sum >= 6) |> 
+  mutate(mtb_refined = mtb_sum == TRUE & min3 == TRUE)
+
+# tm_shape(valbirse_try)+
+#   tm_dots("mtb_sum")
+# 
+# tm_shape(valbirse_try)+
+#   tm_dots("mtb_refined")
+
+valbirse_try <- valbirse_try |> 
+  mutate(ID_mtb=rle_id(mtb_refined))
+
+```
+
+
+**Valbirse trajectory. The points matching the refined criteria return TRUE.**
+```{r valbirse basis for new segmentation, echo=FALSE}
+tm_shape(valbirse_try)+
+  tm_dots("mtb_refined", palette=c('#a6611a', '#80cdc1'))+
+  tm_view(set.view = c(7.27159, 47.23389, 14))
+```
+
+ 
+```{r valbirse new segmentation and visualisation, echo=FALSE}
+valbirse_try <- valbirse_try |>
+  filter(mtb_refined==TRUE) # select rows where the criteria for the last segmentation are considered TRUE to select the moving segments
+
+ggplot(valbirse_try, aes(X, Y))+
+  geom_path(aes(color=ID_mtb))+
+  geom_point(aes(color = ID_mtb))+
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+```{r}
+tm_shape(valbirse_try)+
+  tm_dots("ID_mtb")+
+  tm_view(set.view = c(7.30973, 47.15863, 11))
+```
+
+
+The res
 
 
 

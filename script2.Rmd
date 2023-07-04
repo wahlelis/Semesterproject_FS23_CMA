@@ -688,7 +688,7 @@ wirie0518_try <- wirie0518_try |>
 
 wirie0518_try <- wirie0518_try |> 
   mutate(mtb_sum = c_sum >= 6) |> 
-  mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
+  mutate(mtb_refined = mtb_sum == TRUE & min3 == TRUE)
 
 tm_shape(wirie0518_try)+
   tm_dots("mtb_sum")
@@ -703,20 +703,20 @@ tm_shape(wirie0518_try)+
 #   ungroup()
 # 
 # wirie0518_try <- wirie0518_try |> 
-#   mutate(lastsegm = segm_sum >= 3) # threshold for last segmentation
+#   mutate(mtb_refined = segm_sum >= 3) # threshold for last segmentation
 
 tm_shape(wirie0518_try)+
-  tm_dots("lastsegm")
+  tm_dots("mtb_refined")
 
 wirie0518_try <- wirie0518_try |> 
-  mutate(ID_mtb=rle_id(lastsegm))
+  mutate(ID_mtb=rle_id(mtb_refined))
 
 tm_shape(wirie0518_try)+
-  tm_dots("lastsegm")
+  tm_dots("mtb_refined")
 
 
 # wirie0518_try <- wirie0518_try |> 
-#   filter(lastsegm==TRUE) # select rows where the value is TRUE to select the moving segments
+#   filter(mtb_refined==TRUE) # select rows where the value is TRUE to select the moving segments
 # 
 # ggplot(wirie0518_try, aes(X, Y))+
 #   geom_path(aes(color=ID_mtb))+
@@ -726,38 +726,6 @@ tm_shape(wirie0518_try)+
 
 ```
 
-#### visualise new segments
-
-```{r}
-
-wirie0518_trysum <- wirie0518_try |> 
-  select(ID_mtb, mtb) |> 
-  group_by(ID_mtb) |> 
-  summarise(n_1 = sum(mtb==3),
-            n_2 = sum(mtb==2),
-            n_3 = sum(mtb==1)
-            # sumcriteria = sum(mtb),
-            # tourtime=difftime(last(datetime), first(datetime))
-            )
-
-wirie0518_trysumlong <- pivot_longer(wirie0518_trysum, 2:4,
-               names_to = "criteria",
-               values_to = "points")
-
-
-ggplot(wirie0518_trysumlong, aes(fill = criteria, x = ID_mtb, y = points)) +
-  geom_bar(position = "stack", stat = "identity") +
-  scale_fill_manual(values = c("n_1" = "#dfc27d",
-                               "n_2" = "#80cdc1",
-                               "n_3" = "#018571"
-                               ))+
-  xlab("Segment ID")+
-  ylab("number of points on trajectory")+
-  labs(title = "Number of criteria applying to segments", subtitle = "Wiriehorn 05-18")+
-  geom_text(data=subset(wirie0518_trysumlong,points > 5), aes(label = points), stat = "identity", colour = "black", position = position_stack(vjust = 0.5), size=2)
-```
-
-
 ## Verification on other trajectories
 
 ### Wiriehorn 05-07 speed
@@ -765,7 +733,7 @@ ggplot(wirie0518_trysumlong, aes(fill = criteria, x = ID_mtb, y = points)) +
 Speed threshold compute movement parameter speed for every fix and a
 profile of the movement parameter. (Dodge et al., 2009)
 
-```{r}
+```{r wirie 0507 speed}
 # calculate distance between points d_plusx for distance
 # calculate time between points
 # calculate speed
@@ -801,7 +769,7 @@ wirie0507_speed <- wirie0507_speed |>
 
 #### visualisation of average speed, dealing with NaN
 
-```{r}
+```{r visualisation of average speed, dealing with NaN}
 # explore what we just did
 ggplot(wirie0507_speed, aes(speedmean_ms))+
   geom_histogram(binwidth = 1)+
@@ -874,7 +842,7 @@ tm_shape(wirie0507_segments)+
   tm_dots("static")
 ```
 
-#### segmentation
+#### segmentation and visualisation
 assign unique IDs to the segments
 
 ```{r}
@@ -887,11 +855,7 @@ ggplot(wirie0507_segments, aes(X, Y))+
   coord_fixed()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-```
-
-Visualize the moving segments by colourizing them by segment_ID.
-
-```{r}
+### Visualize the moving segments by colourizing them by segment_ID.
 
 wirie0507_segments <- wirie0507_segments |> 
   filter(!static) # select rows where the static value is not TRUE to select the moving segments
@@ -945,28 +909,11 @@ ggplot(wirie0507_threshold, aes(X, Y))+
 according to the speed statistics i will choose the range of the 1st and 3rd quartile kmh (2.855 to 10.308) as the speed defining mountainbiking.
 
 rename / overwrite rows of points within the speed range of mountainbiking.
-```{r}
-
-# wirie0507_speed$transport_mode[wirie0507_speed$speedmean_kmh >= 2.855 & wirie0507_speed$speedmean_kmh <= 10.308] <- "mtb"
-# 
-# tm_shape(wirie0507_speed)+
-#   tm_dots("transport_mode")
-
-# zooming into the allmiried area we can see that the cable car is labelled as mtb. the speed range therefore applies mainly to the cable car. let's see if by adjusting the range to include lower values as the set threshold changes anything.
-
-# wirie0507_speed$transport_mode[wirie0507_speed$speedmean_kmh <= 10.308] <- "mtb"
-# 
-# tm_shape(wirie0507_speed)+
-#   tm_dots("transport_mode")
-
-# a few more points are included, a great deal of the downhill parts are still not covered though. adjust upper threshold, choose max value of statistics output above. exclude range of cable car
-
+```{r rename / overwrite rows of points within the speed range of mountainbiking}
 wirie0507_speed$transport_mode[wirie0507_speed$speedmean_kmh <= 26.95490 & !(wirie0507_speed$speedmean_kmh >= 2.855 & wirie0507_speed$speedmean_kmh <= 10.308)] <- "mtb"
 
 tm_shape(wirie0507_speed)+
   tm_dots("transport_mode")
-
-# zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car. otherwise, the result represents most of the downhill mountainbiking.
 
 ```
 choosing the average speeds including the full range of the mountainbiking speeds did not exclude the cable car. taking a closer look a the moving parameter profile of the mountainbike segments we see that the cable car travels probably at an average of 8kmh. since average walking speed.
@@ -1005,7 +952,7 @@ tm_shape(wirie0507_speed)+
 #### intersect
 
 intersect the trajectory dataset (already containing the speed) with the groundcover information 
-```{r}
+```{r ground cover}
 
 wirie0507_gc <- st_intersection(wirie0507_segments, bodenbedeckung)
 
@@ -1120,7 +1067,7 @@ groundtype is either Acker, Wiese, Weide or else geschlossener Wald oder
 übrige humusierte, it must be checked with the speed to determine if
 these criteria match mountainbiking.
 
-```{r}
+```{r combination of criteria}
 wirie0507 <- wirie0507_alti |> 
   select(ID, datetime, mtb_speed, mtb_gc, mtb_elevation, X, Y, geometry) |> 
   rowwise() |> 
@@ -1203,28 +1150,28 @@ wirie0507_try <- wirie0507_try |>
 
 wirie0507_try <- wirie0507_try |> 
   mutate(mtb_sum = c_sum >= 6) |> 
-  mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
+  mutate(mtb_refined = mtb_sum == TRUE & min3 == TRUE)
 
 tm_shape(wirie0507_try)+
   tm_dots("mtb_sum")
 
 tm_shape(wirie0507_try)+
-  tm_dots("lastsegm")
+  tm_dots("mtb_refined")
 
 wirie0507_try <- wirie0507_try |> 
-  mutate(ID_mtb=rle_id(lastsegm))
+  mutate(ID_mtb=rle_id(mtb_refined))
 
 tm_shape(wirie0507_try)+
-  tm_dots("lastsegm")+
+  tm_dots("mtb_refined")+
   tm_shape(wirie0507_try)+
   tm_dots("ID_mtb")
 
 wirie0507_try <- wirie0507_try |>
-  filter(lastsegm==TRUE) # select rows where the static value is not TRUE to select the moving segments
+  filter(mtb_refined==TRUE) # select rows where the static value is not TRUE to select the moving segments
 
 ggplot(wirie0507_try, aes(X, Y))+
   geom_path(aes(color=ID_mtb))+
-  geom_point(aes(color = "lastsegm"))+
+  geom_point(aes(color = "mtb_refined"))+
   coord_fixed()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
@@ -1277,7 +1224,7 @@ valbirse_speed <- valbirse_speed |>
 
 #### visualisation of average speed, dealing with NaN
 
-```{r}
+```{r valbirse visualisation of average speed, dealing with NaN }
 # explore what we just did
 ggplot(valbirse_speed, aes(speedmean_ms))+
   geom_histogram(binwidth = 1)+
@@ -1663,19 +1610,19 @@ valbirse_try <- valbirse_try |>
 
 valbirse_try <- valbirse_try |> 
   mutate(mtb_sum = c_sum >= 6) |> 
-  mutate(lastsegm = mtb_sum == TRUE & min3 == TRUE)
+  mutate(mtb_refined = mtb_sum == TRUE & min3 == TRUE)
 
 tm_shape(valbirse_try)+
   tm_dots("mtb_sum")
 
 tm_shape(valbirse_try)+
-  tm_dots("lastsegm")
+  tm_dots("mtb_refined")
 
 valbirse_try <- valbirse_try |> 
-  mutate(ID_mtb=rle_id(lastsegm))
+  mutate(ID_mtb=rle_id(mtb_refined))
 
 valbirse_try <- valbirse_try |>
-  filter(lastsegm==TRUE) # select rows where the criteria for the last segmentation are considered TRUE to select the moving segments
+  filter(mtb_refined==TRUE) # select rows where the criteria for the last segmentation are considered TRUE to select the moving segments
 
 ggplot(valbirse_try, aes(X, Y))+
   geom_path(aes(color=ID_mtb))+
