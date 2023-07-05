@@ -1,6 +1,6 @@
 ---
 title: "Semesterproject paper"
-author: "Aurelia Möri, Lisa Wahlen"
+author: "Aurelia Möri, (Lisa Wahlen)"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -99,26 +99,20 @@ valbirse_transport <- select(valbirse, -c("weekday", "place_name", "user_id"))
 
 
 ## Introduction
-Mountainbiking is a popular sport in Switzerland (Fischer et al., 2021), that raises both environmental and policy issues (Pröbstl-Haider et al., 2018). In order to better understand mountainbiking, this project takes a closer look at the movment of downhill mountainbiking. and be able to talk about these issues on an objective level, it could be of interest to find out more about mountainbiking from a spatial use and movement based perspective. 
 
-Mountain biking can be practiced on different surfaces (on or off-road), there is a preference for natural areas (Zajc & Berzelak, 2016).
+Mountain biking is a popular sport in Switzerland (Fischer et al., 2021), that raises both environmental and policy issues (Pröbstl-Haider et al., 2018). In order to learn more about this recreational activity, this project takes a closer look at the movement of mountain biking. The analysis of movement data has gained increasing attention from both the GIScience community and the wider public, primarily because such data is easily accessible and appears to have a simplicity in structure (Laube, 2014). Addressing this sport from a movement and spatial analysis perspective, I hope to provide some insights about this movement pattern.
 
-movement data of interest. describing movement in GIScience
-In this project, we aim at filtering mountainbiking movement patterns in crowdsourced movement data according to specific movement criteria which should only apply to mountianbikers.
+Mountain biking can be practiced on different surfaces (on or off-road), but riders show a preference for natural areas (Zajc & Berzelak, 2016). There are many different types of mountain biking practices (Zajc & Berzelak, 2016), and in this project I focus on downhill mountain biking. The goal is to find the movement pattern of mountain biking in trajectories where also other movement types occurred. In order to detect the mountain biking pattern, I define three criteria which characterize downhill mountain biking. These three criteria consist of the speed of the riding person, the type of ground cover on which the trajectory is laying and furthermore the steepness of the trajectory, which needs to be directed downhill. Since natural areas are preferred for biking, (Zajc & Berzelak, 2016) ground cover type needs to be vegetated or otherwise natural.
 
-In this project, we aim at defining criteria that indicate mountainbiking movement patterns, and try to provide information about the characteristics of mountainbiking. 
+Using just one or two of the criteria will always still allow for other activities. For instance, a trajectory leading through grasslands and across forests could still be regarded as hiking, and the same applies to the downhill movement. The speed of a person riding a mountain bike is hard to define and may vary, but it is also not a unique identifier for this movement pattern. Therefore, the combination of the criteria is needed to describe and detect the biking pattern.
+Using GPS data that Lisa Wahlen recorded on three mountainbiking tours, I will address the research questions below.
 
-what are characteristics of mountainbiking? -> downhill (not uphill), in vegetated areas / trails (not on streets), within a certain speed range. 
+## Research Questions
+In this project I will work on the following three research questions: 
 
-In order to filter the mountainbiking pattern, we defined three criteria with which we should be able to have a unique identifier. Those three criteria consist of the speed with which the person is moving, the groundtype on which the trajectory is laying and furthermore the steepness of the trajectory, which needs to be directed downhill. 
-Using just one or two of the criteria will always still allow for other activities. Such that a trajectory placed on grass and in forests could still also be a hiker, which also applies to the downhill movement. The Speed of a mountainbiker is hard to define, but it is also not a unique identifier for this movement pattern. 
+- How can speed, ground cover and downward motion be used to characterize the movement pattern of downhill mountain biking?
 
-## Research Question
-In this project we will work on the following two research questions: 
-
-- How can speed, ground cover and downward motion be used to characterize the movement pattern of downhill mountainbiking?
-
-- Can I detect segments where mountainbiking occurred based on speed, groundcover and downward motion?
+- Can I detect segments where mountain biking occurred based on speed, groundcover and downward motion?
 
 - Are the chosen criteria applicable to other movement trajectories?
 
@@ -127,14 +121,14 @@ In this project we will work on the following two research questions:
 
 ### Datasets
 
-For the project, I used the movement trajectories that were created by Lisa Wahlen when going mountainbiking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. We include 3 mountainbiking tours Lisa completed in the period from the 6th of May to the 18th of May 2023. The tours were recorded in Switzerland in the areas of Wiriehorn (2 tours) and Valbirse (1 tour). 
+For the project, I used the movement trajectories that were created by Lisa Wahlen when going mountain biking. The trajectories were recorded by using the GPS-tracking App posmo (Genossenschaft Posmo Schweiz, 2022) with a sampling rate of 10 seconds. We include 3 mountain biking tours Lisa completed in the period from the 6th of May to the 18th of May 2023. The tours were recorded in Switzerland in the areas of Wiriehorn (2 tours) and Valbirse (1 tour). 
 
 For the assessment of the criteria that describe the movement pattern of mountain biking, we used the MOPUBE vector dataset providing the land cover types of the canton of Bern, using the version last updated on the 23.05.23 (Amt für Geoinformation des Kantons Bern, 2023). In addidtion, we worked with parts of the swiss digital terrain model swissALTI3D (Bundesamt für Landestopografie swisstopo, 2022). This elevation data is provided as raster in a resolution of 0.5 m in grids of 1 km2. We worked with extracts of the datasets, covering the spatial extent of the trajectories within the Canton of Bern.
 
-We chose the tour Lisa made on the 18th of May in the Wiriehorn area (Wiriehorn 05-18) to define the characteristics of the biking movement pattern and tried to apply the criteria to the tour at Wiriehorn on the 7th of May (Wiriehorn 05-07) and the tour in Valbirse on the 6th of May for verification. The trajectories included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that the mountainbiking part of the trajectories were labelled by the posmo app as "Car", "Bus", "Other" - and sometimes almost correctly with "Bike". 
+We chose the tour Lisa made on the 18th of May in the Wiriehorn area (Wiriehorn 05-18) to define the characteristics of the biking movement pattern and tried to apply the criteria to the tour at Wiriehorn on the 7th of May (Wiriehorn 05-07) and the tour in Valbirse on the 6th of May for verification. The trajectories included the car ride from Solothurn to the biking location and back. A first visualisation of transport modes of the data revealed that the mountain biking part of the trajectories were labelled by the posmo app as "Car", "Bus", "Other" - and sometimes almost correctly with "Bike". 
 
 **Wiriehorn trajectory of the 18th of May**  
-*Navigating to the south of the trajectory you'll find the mountainbiking part.*
+*Navigating to the south of the trajectory you'll find the mountain biking part.*
 ```{r echo=FALSE}
 # overview transport mode
 
@@ -143,7 +137,7 @@ tm_shape(posmo_transport)+
 ```
 
 **Wiriehorn trajectory of the 7th of May**  
-*Navigating to the south of the trajectory you'll find the mountainbiking part.*
+*Navigating to the south of the trajectory you'll find the mountain biking part.*
 ```{r echo=FALSE}
 
 tm_shape(wiriehorn_transport)+
@@ -152,24 +146,16 @@ tm_shape(wiriehorn_transport)+
 
 
 **Valbirse trajectory of the 6th of May**  
-*Navigating to the northeast of the trajectory you'll find the mountainbiking part.*
+*Navigating to the northeast of the trajectory you'll find the mountain biking part.*
 ```{r, echo=FALSE}
 tm_shape(valbirse_transport)+
   tm_dots("transport_mode")
 ```
 
 
-### Preprocessing
-
-All datasets of the trajectories were first converted to a georeferenced feature. Temporal outliers recorded the night before the trip started were removed, as well as unnecessary or redundant information about Lisa's user ID, the weekday, or the place name.
-
-Preprocessing Bodenbedeckung? in ArcGIS 50m buffer on both sides of the trajectory line
-
-Preprocessing swissALTI3D? polygon extract during acquisition.
-
 ### Methods
 
-Three relevant criteria for mountainbiking are speed, downhill movement and ground cover ***(Quelle)***. For all three criteria I assessed the values and ranges fitting the mountainbiking pattern of the Wiriehorn 05-18 tour. Then I applied the criteria to the Wiriehorn 05-06 and the Valbirse tour. 
+Three relevant criteria for mountain biking are speed, downhill movement and ground cover ***(Quelle)***. For all three criteria I assessed the values and ranges fitting the mountain biking pattern of the Wiriehorn 05-18 tour. Then I applied the criteria to the Wiriehorn 05-06 and the Valbirse tour. 
 
 #### Speed and segmentation
 
@@ -257,7 +243,7 @@ tm_shape(wirie0518_segments)+
   tm_dots("static")
 ```
 
-For every fix on the trajectory I calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference between the fix and the two points before and after, respectively. Fixes where the speed calculation could not be completed because either the distance or the time between two points was 0, were regarded as static. On the Wiriehorn 05-18 tour, 80 points were labelled as static, and used for segmentation of the trajectory. They were located in places on the trajectory where little movement or a change in transport mode is plausible (e.g. at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn). The segments were used to identify parts of the trajectory where Lisa was mountainbiking. The relevant segments were selected based on visual assessment of the movement parameter profile (Dodge et al. 2009) of the average speed (Figure below). I assumed that short segments and segments with high velocities are not biking.
+For every fix on the trajectory I calculated the average speed within the window of four neighboring points, similar to the moving window method of Laube & Purves (2011). The euclidean distance to the two points before and the two points after the fix was calculated and divided by the time difference between the fix and the two points before and after, respectively. Fixes where the speed calculation could not be completed because either the distance or the time between two points was 0, were regarded as static. On the Wiriehorn 05-18 tour, 80 points were labelled as static, and used for segmentation of the trajectory. They were located in places on the trajectory where little movement or a change in transport mode is plausible (e.g. at the bottom and the top of the cable car allmiried, somewhere in the middle of the downhill trail, at train stations in Solothurn). The segments were used to identify parts of the trajectory where Lisa was mountain biking. The relevant segments were selected based on visual assessment of the movement parameter profile (Dodge et al. 2009) of the average speed (Figure below). I assumed that short segments and segments with high velocities are not biking.
 
 
 ```{r MPP speed, include=FALSE}
@@ -322,7 +308,7 @@ To isolate the cable car and determine the relevant speed range for mounainbikin
 
 ```{r choosing segments and defining range, include = FALSE}
 
-# looks like the segments 12, 14, 16, 18, 20, 22, 24, 26 are mountainbiking segments
+# looks like the segments 12, 14, 16, 18, 20, 22, 24, 26 are mountain biking segments
 wirie0518_threshold <- wirie0518_segments |> 
   filter(ID == c(12, 14, 16, 18, 20, 22, 24, 26))
 
@@ -332,20 +318,20 @@ ggplot(wirie0518_threshold, aes(X, Y))+
   coord_fixed()
 
 # covers the time range between 08:42 - 13:13 which corresponds to biking
-# figure out which speed range makes sense to define mountainbiking
+# figure out which speed range makes sense to define mountain biking
 
 ggplot(wirie0518_threshold, aes(y=speedmean_kmh))+
   geom_boxplot(color="#a6611a", fill="#dfc27d", alpha=0.2)+
   ylab("mean speed [kmh]")+
   scale_x_discrete(labels = NULL, breaks = NULL)+
-  labs(title = "Average speed distribution of mountainbiking segments", subtitle = "Wiriehorn 05-18")
+  labs(title = "Average speed distribution of mountain biking segments", subtitle = "Wiriehorn 05-18")
 
 summary(wirie0518_threshold$speedmean_kmh)
 summary(wirie0518_threshold$speedmean_ms)
 sd(wirie0518_threshold$speedmean_kmh)
 ```
 
-```{r rename / overwrite rows of points within the speed range of mountainbiking, include=FALSE}
+```{r rename / overwrite rows of points within the speed range of mountain biking, include=FALSE}
 
 # wirie0518_speed$transport_mode[wirie0518_speed$speedmean_kmh >= 2.855 & wirie0518_speed$speedmean_kmh <= 10.308] <- "mtb"
 # 
@@ -366,7 +352,7 @@ wirie0518_speed$transport_mode[wirie0518_speed$speedmean_kmh < 26.95490 & !(wiri
 # tm_shape(wirie0518_speed)+
 #   tm_dots("transport_mode")
 
-# zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car. otherwise, the result represents most of the downhill mountainbiking.
+# zooming in the map, we see that the cable car is excluded in the allmiried area. since the walking speed of 4-5kmh is also excluded, the transport mode "walking" is preserved. however, some points on the mountainbike descent are excluded, probably because they fall in the speed range of the cable car. otherwise, the result represents most of the downhill mountain biking.
 
 wirie0518_segments$transport_mode[wirie0518_segments$speedmean_kmh <= 26.95490 & !(wirie0518_segments$speedmean_kmh >= 2.855 & wirie0518_segments$speedmean_kmh <= 10.308)] <- "mtb"
 
@@ -391,7 +377,7 @@ length(wirie0518_segments$mtb_speed[wirie0518_segments$mtb_speed == TRUE]) # 605
 
 #### Ground cover
 
-The MOPUBE dataset showed 22 ground cover types (see figure below). Knowing about the preference for natural contexts for mountainbiking (Zajc & Berzelak, 2016) I assume that Lisa rode on vegetated and/or natural groundcovers. Thus, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". We could argue that water bodies are not suitable as well, but depending on their size it is not impossible to cross such features when biking.
+The MOPUBE dataset showed 22 ground cover types (see figure below). Knowing about the preference for natural contexts for mountain biking (Zajc & Berzelak, 2016) I assume that Lisa rode on vegetated and/or natural groundcovers. Thus, every groundcover type seems suitable except for "Abbau, Deponie", Bahn", "Gebäude", "Strasse, Weg", "Trottoir", "übrige befestigte" and "Verkehrsinsel". We could argue that water bodies are not suitable as well, but depending on their size it is not impossible to cross such features when biking.
 
 
 ```{r read ground cover data, echo = FALSE}
@@ -546,7 +532,7 @@ wirie0518_summary <- wirie0518 |>
 #   geom_text(data=subset(wirie0518_sumlong,points > 5), aes(label = points), stat = "identity", colour = "black", position = position_stack(vjust = 0.5), size=2)
 ```
 
-For every point on the trajectory I displayed how many of the three criteria applied. Based on the count of matching criteria, I isolated new segments that represent downhill mountainbiking according to the following conditions: 
+For every point on the trajectory I displayed how many of the three criteria applied. Based on the count of matching criteria, I isolated new segments that represent downhill mountain biking according to the following conditions: 
 The neighboring four fixes must show a sum of at least 6 matched criteria, and, within one Minute, there is at least one fix that matches all three of the criteria. 
 
 ```{r wirie0518 new segmentation, include=FALSE}
@@ -590,26 +576,13 @@ wirie0518_try <- na.omit(wirie0518_try)
 ```
 
 
-
-### Limitations
-
-***The average Speed on the Wiriehorn 05-18 tour was 37.33548 km/h. The biking segments (including the cable car) showed an average speed of 7.80428 km/h. Since Lisa took the cable car several times on the Allmiried tour, the second and the third quartile of the speed distribution represent the speed of the cable car. In consequence, the first and the fourth quartile of the distribution were chosen to represent mountainbiking, resulting in a range of speed values from 0 to 2.855 and from 10.308 to 26.95490. These criteria also preserve the transport mode "walking".***
-
-- generalize 
-- visually choosing relevant segments
-- quantyfying mountainbiking points, evaluation
-- cable car within segments. no segments only including biking
-- speed range chosen to exclude cable car.
-- verification /double check with lisa
-
-
 ## Results
 
 ### Wiriehorn 05-18 
 
-On the Wiriehorn 05-18 trajectory, the points where I assumed Lisa went mountainbiking generally show a higher count of criteria matched. The straight Line uphill represents the cable car, the sinuously distributed points represent the presumed biking pattern. Depending on the criteria, some points on the trajectory received a higher count.
+On the Wiriehorn 05-18 trajectory, the points where I assumed Lisa went mountain biking generally show a higher count of criteria matched. The straight line uphill represents the cable car, the sinuously distributed points represent the presumed biking pattern. Depending on the criteria, some points on the trajectory received a higher count.
 
-**Wiriehorn 05-18. Number of matched criteria for mountainbiking (mtb) for each point.**
+**Wiriehorn 05-18. Number of matched criteria for mountain biking (mtb) for each point.**
 ```{r Wiriehorn 0518 overview, echo=FALSE}
 tm_shape(wirie0518)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))+
@@ -664,12 +637,12 @@ tm_shape(wirie0518_try)+
   tm_view(set.view = c(7.54170, 46.60981, 14))
 ```
 
-The results of the second segmentation step represent the mountainbiking pattern.  
+The results of the second segmentation step represent the mountain biking pattern. Segments where Lisa went biking could be isolated. 
 
 
 ```{r new segmentation, echo=FALSE}
 wirie0518_try <- wirie0518_try |>
-  filter(mtb_refined==TRUE) # select rows where the value is TRUE to select the downhill mountainbiking segments
+  filter(mtb_refined==TRUE) # select rows where the value is TRUE to select the downhill mountain biking segments
 
 ggplot(wirie0518_try, aes(X, Y))+
   geom_path(aes(color=ID_mtb))+
@@ -685,10 +658,6 @@ ggplot(wirie0518_try, aes(X, Y))+
 
 ### Application to other movement trajectories
 #### Wiriehorn 05-07
-
-- How can speed, ground cover and downward motion be used to characterize the movement pattern of downhill mountainbiking?
-- Can I detect segments where mountainbiking occurred based on speed, groundcover and downward motion?
-- Are the chosen criteria applicable to other movement trajectories?
 
 ```{r wirie 0507 speed, include=FALSE}
 # calculate distance between points d_plusx for distance
@@ -797,7 +766,7 @@ ggplot(wirie0507_segments, aes(x = datetime, y = speedmean_kmh))+
 # cable car not excluded
 ```
 
-```{r wirie 0507 rename overwrite rows of points within the speed range of mountainbiking, include=FALSE}
+```{r wirie 0507 rename overwrite rows of points within the speed range of mountain biking, include=FALSE}
 wirie0507_speed$transport_mode[wirie0507_speed$speedmean_kmh <= 26.95490 & !(wirie0507_speed$speedmean_kmh >= 2.855 & wirie0507_speed$speedmean_kmh <= 10.308)] <- "mtb"
 
 tm_shape(wirie0507_speed)+
@@ -898,9 +867,9 @@ wirie0507_summary <- wirie0507 |>
 #                values_to = "points")
 ```
 
-On the Wiriehorn 05-07 trajectory, a higher count of criteria matched is visible where Lisa went mountainbiking. The count varies depending on the criteria.
+Also on the Wiriehorn 05-07 trajectory, a higher count of criteria matched is visible where Lisa went mountain biking. The count varies depending on the criteria.
 
-**Wiriehorn 05-07. Number of matched criteria for mountainbiking (mtb) for each point.**
+**Wiriehorn 05-07. Number of matched criteria for mountain biking (mtb) for each point.**
 ```{r wirie0507 all criteria, echo=FALSE}
 tm_shape(wirie0507)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))+
@@ -908,7 +877,7 @@ tm_shape(wirie0507)+
 ```
 
 
-**Wiriehorn 05-17. Speed (mtb_speed), groundcover (mtb_gc), downwards movement (mtb_elevation)**
+**Wiriehorn 05-17. Speed (mtb_speed), groundcover (mtb_gc), downwards movement (mtb_elevation).**
 ```{r facets of every criteria Wirie0507, echo=FALSE}
 tm_shape(wirie0507)+
   tm_dots(col = c("mtb_speed", "mtb_gc", "mtb_elevation"), palette=c('#a6611a', '#80cdc1'))+
@@ -981,7 +950,7 @@ ggplot(wirie0507_try, aes(X, Y))+
   labs(title = "New segments based on refined criteria", subtitle = "Wiriehorn 05-07")
 ```
 
-The results of the refined segmentation step capture the mountainbiking pattern.
+The results of the refined segmentation step capture the mountain biking pattern.
 
 #### Valbirse
 
@@ -1193,7 +1162,7 @@ valbirse_summary <- valbirse |>
 
 On the Valbirse trajectory many points that are not part of the biking pattern fit more than one criteria. 
 
-**Valbirse. Number of matched criteria for mountainbiking (mtb) for each point.**
+**Valbirse. Number of matched criteria for mountain biking (mtb) for each point.**
 ```{r valbirse all criteria, echo=FALSE}
 tm_shape(valbirse)+
   tm_dots("mtb", palette= brewer.pal(4, "BrBG"))
@@ -1244,6 +1213,7 @@ valbirse_try <- valbirse_try |>
 valbirse_try <- valbirse_try |> 
   mutate(ID_mtb=rle_id(mtb_refined))
 
+valbirse_try <- na.omit(valbirse_try)
 ```
 
 
@@ -1267,35 +1237,31 @@ ggplot(valbirse_try, aes(X, Y))+
 
 ```
 
-```{r}
+```{r valbirse interactive new mtb segments, echo=FALSE}
 tm_shape(valbirse_try)+
   tm_dots("ID_mtb")+
   tm_view(set.view = c(7.30973, 47.15863, 11))
+  
+  # +
+  #  tmap_options(max.categories = 12)
 ```
 
+After the refined criteria were applied, two segments covering five points in Biel/Bienne were considered part of the mountainbike movement pattern. Most of the isolated biking segments are located in rural areas close to Malleray, where mountain biking seems more likely.
 
-The res
-
-
-
-The detection of the downhill movement pattern based on speed, groundcover and downward motion was successful for Wiriehorn 05-18 and Wiriehorn 05-07.
+The detection of the downhill movement pattern based on speed, groundcover and downward motion was successful for Wiriehorn 05-18 and Wiriehorn 05-07. For the Valbirse trajectory, it is possible that mountain biking segments have been isolated where no mountain biking has taken place.
 
 
 ## Discussion
 
-characterization not applicable everywhere
+The criteria of speed, ground cover and downward motion could be shown useful for detecting downhill mountain biking. The visualisations revealed points where mountain biking was plausible. For two out of three trajectories the criteria and the method applied worked well. Combination of the three criteria could also be used for segmentation, therefore allowing extraction or annotation of mountain biking segments within a trajectory. However, there are some issues to consider.
+
+Here, I only validated the data visually and in a qualitative manner. In the context of movement pattern detection, assessing the internal validity or the sensitivity of the method to parameters changes are relevant (Laube, 2014). Such steps would require additional datasets, which I lacked due to the choice of limiting the ground cover information to the spatial extent of one Swiss Region. 
+
+Furthermore, the choice of the parameters took place in an explorative way, mainly to exclude unwanted features (e.g. set the speed range to exclude the cable car). Thus, the Parameter values might work well for the trajectories I experimented with, but might be to narrow (or wide) to fit other mountain biking trajectories. Some parameters, especially speed, vary with the (temporal) scale (Laube & Purves, 2011). Such notions need to be examined further when validating the parameters. In terms of track annotation (Dodge et al., 2013), known biking trail networks could be annotated and added as criterion. Other movement parameters like sinuosity and turning angle could be additional criteria to consider.
 
 
-
-
-
-track annotation with environmental data (Dodge et al., 2013) GlobCover (http://due.esrin.esa.int/page_globcover.php) is from 2009, MOPUBE is updated weekly.
-
-known biking trails 
 
 ## References
-
-APA 7th edition instructions: <https://libguides.jcu.edu.au/apa/books#s-lg-box-21191622>
 
 Amt für Geoinformation des Kantons Bern. (2023). *Amtliche Vermessung vereinfacht* [Map].  2023https://www.agi.dij.be.ch/de/start/geoportal/geodaten/detail.html?type=geoproduct&code=MOPUBE
 
@@ -1305,8 +1271,7 @@ Dodge, S., Weibel, R., & Forootan, E. (2009). Revealing the physics of movement:
 paring the similarity of movement characteristics of different types of moving objects.
 *Computers, Environment and Urban Systems, 33*(6), 419–434. https://doi.org/10.1016/j.compenvurbsys.2009.07.008
 
-Dodge, S., Bohrer, G., Weinzierl, R., Davidson, S. C., Kays, R., Douglas, D., Cruz, S., Han, J., Brandes, D. & Wikelski, M. (2013). The environmental-data automated track annotation (Env-DATA) system: linking animal tracks with environmental data.
-*Movement Ecology, 1*(1), 3. https://doi.org/10.1186/2051-3933-1-3
+Dodge, S., Bohrer, G., Weinzierl, R., Davidson, S. C., Kays, R., Douglas, D., Cruz, S., Han, J., Brandes, D. & Wikelski, M. (2013). The environmental-data automated track annotation (Env-DATA) system: linking animal tracks with environmental data. *Movement Ecology, 1*(3). https://doi.org/10.1186/2051-3933-1-3
 
 Fischer, A., Lamprecht, M., & Bürgi, R. (2021). *Mountainbiken in der
 Schweiz 2020: Auswertung Mountainbikeland-Befragung 2019
@@ -1320,9 +1285,6 @@ Laube, P. (2014). *Computational Movement Analysis*. Springer Cham. <https://doi
 Laube, P. & Purves, R.(2011) How fast is a cow? Cross-scale Analysis of Movement Data, *Transactions in GIS, 15*(3), 401–418, John Wiley & Sons Ltd, DOI:
 10.1111/j.1467-9671.2011.01256.x
 
-***Dodge, S., Laube, P., & Weibel, R. (2012). Movement similarity assessment using symbolic representation of trajectories. *International Journal of Geographical Information Science, 26*(9), 1563-1588. https://doi.org/10.1080/13658816.2011.630003***
-
 Pröbstl-Haider, U., Lund-Durlacher, D., Antonschmidt, H. & Hödl, C. (2018). Mountain bike tourism in Austria and the Alpine region – towards a sustainable model for multi-stakeholder product development. *Journal of Sustainable Tourism, 26*(4), 567-582. https://doi.org/10.1080/09669582.2017.1361428
-
 
 Zajc, P. & Berzelak, N. (2016). Riding styles and characteristics of rides among Slovenian mountain bikers and management challenges. *Journal of Outdoor Recreation and Tourism, 15*, 10-19. https://doi.org/10.1016/j.jort.2016.04.009
