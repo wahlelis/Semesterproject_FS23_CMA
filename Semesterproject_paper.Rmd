@@ -634,8 +634,7 @@ elevation <- ggplot(wirie0518_alti, aes(x = datetime, y = speedmean_kmh))+
 grid.arrange(speed, groundcover, elevation, ncol=3)
 ```
 
-  
-After applying the refining criteria, the basis for the new segmentation included all of the downhill biking trajectory except for 11 points.  
+After applying the refining criteria, the basis for the new segmentation included all of the downhill biking trajectory except for 11 points (Figure below).  
 
 **Wiriehorn 05-18 trajectory. The points matching the refined criteria return TRUE.**
 ```{r basis for new segmentation, echo=FALSE}
@@ -1245,7 +1244,7 @@ ggplot(valbirse_try, aes(X, Y))+
 
 ```
 
-**New Segments based on refined criteria for Valbirse, interactive map for closer inspection.**
+**New segments based on refined criteria for Valbirse, interactive map for closer inspection.**
 ```{r valbirse interactive new mtb segments, echo=FALSE}
 tm_shape(valbirse_try)+
   tm_dots("ID_mtb")+
@@ -1263,9 +1262,9 @@ The detection of the downhill movement pattern based on speed, groundcover and d
 
 ## Discussion
 
-The criteria of speed, ground cover and downward motion could be shown useful for detecting and characterizing downhill mountain biking. The visualisations revealed points where mountain biking is plausible. For two out of three trajectories the criteria and the method applied worked well. Combination of the three criteria could also be used for segmentation, therefore allowing extraction or annotation of mountain biking segments within a trajectory. However, there are some issues to consider.
+The criteria of speed, ground cover and downward motion could be shown useful for detecting and characterizing downhill mountain biking. The visualisations revealed points where mountain biking is plausible. The two Wiriehorn trajectories where detection was successful were recorded in the same location, and given this similarity it is no surprise the criteria matched quite well. On the Valbirse trajectory, despite the refinement steps applied, a few points in Biel/Bienne were isolated as mountainbiking segments. Falsely associated ground cover due to measurement inaccuracy could have caused three criteria to match therefore meeting the refinement conditions. Thus, for two out of three trajectories the criteria and the method applied worked well. Combination of the three criteria could also be used for segmentation, therefore allowing extraction or annotation of mountain biking segments within a trajectory. However, there are some issues to consider.
 
-The two trajectories where detection was successful were recorded in the same location, and given this similarity it is no surprise the criteria matched quite well. Here, I only validated the data visually and in a qualitative manner. In the context of movement pattern detection, assessing the internal validity or the sensitivity of the method to parameters changes are relevant (Laube, 2014). Such steps would require additional datasets, which I lacked due to the choice of limiting the ground cover information to the spatial extent of one Swiss Region. By using other ground cover datasets, trajectories with different spatial extents could have been analysed.
+Here, I only validated the data visually and in a qualitative manner. In the context of movement pattern detection, assessing the internal validity or the sensitivity of the method to parameters changes are relevant (Laube, 2014). Such steps would require additional datasets, which I lacked due to the choice of limiting the ground cover information to the spatial extent of one Swiss Region. By using other ground cover datasets, trajectories with different spatial extents could have been analysed.
 
 Furthermore, the choice of the parameters took place in an explorative way, mainly to exclude unwanted features (e.g. set the speed range to exclude the cable car). Thus, the Parameter values may work well for the trajectories I experimented with, but might be to narrow (or wide) to fit other mountain biking trajectories. Some parameters, especially speed, vary with the (temporal) scale in which they are analysed (Laube & Purves, 2011). Such notions need to be examined further when validating the parameters. Other movement parameters like sinuosity and turning angle could be additional criteria to consider. In the trajectories examined here, downhill mountain biking often displayed sinuous properties. In terms of track annotation (Dodge et al., 2013), known biking trail networks could be annotated and added as criterion. 
 
